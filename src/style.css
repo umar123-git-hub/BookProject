@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Fixed brand colors (same in both themes) */
+ 
+/* Individual colors: each name is one fixed color, in any theme.
+   Use them like bg-mist, text-ink, border-fog, dark:bg-night.
+   "static" makes Tailwind always emit these variables, even when
+   they are only referenced through var() below. */
+@theme static {
+  /* Catalog (light) */
+  --color-mist: #f4f5f8;
+  --color-pale-mist: #eef0f5;
+  --color-powder: #e1e8f8;
+  --color-fog: #dfe2ea;
+  --color-ink: #1b2233;
+  --color-slate-grey: #5b6578;
+  --color-navy: #1f3a8a;
+  --color-cobalt: #2f4fb0;
+  --color-brick: #b42318;
+  --color-vermilion: #d4463a;
+  --color-forest: #1b7a3d;
+  --color-fern: #2f9a57;
+ 
+  /* Night archive (dark) */
+  --color-night: #101318;
+  --color-charcoal: #181c23;
+  --color-graphite: #1d222b;
+  --color-steel: #262d3a;
+  --color-iron: #2a303a;
+  --color-frost: #e8ebf0;
+  --color-ash: #9aa4b2;
+  --color-lamp-blue: #8fb4ff;
+  --color-coral: #ff8a80;
+  --color-deep-navy: #1f2a44;
+  --color-dusk: #2c3d66;
+  --color-pine: #1f6f46;
+  --color-dark-pine: #14472d;
+  --color-rust: #a8362c;
+  --color-oxblood: #6e211b;
+}
