@@ -29,7 +29,7 @@
             class="flex gap-2 items-center px-2.5 py-1.5 rounded-xl border border-gray-300 cursor-pointer text-gray-100 dark:text-gray-950 bg-linear-to-l from-gray-800 via-blue-600 to-blue-800 dark:from-blue-300 dark:via-blue-100 dark:via-5% dark:to-blue-300"
           >
             <BookPlus class="size-4"></BookPlus>
-            <div class="font-medium">Add Book</div>
+            <div class="font-medium">Add Books</div>
           </button>
           <!-- ADD BTN -->
         </div>
