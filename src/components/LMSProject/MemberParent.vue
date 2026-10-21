@@ -145,9 +145,25 @@
               >
                 <td v-if="key !== 'id' && key !== 'pic'">
                   <div
+                    v-if="!(typeof tableData == typeof true)"
                     class="px-4 py-2 border-t border-blue-900 text-center truncate"
                   >
-                    {{ tableData }}
+                    {{
+                      typeof tableData == typeof ""
+                        ? tableData
+                        : Array.isArray(tableData)
+                          ? tableData.length
+                          : typeof tableData == typeof true
+                            ? ""
+                            : tableData
+                    }}
+                  </div>
+                  <div
+                    v-else
+                    class="px-4 py-2 border-t border-blue-900 text-center truncate"
+                    :class="[tableData ? 'text-yellow-300' : 'text-gray-500']"
+                  >
+                    <Gem></Gem>
                   </div>
                 </td>
               </template>
