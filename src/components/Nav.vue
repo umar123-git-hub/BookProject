@@ -21,7 +21,7 @@
       class="w-max bg-gray-950 dark:bg-gray-100 px-1 md:px-2 py-0.5 md:py-1.5 hover:bg- rounded-lg cursor-pointer"
     ></ToggleTheme>
     <!--- sideBar ---->
-    <SideBar v-if="sideBarModel" v-model="sideBarModel"></SideBar>
+    <!-- <SideBar v-if="sideBarModel" v-model="sideBarModel"></SideBar> -->
     <!--- sideBar ---->
   </div>
 </template>
