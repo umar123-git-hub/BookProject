@@ -25,7 +25,7 @@
           <div class="flex flex-col gap-3">
             <template v-for="i in sideArr" :key="i.name">
               <div
-                @click="SelectFun(i)"
+                @click=""
                 class="flex gap-3 transition-all duration-150 cursor-pointer items-center px-2 py-1 rounded-lg"
                 :class="
                   variablesFromStore.routeSelect == i.name
@@ -56,7 +56,7 @@ import {
 import { ref, Teleport } from "vue";
 import { useRouter } from "vue-router";
 // import { useVariableStore } from "../../store/variableStore";
-import { useVariableStore } from "../Store/variableStore";
+// import { useVariableStore } from "../Store/variableStore";
 const sideArr = ref([
   { name: "Dashboard", iconComp: LayoutDashboard },
   { name: "Books", iconComp: BookOpen },
@@ -67,12 +67,12 @@ const sideArr = ref([
 const variablesFromStore = useVariableStore();
 const routes = useRouter();
 const sideBarModel = defineModel({ type: Boolean });
-const SelectFun = (i) => {
-  variablesFromStore.routeSelect = i.name;
-  sideBarModel.value = !sideBarModel.value;
-  console.log(variablesFromStore.routeSelect);
-  // changing routes
-  routes.push(variablesFromStore.routeSelect);
-  // changing routes
-};
+// const SelectFun = (i) => {
+//   variablesFromStore.routeSelect = i.name;
+//   sideBarModel.value = !sideBarModel.value;
+//   console.log(variablesFromStore.routeSelect);
+//   // changing routes
+//   routes.push(variablesFromStore.routeSelect);
+//   // changing routes
+// };
 </script>

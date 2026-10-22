@@ -11,7 +11,7 @@
   </div>
 </template>
 <script setup>
-import BookParent from "./LMSProject/BookParent.vue";
-import { RouterView } from "vue-router";
+// import BookParent from "./LMSProject/BookParent.vue";
+// import { RouterView } from "vue-router";
 import Nav from "./Nav.vue";
 </script>
