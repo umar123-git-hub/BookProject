@@ -1,6 +1,6 @@
 <template>
   <Shell></Shell>
-hi</template>
+</template>
 <script setup>
 import Shell from "./components/Shell.vue";
 </script>
