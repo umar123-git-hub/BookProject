@@ -1,7 +1,7 @@
 <template>
   <Shell></Shell>
-  hi hi
-</template>
+  umar
+  </template>
 <script setup>
 import Shell from "./components/Shell.vue";
 </script>
