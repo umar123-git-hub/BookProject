@@ -1,6 +1,6 @@
 <template>
   <Shell></Shell>
-  Kidann..
+  kuch or
 </template>
 <script setup>
 import Shell from "./components/Shell.vue";
