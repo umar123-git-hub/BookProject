@@ -164,6 +164,7 @@
                     :class="[tableData ? 'text-yellow-300' : 'text-gray-500']"
                   >
                     <Gem></Gem>
+                    \hi
                   </div>
                 </td>
               </template>
