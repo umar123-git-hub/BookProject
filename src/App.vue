@@ -1,6 +1,6 @@
 <template>
   <Shell></Shell>
-  Talish
+  Kidann..
 </template>
 <script setup>
 import Shell from "./components/Shell.vue";
