@@ -10,21 +10,6 @@ const router = createRouter({
 
   routes: [
     { path: "/", name: "Home", component: Home },
-    {
-      path: "/Books",
-      name: "Books",
-      component: () => import("../components/LMSProject/BookParent.vue"),
-    },
-    {
-      path: "/Members",
-      name: "Members",
-      component: () => import("../components/LMSProject/MemberParent.vue"),
-    },
-    {
-      path: "/Circulations",
-      name: "Circulations",
-      component: () => import("../components/LMSProject/CirculationParent.vue"),
-    },
     // {
     //   path: "/Books",
     //   component: BooksParent,
