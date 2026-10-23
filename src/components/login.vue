@@ -61,12 +61,12 @@
 
           <!-- Remember Me -->
           <div class="flex items-center gap-2">
-            <input
-              type="checkbox"
-              class="h-4 w-4 cursor-pointer rounded accent-indigo-600"
-            />
-
             <label class="cursor-pointer text-sm text-slate-600">
+              <input
+                type="checkbox"
+                class="h-4 w-4 cursor-pointer rounded accent-indigo-600"
+              />
+
               Remember me
             </label>
           </div>
