@@ -44,13 +44,18 @@
           </label>
         </div>
 
-          <!-- Remember Me -->
-          <div class="flex items-center gap-2">
-            <label class="cursor-pointer text-sm text-slate-600">
-              <input
-                type="checkbox"
-                class="h-4 w-4 cursor-pointer rounded accent-indigo-600"
-              />
+        <button
+          class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 cursor-pointer"
+        >
+          Forgot Password?
+        </button>
+        <!-- Remember Me -->
+        <div class="flex items-center">
+          <label class="cursor-pointer flex gap-2 items-center text-slate-600">
+            <input
+              type="checkbox"
+              class="cursor-pointer rounded accent-indigo-600"
+            />
 
             <div class="text-sm">Remember me</div>
           </label>
