@@ -1,14 +1,11 @@
 <template>
   <div>
     <!------- LOGIN PAGE --------->
-    <div v-if="loginOk">
-      <Login v-model="loginOk"></Login>
+    <div>
+      <Login></Login>
     </div>
     <!------- LOGIN PAGE --------->
-    <div
-      v-else
-      class="relative overflow-clip h-screen bg-white dark:bg-gray-90 transition-colors ease-in-out duration-200"
-    >
+    <div>
       <nav>
         <Nav></Nav>
       </nav>
@@ -24,6 +21,4 @@
 import { ref } from "vue";
 import Login from "./login.vue";
 import Nav from "./Nav.vue";
-
-const loginOk = ref(true);
 </script>
