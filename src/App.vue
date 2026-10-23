@@ -1,11 +1,6 @@
 <template>
   <Shell></Shell>
-<<<<<<< HEAD
-  kuch or
-=======
-  ali ahmad
->>>>>>> origin/main
-</template>
+hi</template>
 <script setup>
 import Shell from "./components/Shell.vue";
 </script>
