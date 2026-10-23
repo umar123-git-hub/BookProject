@@ -1,7 +1,7 @@
 <template>
   <!-- Main Overlay black -->
   <div
-    class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 py-8"
+    class="inset-0 z-100 flex items-center justify-center bg-slate-200 px-4 py-8"
   >
     <!-- Dialog Box -->
     <div
@@ -60,7 +60,7 @@
           </div>
 
           <!-- Remember Me -->
-          <div class="flex items-center gap-2">
+          <div>
             <label class="cursor-pointer text-sm text-slate-600">
               <input
                 type="checkbox"
@@ -74,7 +74,7 @@
 
           <!-- Login Button -->
           <button
-            @click="loginOk = !loginOk"
+          @click="loginOk = !loginOk"
             class="w-full rounded-xl bg-indigo-600 px-4 py-3.5 font-semibold text-white shadow-lg shadow-indigo-200 transition cursor-pointer hover:bg-indigo-700 active:scale-[0.98]"
           >
             Login to Account
@@ -104,6 +104,6 @@
 <script setup>
 import { X } from "@lucide/vue";
 import { ref } from "vue";
-
 const loginOk = defineModel({ type: Boolean });
+
 </script>
