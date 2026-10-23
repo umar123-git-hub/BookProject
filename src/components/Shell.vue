@@ -1,8 +1,8 @@
 <template>
   <div>
     <!------- LOGIN PAGE --------->
-    <div>
-      <Login></Login>
+    <div v-if="loginOk">
+      <Login v-model="loginOk"></Login>
     </div>
     <!------- LOGIN PAGE --------->
     <div>
@@ -21,4 +21,6 @@
 import { ref } from "vue";
 import Login from "./login.vue";
 import Nav from "./Nav.vue";
+
+const loginOk = ref(true);
 </script>
