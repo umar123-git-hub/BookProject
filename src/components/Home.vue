@@ -1,10 +1,9 @@
 <template>
   <div class="relative">
-      <DashBoard></DashBoard>
+    <DashBoard></DashBoard>
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
 import DashBoard from "./DashBoard.vue";
-
 </script>
