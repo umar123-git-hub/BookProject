@@ -1,6 +1,6 @@
 <template>
   <Shell></Shell>
-  Kidann..
+  ali ahmad
 </template>
 <script setup>
 import Shell from "./components/Shell.vue";
