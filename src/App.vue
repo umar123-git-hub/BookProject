@@ -1,7 +1,7 @@
 <template>
   <Shell></Shell>
- Toheed
-  </template>
+  Talish
+</template>
 <script setup>
 import Shell from "./components/Shell.vue";
 </script>
