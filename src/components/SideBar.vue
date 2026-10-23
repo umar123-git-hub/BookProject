@@ -6,52 +6,22 @@
       <!------------------ main content ---------------->
       <div class="flex flex-col gap-3 px-2">
         <!-- logo -->
-        <div class="flex items-center gap-2 border-b border-gray-300 pt-2 pb-5">
-          <LibraryBig
-            class="bg-linear-to-r dark:text-black text-gray-100 dark:from-white dark:to-gray-200 from-blue-950 to-gray-900 size-10 px-2 rounded-xl"
-          ></LibraryBig>
-          <div class="flex flex-col -gap-1">
-            <div class="font-medium">TUT</div>
-            <div class="text-xs">Library OS</div>
-          </div>
-        </div>
-        <!-- logo -->
         <div class="flex flex-col gap-3">
-          <template
-            v-for="i in sideArr"
-            :key="i.name"
-          >
-            <LibraryBig
-              class="bg-linear-to-r dark:text-black text-gray-100 dark:from-white dark:to-gray-200 from-blue-950 to-gray-900 size-10 px-2 rounded-xl"
-            ></LibraryBig>
-            <div class="flex flex-col -gap-1">
-              <div class="font-medium">TUT</div>
-              <div class="text-xs">Library OS</div>
+          <template v-for="i in sideArr" :key="i.name">
+            <div
+              @click=""
+              class="flex gap-3 transition-all duration-150 cursor-pointer items-center px-2 py-1 rounded-lg"
+            >
+              <component :is="i.iconComp"></component>
+              <div>{{ i.name }}</div>
             </div>
-          </div>
-          <!-- logo -->
-          <div class="flex flex-col gap-3">
-            <template v-for="i in sideArr" :key="i.name">
-              <div
-                @click=""
-                class="flex gap-3 transition-all duration-150 cursor-pointer items-center px-2 py-1 rounded-lg"
-                :class="
-                  variablesFromStore.routeSelect == i.name
-                    ? ' border dark:border-blue-200 dark:bg-linear-to-r dark:from-blue-700 dark:to-gray-600'
-                    : 'shadow-2xl border dark:text-black text-gray-100 dark:from-white dark:to-gray-200 bg-linear-to-r from-blue-900 to-gray-600 hover:from-blue-950 hover:to-gray-700 dark:hover:text-white'
-                "
-              >
-                <component :is="i.iconComp"></component>
-                <div>{{ i.name }}</div>
-              </div>
-            </template>
-          </div>
+          </template>
         </div>
-        <!------------------ main content ------  ---------->
       </div>
       <!------------------ main content ------  ---------->
     </div>
-  </Teleport>
+    <!------------------ main content ------  ---------->
+  </div>
 </template>
 <script setup>
 import {
