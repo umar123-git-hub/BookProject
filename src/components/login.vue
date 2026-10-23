@@ -74,7 +74,7 @@
 
           <!-- Login Button -->
           <button
-            @click="loginOk = !loginOk"
+          @click="loginOk = !loginOk"
             class="w-full rounded-xl bg-indigo-600 px-4 py-3.5 font-semibold text-white shadow-lg shadow-indigo-200 transition cursor-pointer hover:bg-indigo-700 active:scale-[0.98]"
           >
             Login to Account
@@ -104,6 +104,6 @@
 <script setup>
 import { X } from "@lucide/vue";
 import { ref } from "vue";
-
 const loginOk = defineModel({ type: Boolean });
+
 </script>
