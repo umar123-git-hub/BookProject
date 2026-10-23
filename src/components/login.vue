@@ -1,7 +1,7 @@
 <template>
   <!-- Main Overlay black -->
   <div
-    class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 py-8"
+    class="inset-0 z-100 flex items-center justify-center bg-slate-200 px-4 py-8"
   >
     <!-- Dialog Box -->
     <div
@@ -60,7 +60,7 @@
           </div>
 
           <!-- Remember Me -->
-          <div class="flex items-center gap-2">
+          <div>
             <label class="cursor-pointer text-sm text-slate-600">
               <input
                 type="checkbox"

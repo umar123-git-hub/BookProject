@@ -2,7 +2,7 @@
   <div>
     <!------- LOGIN PAGE --------->
     <div v-if="loginOk">
-      <Login v-model="loginOk"></Login>
+      <!-- <Login v-model="loginOk"></Login> -->
     </div>
     <!------- LOGIN PAGE --------->
     <div class="flex flex-col w-full">
