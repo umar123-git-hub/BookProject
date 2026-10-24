@@ -1,5 +1,13 @@
 <template>
-  <table class="w-full border-separate border-spacing-0 lg:w-full">
+  <table class="w-full table-fixed border-separate border-spacing-0 lg:w-full">
+    <colgroup>
+      <template
+        v-for="tableHeading in tableKeys"
+        :key="tableHeading"
+      >
+        <col class="w-26" />
+      </template>
+    </colgroup>
     <thead>
       <slot
         name="tableHeadingSlot"
@@ -7,13 +15,19 @@
         :table-keys="tableKeys"
       ></slot>
       <tr v-else>
-        <template v-for="tableHeading in tableKeys" :key="tableHeading">
+        <template
+          v-for="tableHeading in tableKeys"
+          :key="tableHeading"
+        >
           <th v-if="tableHeading !== 'id'">{{ formatLabel(tableHeading) }}</th>
         </template>
       </tr>
     </thead>
     <tbody class="">
-      <template v-for="tableRow in tableArr" :key="tableRow.id">
+      <template
+        v-for="tableRow in tableArr"
+        :key="tableRow.id"
+      >
         <slot
           name="tableRowSlot"
           v-if="$slots.tableRowSlot"
