@@ -22,7 +22,7 @@
 
       <!-------- Footer ------->
       <footer
-        class="fixed md:hidden bottom-0 left-0 w-full shadow-2xl border border-t border-gray-300 p-2"
+        class="fixed bg-white md:hidden bottom-0 left-0 w-full shadow-2xl border border-t border-gray-300 p-2"
       >
         <Footer></Footer>
       </footer>
