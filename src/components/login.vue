@@ -96,6 +96,7 @@
 import { ref } from "vue";
 import { useUsersLoginInfoStore } from "../Store/usersLoginInfoStore";
 const userInfoForLogin = useUsersLoginInfoStore();
+
 const loginOk = defineModel({
   type: Boolean,
 });
