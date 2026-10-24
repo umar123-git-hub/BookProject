@@ -18,10 +18,7 @@
         <div
           class="grid grid-cols-2 md:grid-cols-4 gap-x-1.5 gap-y-1 cursor-pointer"
         >
-          <template
-            v-for="card in cardsArr"
-            :key="card"
-          >
+          <template v-for="card in cardsArr" :key="card">
             <div
               :class="card.cardColor"
               class="flex flex-col gap-0.5 rounded p-2"
@@ -41,7 +38,7 @@
       </div>
       <!----------------- WRITTEN AND CARDS -------------------->
       <!----------------- TABLE AND ADD TASK ------------------->
-      <div class="bg-white p-1 rounded px-2">
+      <div class="bg-white p-1 rounded px-2 flex flex-col gap-2">
         <!-- ADD BUTTON AND SELECTS -->
         <div class="flex flex-col">
           <!-- button and written -->
@@ -52,10 +49,11 @@
           <!-- button and written -->
           <!-- selections -->
           <div class="flex gap-1">
-            <div class="px-2 py-0.5 text-sm bg-gray-200 rounded-xl">123</div>
-            <div class="px-2 py-0.5 text-sm bg-gray-200 rounded-xl">223</div>
-            <div class="px-2 py-0.5 text-sm bg-gray-200 rounded-xl">323</div>
-            <div class="px-2 py-0.5 text-sm bg-gray-200 rounded-xl">423</div>
+            <template v-for="itemFilter in filtersForTable">
+              <div class="px-2 py-0.5 text-xs bg-gray-200 rounded-xl">
+                {{ itemFilter.name }}
+              </div>
+            </template>
           </div>
           <!-- selections -->
         </div>
@@ -71,11 +69,7 @@
     <!--============= CARDS AND TABLE PARENT ==================-->
     <!--============= DATES AND PROGRESS GRAPH PARENT ==================-->
     <div class="flex flex-col sm:flex-row md:flex-col gap-2">
-      <VueDatePicker
-        inline
-        auto-apply
-        class="w-full basis-full"
-      />
+      <VueDatePicker inline auto-apply class="w-full basis-full" />
       <div class="bg-blue-500 basis-full p-32"></div>
     </div>
     <!--============= DATES AND PROGRESS GRAPH PARENT ==================-->
@@ -146,5 +140,12 @@ const cardsArr = ref([
     cardColor: "bg-red-100 text-red-800 ",
     iconColor: "bg-red-700 text-red-200 p-1 rounded-full size-6 md:size-7",
   },
+]);
+
+const filtersForTable = ref([
+  { name: "All" },
+  { name: "To Do" },
+  { name: "In Progress" },
+  { name: "Completed" },
 ]);
 </script>
