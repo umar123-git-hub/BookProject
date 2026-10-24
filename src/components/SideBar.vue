@@ -17,7 +17,10 @@
       <div class="flex flex-col gap-3 px-2">
         <!-- logo -->
         <div class="flex flex-col gap-3">
-          <template v-for="i in sideArr" :key="i.name">
+          <template
+            v-for="i in sideArr"
+            :key="i.name"
+          >
             <div
               @click=""
               class="flex gap-3 transition-all duration-150 cursor-pointer items-center px-2 py-1 rounded-lg shadow-2xl bg-white hover:scale-115"
