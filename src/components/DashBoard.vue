@@ -18,7 +18,10 @@
         <div
           class="grid grid-cols-2 md:grid-cols-4 gap-x-1.5 gap-y-1 cursor-pointer"
         >
-          <template v-for="card in cardsArr" :key="card">
+          <template
+            v-for="card in cardsArr"
+            :key="card"
+          >
             <div
               :class="card.cardColor"
               class="flex flex-col gap-0.5 rounded p-2"
@@ -38,7 +41,7 @@
       </div>
       <!----------------- WRITTEN AND CARDS -------------------->
       <!----------------- TABLE AND ADD TASK ------------------->
-      <div class="bg-white p-1 rounded px-2 flex flex-col gap-2">
+      <div class="bg-white p-1 rounded px-2">
         <!-- ADD BUTTON AND SELECTS -->
         <div class="flex flex-col">
           <!-- button and written -->
@@ -69,7 +72,11 @@
     <!--============= CARDS AND TABLE PARENT ==================-->
     <!--============= DATES AND PROGRESS GRAPH PARENT ==================-->
     <div class="flex flex-col sm:flex-row md:flex-col gap-2">
-      <VueDatePicker inline auto-apply class="w-full basis-full" />
+      <VueDatePicker
+        inline
+        auto-apply
+        class="w-full basis-full"
+      />
       <div class="bg-blue-500 basis-full p-32"></div>
     </div>
     <!--============= DATES AND PROGRESS GRAPH PARENT ==================-->
@@ -89,25 +96,63 @@ import TableG from "./TableG.vue";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
-const exArr = ref([
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
+const tasksArr = ref([
+  {
+    id: crypto.randomUUID(),
+    task: "Design login page UI",
+    category: "UI/UX",
+    dueDate: "Today, 5:00 PM",
+    status: "In Progress",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Set up project repository",
+    category: "Development",
+    dueDate: "Today, 10:00 AM",
+    status: "Completed",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Write API documentation",
+    category: "Backend",
+    dueDate: "Tomorrow, 11:00 AM",
+    status: "To Do",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Prepare presentation",
+    category: "Work",
+    dueDate: "May 18, 2025",
+    status: "To Do",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Fix responsive issues",
+    category: "Frontend",
+    dueDate: "May 16, 2025",
+    status: "Completed",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Plan next sprint",
+    category: "Planning",
+    dueDate: "May 20, 2025",
+    status: "To Do",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Update dependencies",
+    category: "Maintenance",
+    dueDate: "May 22, 2025",
+    status: "In Progress",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Review pull requests",
+    category: "Development",
+    dueDate: "May 23, 2025",
+    status: "To Do",
+  },
 ]);
 
 const cardsArr = ref([
@@ -140,12 +185,5 @@ const cardsArr = ref([
     cardColor: "bg-red-100 text-red-800 ",
     iconColor: "bg-red-700 text-red-200 p-1 rounded-full size-6 md:size-7",
   },
-]);
-
-const filtersForTable = ref([
-  { name: "All" },
-  { name: "To Do" },
-  { name: "In Progress" },
-  { name: "Completed" },
 ]);
 </script>
