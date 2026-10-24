@@ -1,7 +1,7 @@
 <template>
   <!-- Main Overlay black -->
   <div
-    class="flex items-center justify-center inset-0 z-100 absolute bg-slate-200 px-4 py-8"
+    class="flex items-center justify-center inset-0 z-100 fixed bg-slate-200 px-4 py-8"
   >
     <!-- Dialog Box -->
     <div class="flex flex-col rounded-3xl bg-white shadow-2xl px-6 py-4">
@@ -24,6 +24,7 @@
           <label class="mb-2 block text-sm font-semibold text-slate-700">
             Email Address
             <input
+              v-model="emailModel"
               type="email"
               placeholder="name@gmail.com"
               class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100"
@@ -37,6 +38,7 @@
           <label class="text-sm font-semibold text-slate-700">
             <div class="">Password</div>
             <input
+              v-model="passwordModel"
               type="password"
               placeholder="Enter your password"
               class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100"
@@ -64,7 +66,7 @@
 
         <!-- Login Button -->
         <button
-          @click="loginOk = !loginOk"
+          @click="loginFun"
           class="w-full rounded-xl bg-indigo-600 px-4 py-3.5 font-semibold text-white shadow-lg shadow-indigo-200 transition cursor-pointer hover:bg-indigo-700 active:scale-[0.98]"
         >
           Login to Account
@@ -92,7 +94,22 @@
 </template>
 <script setup>
 import { ref } from "vue";
+import { useUsersLoginInfoStore } from "../Store/usersLoginInfoStore";
+const userInfoForLogin = useUsersLoginInfoStore();
 const loginOk = defineModel({
   type: Boolean,
 });
+
+const emailModel = ref("");
+const passwordModel = ref("");
+
+const loginFun = () => {
+  userInfoForLogin.allUserInfo.forEach((i) => {
+    if (emailModel.value == i.email) {
+      if (passwordModel.value == i.password) {
+        loginOk.value = false;
+      }
+    }
+  });
+};
 </script>

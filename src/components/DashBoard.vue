@@ -52,10 +52,11 @@
           <!-- button and written -->
           <!-- selections -->
           <div class="flex gap-1">
-            <div class="px-2 py-0.5 text-sm bg-gray-200 rounded-xl">123</div>
-            <div class="px-2 py-0.5 text-sm bg-gray-200 rounded-xl">223</div>
-            <div class="px-2 py-0.5 text-sm bg-gray-200 rounded-xl">323</div>
-            <div class="px-2 py-0.5 text-sm bg-gray-200 rounded-xl">423</div>
+            <template v-for="itemFilter in filtersForTable">
+              <div class="px-2 py-0.5 text-xs bg-gray-200 rounded-xl">
+                {{ itemFilter.name }}
+              </div>
+            </template>
           </div>
           <!-- selections -->
         </div>
@@ -95,25 +96,63 @@ import TableG from "./TableG.vue";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
-const exArr = ref([
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
-  { task: "Design1", category: "UI1", status: "in progress1" },
-  { task: "Design2", category: "UI2", status: "in progress2" },
-  { task: "Design3", category: "UI3", status: "in progress3" },
+const tasksArr = ref([
+  {
+    id: crypto.randomUUID(),
+    task: "Design login page UI",
+    category: "UI/UX",
+    dueDate: "Today, 5:00 PM",
+    status: "In Progress",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Set up project repository",
+    category: "Development",
+    dueDate: "Today, 10:00 AM",
+    status: "Completed",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Write API documentation",
+    category: "Backend",
+    dueDate: "Tomorrow, 11:00 AM",
+    status: "To Do",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Prepare presentation",
+    category: "Work",
+    dueDate: "May 18, 2025",
+    status: "To Do",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Fix responsive issues",
+    category: "Frontend",
+    dueDate: "May 16, 2025",
+    status: "Completed",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Plan next sprint",
+    category: "Planning",
+    dueDate: "May 20, 2025",
+    status: "To Do",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Update dependencies",
+    category: "Maintenance",
+    dueDate: "May 22, 2025",
+    status: "In Progress",
+  },
+  {
+    id: crypto.randomUUID(),
+    task: "Review pull requests",
+    category: "Development",
+    dueDate: "May 23, 2025",
+    status: "To Do",
+  },
 ]);
 
 const cardsArr = ref([
