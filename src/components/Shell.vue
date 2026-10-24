@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div class="relative">
     <!------- LOGIN PAGE --------->
     <div v-if="loginOk">
-      <!-- <Login v-model="loginOk"></Login> -->
+      <Login v-model="loginOk"></Login>
     </div>
     <!------- LOGIN PAGE --------->
-    <div class="flex flex-col w-full">
+    <div v-else class="flex flex-col w-full">
       <!----------------- SIDE NAV AND ROUTERVIEW PARENT ----------------->
       <div class="flex w-full">
         <!--- sideBar   ---->
