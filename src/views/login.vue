@@ -1,7 +1,7 @@
 <template>
   <!-- Main Overlay black -->
   <div
-    class="flex items-center justify-center inset-0 z-100 fixed bg-slate-200 px-4 py-8"
+    class="flex items-center justify-center w-full h-full bg-slate-200 px-4 py-8"
   >
     <!-- Dialog Box -->
     <div class="flex flex-col rounded-3xl bg-white shadow-2xl px-6 py-4">
@@ -94,8 +94,8 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import { useUsersLoginInfoStore } from "../Store/usersLoginInfoStore";
-const userInfoForLogin = useUsersLoginInfoStore();
+import { useLoginUsersStore } from "../Store/loginUsersStore";
+const userInfoForLogin = useLoginUsersStore();
 
 const loginOk = defineModel({
   type: Boolean,
@@ -105,11 +105,12 @@ const emailModel = ref("");
 const passwordModel = ref("");
 
 const loginFun = () => {
-  userInfoForLogin.allUserInfo.forEach((i) => {
-    if (emailModel.value == i.email) {
-      if (passwordModel.value == i.password) {
-        loginOk.value = false;
-      }
+  userInfoForLogin.allLoginUser.forEach((i) => {
+    if (emailModel.value == i.email && passwordModel.value == i.password) {
+      loginOk.value = false;
+      console.log(loginOk.value);
+    } else {
+      console.log(userInfoForLogin.allLoginUser);
     }
   });
 };
