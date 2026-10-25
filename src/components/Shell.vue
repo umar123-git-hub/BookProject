@@ -1,17 +1,20 @@
 <template>
-  <div class="relative">
+  <div class="relative h-screen">
     <!------- LOGIN PAGE --------->
     <div v-if="loginOk">
       <Login v-model="loginOk"></Login>
     </div>
     <!------- LOGIN PAGE --------->
-    <div v-else class="flex flex-col w-full">
+    <div
+      v-else
+      class="flex flex-col w-full"
+    >
       <!----------------- SIDE NAV AND ROUTERVIEW PARENT ----------------->
-      <div class="flex w-full">
+      <div class="flex bg-slate-50 w-full">
         <!--- sideBar   ---->
         <SideBar class="hidden md:flex"></SideBar>
         <!--- sideBar ---->
-        <div class="overflow-hidden w-full flex flex-col h-full">
+        <div class="w-full flex flex-col h-full">
           <nav class="w-full">
             <Nav></Nav>
           </nav>
