@@ -1,12 +1,13 @@
 <template>
   <table class="w-full table-fixed border-separate border-spacing-0 lg:w-full">
     <colgroup>
-      <template
-        v-for="tableHeading in tableKeys"
+      <col
+        v-for="tableHeading in tableKeys.filter((key) => key !== 'id')"
         :key="tableHeading"
-      >
-        <col class="w-26" />
-      </template>
+        :style="{
+          width: `${getColumnWidth(tableHeading)}px`,
+        }"
+      />
     </colgroup>
     <thead>
       <slot
@@ -81,4 +82,14 @@ const tableKeys = computed(() => {
     return Object.keys(props.tableArr[0]);
   }
 });
+const getColumnWidth = (heading) => {
+  const headingLength = formatLabel(heading).length;
+
+  const longestDataLength = Math.max(
+    headingLength,
+    ...props.tableArr.map((row) => String(row[heading] ?? "").length),
+  );
+
+  return longestDataLength * 8 + 24;
+};
 </script>

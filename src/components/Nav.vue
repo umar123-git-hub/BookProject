@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full p-1.5 md:px-2.5 flex justify-between items-center">
+  <div
+    class="w-full p-1.5 md:px-2.5 bg-white flex justify-between items-center"
+  >
     <!-- navBar -->
 
     <!-- LEFT SIDE -->
