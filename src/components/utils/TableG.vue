@@ -1,13 +1,17 @@
 <template>
-  <table class="w-full table-fixed border-separate border-spacing-0 lg:w-full">
-    <colgroup>
-      <col
-        v-for="tableHeading in tableKeys.filter((key) => key !== 'id')"
+  <table class="w-full border-separate border-spacing-0 lg:w-full">
+    <slot
+      name="tableColsSlot"
+      v-if="$slots.tableColsSlot"
+      :table-keys="tableKeys"
+    ></slot>
+    <colgroup v-else>
+      <template
+        v-for="tableHeading in tableKeys"
         :key="tableHeading"
-        :style="{
-          width: `${getColumnWidth(tableHeading)}px`,
-        }"
-      />
+      >
+        <col class="min-w-40" />
+      </template>
     </colgroup>
     <thead>
       <slot
@@ -47,7 +51,6 @@
 </template>
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { Edit, Image, Trash } from "@lucide/vue";
 const props = defineProps({
   tableArr: {
     Array,
@@ -82,14 +85,4 @@ const tableKeys = computed(() => {
     return Object.keys(props.tableArr[0]);
   }
 });
-const getColumnWidth = (heading) => {
-  const headingLength = formatLabel(heading).length;
-
-  const longestDataLength = Math.max(
-    headingLength,
-    ...props.tableArr.map((row) => String(row[heading] ?? "").length),
-  );
-
-  return longestDataLength * 8 + 24;
-};
 </script>
