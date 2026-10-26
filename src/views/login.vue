@@ -22,10 +22,10 @@
         <!-------------------- Email  ------------------------------------------------------------>
         <div>
           <label class="mb-2 block text-sm font-semibold text-slate-700">
-            Email Address
+            User Name
             <input
-              v-model="emailModel"
-              type="email"
+              v-model="userNameModel"
+              type="text"
               placeholder="name@gmail.com"
               class="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-100"
             />
@@ -94,24 +94,40 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import { useLoginUsersStore } from "../Store/loginUsersStore";
-const userInfoForLogin = useLoginUsersStore();
+import { useUsersStore } from "../Store/UsersStore";
+import { useRouter } from "vue-router";
+import router from "../router";
+import DashBoard from "./dashboard/DashBoard.vue";
+const usersFromStore = useUsersStore();
 
 const loginOk = defineModel({
   type: Boolean,
 });
 
-const emailModel = ref("");
+const userNameModel = ref("");
 const passwordModel = ref("");
 
 const loginFun = () => {
-  userInfoForLogin.allLoginUser.forEach((i) => {
-    if (emailModel.value == i.email && passwordModel.value == i.password) {
-      loginOk.value = false;
-      console.log(loginOk.value);
-    } else {
-      console.log(userInfoForLogin.allLoginUser);
+  let required = usersFromStore.allUser.find(
+    (i) => i.userName === userNameModel.value.trim().toLocaleLowerCase(),
+  );
+  if (required) {
+    if (required.password === passwordModel.value) {
+      usersFromStore.loggedInUser = required;
+      router.push({ name: "DashBoard" });
     }
-  });
+  }
+
+  // if user is deleted then its username must be stored permanently
+  // let required = usersFromStore.allUser.filter(
+  //   (i) => i.userName === userNameModel.value.trim().toLocaleLowerCase(),
+  // );
+  // if (required.length == 0) return;
+  // if (required.filter((i) => i.password === passwordModel.value)) {
+  //   router.push("/dashboard");
+
+  // } else {
+  //   return console.log("!");
+  // }
 };
 </script>
