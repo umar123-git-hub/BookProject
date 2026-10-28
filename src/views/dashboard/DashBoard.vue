@@ -30,7 +30,9 @@
                 <div class="text-lg font-semibold md:text-xl xl:font-bold">
                   {{ card.uiNum }}
                 </div>
-                <div>{{ card.name }}</div>
+                <div class="text-xs lg:text-lg">
+                  {{ card.name }}
+                </div>
               </div>
             </div>
           </template>
@@ -60,13 +62,13 @@
           </div>
           <!-- ADD BTN AND WRITTEN -->
           <!-- SELECTION BTNS -->
-          <div class="flex items-center gap-4 py-1">
+          <div class="flex items-center gap-1 sm:gap-2 lg:gap-4 py-1">
             <template
               v-for="select in selections"
               :key="select.name"
             >
               <div
-                class="px-2 py-1 border border-blue-400 rounded text-xs md:text-sm bg-blue-100 hover:bg-blue-200 cursor-pointer transition-all duration-100 text-blue-700"
+                class="p-1 sm:py-1 border border-blue-400 rounded text-xs md:text-sm bg-blue-100 hover:bg-blue-200 cursor-pointer transition-all duration-100 text-blue-700"
               >
                 {{ select.name }}
               </div>
@@ -77,7 +79,7 @@
         <!--================ ADD BTN AND WRITTEN AND SELECTION BTNS  ========================-->
 
         <!-- TABLE -->
-        <div class="w-full overflow-auto h-3/4 rounded-xl">
+        <div class="w-full overflow-auto bg-white h-3/4 rounded-xl">
           <TableG :table-arr="tasksArr">
             <template #tableHeadingSlot="{ tableKeys }">
               <tr class="rounded bg-blue-400">
