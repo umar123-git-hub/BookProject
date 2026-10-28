@@ -1,84 +1,93 @@
 <template>
-  <div
-    class="relative h-full flex flex-col md:flex-row gap-2 px-3 md:px-5 py-3 pb-25 w-full"
-  >
-    <!--============= CARDS AND TABLE PARENT ==================-->
-    <div class="flex flex-col gap-2 md:gap-4">
-      <!----------------- WRITTEN AND CARDS -------------------->
-      <div class="flex flex-col gap-2 md:gap-4">
-        <!--------- WRITTEN ------------>
-        <div class="flex flex-col gap-0.5">
-          <div class="text-xl md:text-2xl font-bold">Good Afternoon, User!</div>
-          <div class="font-semibold text-gray-500">
-            Here's what's happening with your tasks.
+  <div class="relative w-full grid grid-cols-1 md:grid-cols-12">
+    <!--=================== LEFT SIDE =================-->
+    <div class="p-3 w-full flex flex-col gap-3 md:col-span-8 lg:col-span-9">
+      <!-- CARD AND WRITTEN -->
+      <div class="flex flex-col gap-4">
+        <!-- written -->
+        <div class="flex flex-col">
+          <div class="font-semibold xl:font-bold text-xl xl:text-2xl">
+            Good Afternoon, {{ userFromStore.loggedInUser.name }} !
           </div>
+          <div>Here's what's happening with your tasks today.</div>
         </div>
-        <!--------- WRITTEN ------------>
-        <!---------- CARDS ------------->
-        <div
-          class="grid grid-cols-2 md:grid-cols-4 gap-x-1.5 gap-y-1 cursor-pointer"
-        >
+        <!-- written -->
+        <!-- cards -->
+        <div class="grid grid-cols-3 gap-x-2 gap-y-1">
           <template
             v-for="card in cardsArr"
             :key="card"
           >
             <div
               :class="card.cardColor"
-              class="flex flex-col gap-0.5 rounded p-2"
+              class="flex flex-col cursor-pointer gap-1 transition-all duration-150 p-3 border rounded-xl"
             >
               <component
-                :class="card.iconColor"
                 :is="card.iconComp"
-              ></component>
+                :class="card.iconColor"
+              />
               <div class="flex flex-col">
-                <div>{{ card.uiNum }}</div>
+                <div class="text-lg font-semibold md:text-xl xl:font-bold">
+                  {{ card.uiNum }}
+                </div>
                 <div>{{ card.name }}</div>
               </div>
             </div>
           </template>
         </div>
-        <!---------- CARDS ------------->
+        <!-- cards -->
       </div>
-      <!----------------- WRITTEN AND CARDS -------------------->
-      <!----------------- TABLE AND ADD TASK ------------------->
-      <div class="bg-white p-1 rounded px-2 flex flex-col gap-2">
-        <!-- ADD BUTTON AND SELECTS -->
-        <div class="flex flex-col">
-          <!-- button and written -->
-          <div class="flex items-center justify-between py-1">
-            <div class="text-base md:text-lg font-bold">My Tasks</div>
-            <button
-              class="px-2 py-1 hover:text-blue-500 cursor-pointer transition-all duration-150 rounded"
+      <!--CARD AND WRITTEN -->
+      <!-- ADD, SELECTION AND TABLE  -->
+      <div class="flex flex-col gap-1 bg-blue-500/10 rounded-xl px-3">
+        <!--================ ADD BTN AND WRITTEN AND SELECTION BTNS  ========================-->
+        <div class="flex flex-col py-3 gap-1">
+          <!-- ADD BTN AND WRITTEN -->
+          <div class="flex items-center justify-between">
+            <div
+              class="px-1 py-0.5 font-semibold lg:font- text-base md:text-lg xl:text-xl"
             >
-              <CirclePlus></CirclePlus>
+              My Tasks
+            </div>
+            <button
+              class="flex items-center text-white gap-0.5 transition-all duration-100 bg-blue-300 hover:bg-blue-400 cursor-pointer rounded p-1"
+            >
+              <StickyNotePlus
+                class="size-4 md:size-5 xl:size7"
+              ></StickyNotePlus>
+              <div class="text-xs md:text-sm">Add Task</div>
             </button>
           </div>
-          <!-- button and written -->
-          <!-- selections -->
-          <div class="flex gap-1">
-            <template v-for="itemFilter in filtersForTable">
+          <!-- ADD BTN AND WRITTEN -->
+          <!-- SELECTION BTNS -->
+          <div class="flex items-center gap-4 py-1">
+            <template
+              v-for="select in selections"
+              :key="select.name"
+            >
               <div
-                class="px-2 py-0.5 text-xs md:text-sm cursor-pointer bg-blue-100 text-blue-800 rounded-xl"
+                class="px-2 py-1 border border-blue-400 rounded text-xs md:text-sm bg-blue-100 hover:bg-blue-200 cursor-pointer transition-all duration-100 text-blue-700"
               >
-                {{ itemFilter.name }}
+                {{ select.name }}
               </div>
             </template>
           </div>
-          <!-- selections -->
+          <!-- SELECTION BTNS -->
         </div>
-        <!-- ADD BUTTON AND SELECTS -->
+        <!--================ ADD BTN AND WRITTEN AND SELECTION BTNS  ========================-->
+
         <!-- TABLE -->
-        <div class="overflow-auto h-1/3">
+        <div class="w-full overflow-auto h-3/4 rounded-xl">
           <TableG :table-arr="tasksArr">
             <template #tableHeadingSlot="{ tableKeys }">
-              <tr class="bg-blue-500 text-white sticky top-0">
+              <tr class="rounded bg-blue-400">
                 <template
                   v-for="tableHeading in tableKeys"
                   :key="tableHeading"
                 >
                   <th
-                    class="py-1"
                     v-if="tableHeading !== 'id'"
+                    class="text-white text-base lg:text-lg bg-blue-400 sticky top-0"
                   >
                     {{ formatLabel(tableHeading) }}
                   </th>
@@ -87,14 +96,17 @@
             </template>
             <template #tableRowSlot="{ tableRow }">
               <tr
-                class="hover:bg-blue-300 even:bg-blue-100 transition-all duration-100"
+                class="text-center text-sm md:text-base xl:text-lg hover:bg-blue-200"
               >
-                <template v-for="(TableData, key) in tableRow">
+                <template
+                  v-for="(tableData, key) in tableRow"
+                  :key="tableData.id"
+                >
                   <td
                     v-if="key !== 'id'"
-                    class="px-2 py-2"
+                    class="px-4 py-1.5"
                   >
-                    {{ TableData }}
+                    {{ tableData }}
                   </td>
                 </template>
               </tr>
@@ -103,36 +115,26 @@
         </div>
         <!-- TABLE -->
       </div>
-      <!----------------- TABLE AND ADD TASK ------------------->
+      <!-- ADD, SELECTION AND TABLE  -->
     </div>
-    <!--============= CARDS AND TABLE PARENT ==================-->
-    <!--============= DATES AND PROGRESS GRAPH PARENT ==================-->
-    <div class="flex flex-col items-start sm:flex-row md:flex-col gap-2">
-      <VueDatePicker
-        inline
-        auto-apply
-        class="w-full basis-full"
-      />
-      <div class="bg-blue-500 p-32"></div>
-    </div>
-    <!--============= DATES AND PROGRESS GRAPH PARENT ==================-->
+    <!--=================== LEFT SIDE =================-->
+    <!--=================== RIGHT SIDE =================-->
+    <div class="p-3 w-full bg-blue-200 md:col-span-4 lg:col-span-3">right</div>
+    <!--=================== RIGHT SIDE =================-->
   </div>
 </template>
 <script setup>
-import {
-  Check,
-  CirclePlus,
-  CircleUser,
-  FileWarning,
-  Loader,
-  Summary,
-  User,
-} from "@lucide/vue";
 import { ref } from "vue";
-import TableG from "./TableG.vue";
-import { VueDatePicker } from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-
+import {
+  Summary,
+  Check,
+  Loader,
+  FileWarning,
+  StickyNotePlus,
+} from "@lucide/vue";
+import { useUsersStore } from "../../Store/UsersStore";
+import TableG from "../../components/utils/TableG.vue";
+const userFromStore = useUsersStore();
 const formatLabel = (str) => {
   return str
     .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -141,164 +143,67 @@ const formatLabel = (str) => {
 const tasksArr = ref([
   {
     id: crypto.randomUUID(),
-    task: "Design login page UI",
+    title: "Design login page UI",
     category: "UI/UX",
-    dueDate: "Today, 5:00 PM",
+    date: "Today, 5:00 PM",
     status: "In Progress",
+    completed: false,
   },
   {
     id: crypto.randomUUID(),
-    task: "Set up project repository",
+    title: "Set up project repository",
     category: "Development",
-    dueDate: "Today, 10:00 AM",
+    date: "Today, 10:00 AM",
     status: "Completed",
+    completed: true,
   },
   {
     id: crypto.randomUUID(),
-    task: "Write API documentation",
+    title: "Write API documentation",
     category: "Backend",
-    dueDate: "Tomorrow, 11:00 AM",
+    date: "Tomorrow, 11:00 AM",
     status: "To Do",
+    completed: false,
   },
   {
     id: crypto.randomUUID(),
-    task: "Design login page UI",
-    category: "UI/UX",
-    dueDate: "Today, 5:00 PM",
-    status: "In Progress",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Set up project repository",
-    category: "Development",
-    dueDate: "Today, 10:00 AM",
-    status: "Completed",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Write API documentation",
-    category: "Backend",
-    dueDate: "Tomorrow, 11:00 AM",
-    status: "To Do",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Design login page UI",
-    category: "UI/UX",
-    dueDate: "Today, 5:00 PM",
-    status: "In Progress",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Set up project repository",
-    category: "Development",
-    dueDate: "Today, 10:00 AM",
-    status: "Completed",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Write API documentation",
-    category: "Backend",
-    dueDate: "Tomorrow, 11:00 AM",
-    status: "To Do",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Design login page UI",
-    category: "UI/UX",
-    dueDate: "Today, 5:00 PM",
-    status: "In Progress",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Set up project repository",
-    category: "Development",
-    dueDate: "Today, 10:00 AM",
-    status: "Completed",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Write API documentation",
-    category: "Backend",
-    dueDate: "Tomorrow, 11:00 AM",
-    status: "To Do",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Design login page UI",
-    category: "UI/UX",
-    dueDate: "Today, 5:00 PM",
-    status: "In Progress",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Set up project repository",
-    category: "Development",
-    dueDate: "Today, 10:00 AM",
-    status: "Completed",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Write API documentation",
-    category: "Backend",
-    dueDate: "Tomorrow, 11:00 AM",
-    status: "To Do",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Design login page UI",
-    category: "UI/UX",
-    dueDate: "Today, 5:00 PM",
-    status: "In Progress",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Set up project repository",
-    category: "Development",
-    dueDate: "Today, 10:00 AM",
-    status: "Completed",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Write API documentation",
-    category: "Backend",
-    dueDate: "Tomorrow, 11:00 AM",
-    status: "To Do",
-  },
-  {
-    id: crypto.randomUUID(),
-    task: "Prepare presentation",
+    title: "Prepare presentation",
     category: "Work",
-    dueDate: "May 18, 2025",
+    date: "May 18, 2025",
     status: "To Do",
+    completed: false,
   },
   {
     id: crypto.randomUUID(),
-    task: "Fix responsive issues",
+    title: "Fix responsive issues",
     category: "Frontend",
-    dueDate: "May 16, 2025",
+    date: "May 14, 2025",
     status: "Completed",
+    completed: true,
   },
   {
     id: crypto.randomUUID(),
-    task: "Plan next sprint",
+    title: "Plan next sprint",
     category: "Planning",
-    dueDate: "May 20, 2025",
+    date: "May 20, 2025",
     status: "To Do",
+    completed: false,
   },
   {
     id: crypto.randomUUID(),
-    task: "Update dependencies",
+    title: "Update dependencies",
     category: "Maintenance",
-    dueDate: "May 22, 2025",
+    date: "May 22, 2025",
     status: "In Progress",
+    completed: false,
   },
   {
     id: crypto.randomUUID(),
-    task: "Review pull requests",
+    title: "Review pull requests",
     category: "Development",
-    dueDate: "May 23, 2025",
+    date: "May 23, 2025",
     status: "To Do",
+    completed: false,
   },
 ]);
 
@@ -307,34 +212,36 @@ const cardsArr = ref([
     name: "Total Tasks",
     iconComp: Summary,
     uiNum: 3,
-    cardColor: "bg-blue-100 text-blue-800 ",
-    iconColor: "bg-blue-600 text-blue-200 p-1 rounded-full size-6 md:size-7",
+    cardColor:
+      "bg-blue-50 text-blue-800 border-blue-100 shadow hover:shadow-lg ",
+    iconColor: "bg-blue-500 text-blue-100 p-1 rounded-full size-7 md:size-8",
   },
   {
     name: "Completed",
     iconComp: Check,
     uiNum: 3,
-    cardColor: "bg-green-100 text-green-800 ",
-    iconColor: "bg-green-600 text-green-200 p-1 rounded-full size-6 md:size-7",
+    cardColor:
+      "bg-green-50 text-green-800 border-green-100 shadow hover:shadow-lg ",
+    iconColor: "bg-green-500 text-green-100 p-1 rounded-full size-7 md:size-8",
   },
   {
     name: "In Progress",
     iconComp: Loader,
     uiNum: 3,
-    cardColor: "bg-yellow-100 text-yellow-800 ",
-    iconColor:
-      "bg-yellow-600 text-yellow-200 p-1 rounded-full size-6 md:size-7",
+    cardColor:
+      "bg-amber-50 text-yellow-800 border-amber-100  shadow hover:shadow-lg ",
+    iconColor: "bg-amber-500 text-white p-1 rounded-full size-7 md:size-8",
   },
-  {
-    name: "Overdue",
-    iconComp: FileWarning,
-    uiNum: 3,
-    cardColor: "bg-red-100 text-red-800 ",
-    iconColor: "bg-red-600 text-red-50 p-1 rounded-full size-6 md:size-7",
-  },
+  // {
+  //   name: "Overdue",
+  //   iconComp: FileWarning,
+  //   uiNum: 3,
+  //   cardColor: "bg-red-100 text-red-800 ",
+  //   iconColor: "bg-red-600 text-red-50 p-1 rounded-full size-6 md:size-7",
+  // },
 ]);
 
-const filtersForTable = ref([
+const selections = ref([
   { name: "All" },
   { name: "To Do" },
   { name: "In Progress" },
