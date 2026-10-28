@@ -7,7 +7,7 @@
         <!-- written -->
         <div class="flex flex-col">
           <div class="font-semibold xl:font-bold text-xl xl:text-2xl">
-            Good Afternoon, {{ userFromStore.loggedInUser.name }} !
+            Good Afternoon, {{ userFromStore.loggedInUser?.name }} !
           </div>
           <div>Here's what's happening with your tasks today.</div>
         </div>
@@ -52,6 +52,7 @@
               My Tasks
             </div>
             <button
+              @click="addEditMarker = !addEditMarker"
               class="flex items-center text-white gap-0.5 shadow-xl transition-all duration-100 bg-blue-300 hover:bg-blue-400 cursor-pointer rounded p-1"
             >
               <StickyNotePlus
@@ -111,7 +112,7 @@
               </template>
               <template #tableRowSlot="{ tableRow }">
                 <tr
-                  class="text-center text-sm md:text-base xl:text-lg hover:bg-blue-200"
+                  class="text-center z-20 text-sm md:text-base xl:text-lg hover:bg-blue-200"
                 >
                   <template
                     v-for="(tableData, key) in tableRow"
@@ -139,10 +140,16 @@
     <!--=================== RIGHT SIDE =================-->
     <div class="p-3 w-full bg-blue-200 md:col-span-4 lg:col-span-3">right</div>
     <!--=================== RIGHT SIDE =================-->
+    <!-- DIALOGUE -->
+    <AddEditTask
+      v-if="addEditMarker"
+      @hide="addEditMarker = false"
+    ></AddEditTask>
+    <!-- DIALOGUE -->
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, defineAsyncComponent } from "vue";
 import {
   Summary,
   Check,
@@ -153,12 +160,17 @@ import {
 } from "@lucide/vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import TableG from "../../components/utils/TableG.vue";
+const AddEditTask = defineAsyncComponent(
+  () => import("../../components/utils/addEditTask.vue"),
+);
 const userFromStore = useUsersStore();
+const addEditMarker = ref(false);
 const formatLabel = (str) => {
   return str
     .replace(/([a-z])([A-Z])/g, "$1 $2")
     .replace(/^\w/, (char) => char.toUpperCase());
 };
+
 const tasksArr = ref([
   {
     id: crypto.randomUUID(),

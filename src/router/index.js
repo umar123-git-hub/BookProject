@@ -36,6 +36,9 @@ router.beforeEach((to) => {
   if (to.meta.auth && loggedUser.loggedInUser !== null) {
     return true;
   }
+  // if (!to.meta.auth && loggedUser.loggedInUser !== null) {
+  //   return "/dashboard";
+  // }
   return "/";
 });
 
