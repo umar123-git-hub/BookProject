@@ -7,7 +7,7 @@
         <!-- written -->
         <div class="flex flex-col">
           <div class="font-semibold xl:font-bold text-xl xl:text-2xl">
-            Good Afternoon, {{ userFromStore.loggedInUser.name }} !
+            Good Afternoon, {{ userFromStore.loggedInUser?.name }} !
           </div>
           <div>Here's what's happening with your tasks today.</div>
         </div>
@@ -30,7 +30,9 @@
                 <div class="text-lg font-semibold md:text-xl xl:font-bold">
                   {{ card.uiNum }}
                 </div>
-                <div>{{ card.name }}</div>
+                <div class="text-xs lg:text-lg">
+                  {{ card.name }}
+                </div>
               </div>
             </div>
           </template>
@@ -50,7 +52,8 @@
               My Tasks
             </div>
             <button
-              class="flex items-center text-white gap-0.5 transition-all duration-100 bg-blue-300 hover:bg-blue-400 cursor-pointer rounded p-1"
+              @click="addEditMarker = !addEditMarker"
+              class="flex items-center text-white gap-0.5 shadow-xl transition-all duration-100 bg-blue-300 hover:bg-blue-400 cursor-pointer rounded p-1"
             >
               <StickyNotePlus
                 class="size-4 md:size-5 xl:size7"
@@ -60,13 +63,13 @@
           </div>
           <!-- ADD BTN AND WRITTEN -->
           <!-- SELECTION BTNS -->
-          <div class="flex items-center gap-4 py-1">
+          <div class="flex items-center gap-1 sm:gap-2 lg:gap-4 py-1">
             <template
               v-for="select in selections"
               :key="select.name"
             >
               <div
-                class="px-2 py-1 border border-blue-400 rounded text-xs md:text-sm bg-blue-100 hover:bg-blue-200 cursor-pointer transition-all duration-100 text-blue-700"
+                class="p-1 sm:py-1 border border-blue-400 rounded text-xs md:text-sm bg-blue-100 hover:bg-blue-200 cursor-pointer transition-all duration-100 text-blue-700"
               >
                 {{ select.name }}
               </div>
@@ -75,45 +78,61 @@
           <!-- SELECTION BTNS -->
         </div>
         <!--================ ADD BTN AND WRITTEN AND SELECTION BTNS  ========================-->
-
-        <!-- TABLE -->
-        <div class="w-full overflow-auto h-3/4 rounded-xl">
-          <TableG :table-arr="tasksArr">
-            <template #tableHeadingSlot="{ tableKeys }">
-              <tr class="rounded bg-blue-400">
-                <template
-                  v-for="tableHeading in tableKeys"
-                  :key="tableHeading"
-                >
-                  <th
-                    v-if="tableHeading !== 'id'"
-                    class="text-white text-base lg:text-lg bg-blue-400 sticky top-0"
+        <!-- SEARCH AND TABLE -->
+        <div class="flex flex-col gap-3">
+          <!-- search -->
+          <div
+            class="flex items-center backdrop-blur-2xl bg-white shadow-xl rounded-xl gap-2 px-3 py-2 border border-white w-full"
+          >
+            <Search class="size-5 stroke-3 text-gray-600"></Search>
+            <input
+              type="text"
+              class="w-full bg-transparent py-0.5 outline-none"
+              placeholder="Search Tasks"
+            />
+          </div>
+          <!-- search -->
+          <!-- TABLE -->
+          <div class="w-full overflow-auto bg-white h-3/4 rounded-xl">
+            <TableG :table-arr="tasksArr">
+              <template #tableHeadingSlot="{ tableKeys }">
+                <tr class="rounded bg-blue-400">
+                  <template
+                    v-for="tableHeading in tableKeys"
+                    :key="tableHeading"
                   >
-                    {{ formatLabel(tableHeading) }}
-                  </th>
-                </template>
-              </tr>
-            </template>
-            <template #tableRowSlot="{ tableRow }">
-              <tr
-                class="text-center text-sm md:text-base xl:text-lg hover:bg-blue-200"
-              >
-                <template
-                  v-for="(tableData, key) in tableRow"
-                  :key="tableData.id"
+                    <th
+                      v-if="tableHeading !== 'id'"
+                      class="text-white text-base lg:text-lg bg-blue-400 sticky top-0"
+                    >
+                      {{ formatLabel(tableHeading) }}
+                    </th>
+                  </template>
+                </tr>
+              </template>
+              <template #tableRowSlot="{ tableRow }">
+                <tr
+                  class="text-center z-20 text-sm md:text-base xl:text-lg hover:bg-blue-200"
                 >
-                  <td
-                    v-if="key !== 'id'"
-                    class="px-4 py-1.5"
+                  <template
+                    v-for="(tableData, key) in tableRow"
+                    :key="tableData.id"
                   >
-                    {{ tableData }}
-                  </td>
-                </template>
-              </tr>
-            </template>
-          </TableG>
+                    <td
+                      v-if="key !== 'id'"
+                      class="px-4 py-1.5"
+                    >
+                      {{ tableData }}
+                    </td>
+                  </template>
+                </tr>
+              </template>
+            </TableG>
+          </div>
+          <!-- TABLE -->
         </div>
-        <!-- TABLE -->
+
+        <!-- SEARCH AND TABLE -->
       </div>
       <!-- ADD, SELECTION AND TABLE  -->
     </div>
@@ -121,25 +140,37 @@
     <!--=================== RIGHT SIDE =================-->
     <div class="p-3 w-full bg-blue-200 md:col-span-4 lg:col-span-3">right</div>
     <!--=================== RIGHT SIDE =================-->
+    <!-- DIALOGUE -->
+    <AddEditTask
+      v-if="addEditMarker"
+      @hide="addEditMarker = false"
+    ></AddEditTask>
+    <!-- DIALOGUE -->
   </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, defineAsyncComponent } from "vue";
 import {
   Summary,
   Check,
   Loader,
   FileWarning,
   StickyNotePlus,
+  Search,
 } from "@lucide/vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import TableG from "../../components/utils/TableG.vue";
+const AddEditTask = defineAsyncComponent(
+  () => import("../../components/utils/addEditTask.vue"),
+);
 const userFromStore = useUsersStore();
+const addEditMarker = ref(false);
 const formatLabel = (str) => {
   return str
     .replace(/([a-z])([A-Z])/g, "$1 $2")
     .replace(/^\w/, (char) => char.toUpperCase());
 };
+
 const tasksArr = ref([
   {
     id: crypto.randomUUID(),
