@@ -49,7 +49,9 @@
               <Tags class="size-4 lg:size-5"></Tags>
               <div>Labels</div>
             </div>
-            <div class="border-l border-gray-400/80">1</div>
+            <div class="border-l border-gray-400/80">
+              <TextTaker v-model="taskLocal.tags"></TextTaker>
+            </div>
           </div>
           <!------- Task Labels ------->
           <!------- Task Assignees ------->
@@ -94,6 +96,7 @@ import { Calendar, CircleUserRound, Clock, Tags, X } from "@lucide/vue";
 import { ref, Teleport } from "vue";
 import Multi from "./Multi.vue";
 import { useUsersStore } from "../../Store/UsersStore";
+import TextTaker from "./textTaker.vue";
 const userFromStore = useUsersStore();
 const emit = defineEmits(["hide"]);
 const taskLocal = ref({
