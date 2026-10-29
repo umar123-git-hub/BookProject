@@ -7,15 +7,35 @@
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
-        class="absolute top-1/2 left-1/2 -translate-1/2 bg-amber-50 p-20"
+        class="absolute top-1/2 left-1/2 -translate-1/2 bg-amber-50 flex"
       >
-        s
+        <!------- Add Task ------->
+        <div>
+          <!------- written or Cancel ------->
+          <div class="flex">
+            <div>Add Task</div>
+            <X></X>
+          </div>
+          <!------- written or Cancel ------->
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <!------- Add Task ------->
+        <!------- Task history ------->
+        <div></div>
+        <!------- Task history ------->
       </div>
       <!--=================== ABSOLUTE AREA ========================-->
     </div>
   </Teleport>
 </template>
 <script setup>
+import { X } from "@lucide/vue";
 import { ref, Teleport } from "vue";
 const emit = defineEmits(["hide"]);
 const taskLocal = ref({
