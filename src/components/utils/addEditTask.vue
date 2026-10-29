@@ -58,7 +58,13 @@
               <CircleUserRound class="size-4 lg:size-5"></CircleUserRound>
               <div>Assignees</div>
             </div>
-            <div class="border-l border-gray-400/80"></div>
+            <div class="border-l border-gray-400/80">
+              <Multi
+                v-model="taskLocal.assignees"
+                :multi-data="userFromStore.allUser"
+                :field="'name'"
+              ></Multi>
+            </div>
           </div>
           <!------- Task Assignees ------->
           <!------- Task Time ------->
@@ -86,6 +92,9 @@
 <script setup>
 import { Calendar, CircleUserRound, Clock, Tags, X } from "@lucide/vue";
 import { ref, Teleport } from "vue";
+import Multi from "./Multi.vue";
+import { useUsersStore } from "../../Store/UsersStore";
+const userFromStore = useUsersStore();
 const emit = defineEmits(["hide"]);
 const taskLocal = ref({
   id: crypto.randomUUID(),
