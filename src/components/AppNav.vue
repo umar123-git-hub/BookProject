@@ -16,18 +16,12 @@
     <!--================ LOGO --================-->
     <!--=================== SELECTIONS ====================-->
     <div class="flex flex-col gap-5">
-      <template
-        v-for="routeSingle in routeArr"
-        :key="routeSingle"
-      >
+      <template v-for="routeSingle in routeArr" :key="routeSingle">
         <div
           @click="changeRoute(routeSingle)"
           class="flex flex-col items-center cursor-pointer gap-2 px-1 lg:px-2 text-white"
         >
-          <component
-            class="size-5 lg:size-6"
-            :is="routeSingle.iconComponent"
-          />
+          <component class="size-5 lg:size-6" :is="routeSingle.iconComponent" />
           <div class="text-xs">{{ routeSingle.routeName }}</div>
         </div>
       </template>
@@ -38,20 +32,45 @@
       <div class="cursor-pointer pb- text-white">
         <Bell class="size-5 lg:size-6"></Bell>
       </div>
-      <div
-        @click="accountDiaOpen"
-        class="relative cursor-pointer text-white"
-      >
-        <UserCircle2 class="size-6 lg:size-7"></UserCircle2>
+      <div @click="accountDiaOpen" class="relative cursor-pointer text-white">
+        <img
+          v-if="userFromStore.loggedInUser.pfp !== ''"
+          class="size-7 lg:size-8 rounded-full"
+          :src="userFromStore.loggedInUser.pfp"
+        />
+        <div
+          v-else
+          class="size-7 lg:size-8 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
+        >
+          {{ userFromStore.loggedInUser.name.slice(0, 1).toLocaleUpperCase() }}
+        </div>
         <div
           v-if="accountDiaOpenMarker"
-          class="size-40 flex flex-col absolute bottom-0 left-full z-500 bg-amber-500 p-2"
+          class="size-40 flex flex-col z-30 absolute bottom-0 left-full bg-amber-500 p-2"
         >
           <!----------------- LogOut ----------------->
-          <div
-            @click="logOut"
-            class="cursor-pointer items-end text-white"
-          >
+          <div @click="logOut" class="cursor-pointer items-end text-white">
+            <img
+              @click.stop
+              v-if="userFromStore.loggedInUser.pfp !== ''"
+              class="size-14 lg:size-16 rounded-full"
+              :src="userFromStore.loggedInUser.pfp"
+            />
+            <div
+              @click.stop
+              v-else
+              class="size-7 lg:size-8 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
+            >
+              {{
+                userFromStore.loggedInUser.name.slice(0, 1).toLocaleUpperCase()
+              }}
+            </div>
+            <div
+              @click.stop
+              class="bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
+            >
+              {{ userFromStore.loggedInUser.name }}
+            </div>
             <LogOut class="size-5 lg:size-6"></LogOut>
           </div>
           <!----------------- LogOut ----------------->
