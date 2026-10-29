@@ -44,21 +44,36 @@
           </div>
           <!------- Task start/due ------->
           <!------- Task Labels ------->
-          <div>
-            <div></div>
-            <div></div>
+          <div class="flex border border-gray-400/80">
+            <div class="flex gap-2 px-4 py-0.5">
+              <Tags class="size-4 lg:size-5"></Tags>
+              <div>Labels</div>
+            </div>
+            <div class="border-l border-gray-400/80">1</div>
           </div>
           <!------- Task Labels ------->
           <!------- Task Assignees ------->
-          <div>
-            <div></div>
-            <div></div>
+          <div class="flex border border-gray-400/80">
+            <div class="flex gap-2 px-4 py-0.5">
+              <CircleUserRound class="size-4 lg:size-5"></CircleUserRound>
+              <div>Assignees</div>
+            </div>
+            <div class="border-l border-gray-400/80">
+              <Multi
+                v-model="taskLocal.assignees"
+                :multi-data="userFromStore.allUser"
+                :field="'name'"
+              ></Multi>
+            </div>
           </div>
           <!------- Task Assignees ------->
           <!------- Task Time ------->
-          <div>
-            <div></div>
-            <div></div>
+          <div class="flex border border-gray-400/80">
+            <div class="flex gap-2 px-4 py-0.5">
+              <Clock></Clock>
+              <div>Time</div>
+            </div>
+            <div class="border-l border-gray-400/80"></div>
           </div>
           <!------- Task Time  ------->
           <!------- Add or Cancel  ------->
@@ -75,8 +90,11 @@
   </Teleport>
 </template>
 <script setup>
-import { Calendar, X } from "@lucide/vue";
+import { Calendar, CircleUserRound, Clock, Tags, X } from "@lucide/vue";
 import { ref, Teleport } from "vue";
+import Multi from "./Multi.vue";
+import { useUsersStore } from "../../Store/UsersStore";
+const userFromStore = useUsersStore();
 const emit = defineEmits(["hide"]);
 const taskLocal = ref({
   id: crypto.randomUUID(),
