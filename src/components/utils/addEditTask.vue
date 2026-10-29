@@ -37,7 +37,7 @@
           <!------- Task start/due ------->
           <div class="flex border border-gray-400/80">
             <div class="flex gap-2 px-4 py-0.5">
-              <Calendar class="size-5"></Calendar>
+              <Calendar class="size-4 lg:size-5"></Calendar>
               <div>start/due</div>
             </div>
             <div class="border-l border-gray-400/80">1</div>
