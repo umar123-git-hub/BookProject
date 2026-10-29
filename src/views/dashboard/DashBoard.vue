@@ -164,6 +164,7 @@ const AddEditTask = defineAsyncComponent(
   () => import("../../components/utils/addEditTask.vue"),
 );
 const userFromStore = useUsersStore();
+userFromStore.allUser;
 const addEditMarker = ref(false);
 const formatLabel = (str) => {
   return str
