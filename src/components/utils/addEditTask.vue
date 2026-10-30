@@ -204,12 +204,14 @@ import {
 import { onClickOutside } from "@vueuse/core";
 import { defineAsyncComponent, ref, Teleport, watch } from "vue";
 import { useUsersStore } from "../../Store/UsersStore";
+import { useTaskStore } from "../../Store/TasksStore.js";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 const TextTaker = defineAsyncComponent(() => import("./textTaker.vue"));
 const Multi = defineAsyncComponent(() => import("./Multi.vue"));
 
 const userFromStore = useUsersStore();
+const tasksFromStore = useTaskStore();
 const emit = defineEmits(["hide"]);
 
 // ---------------------MARKERS
@@ -238,7 +240,11 @@ const taskLocal = ref({
 });
 
 ///////////////Add Task
-const addTaskFun = () => {};
+const addTaskFun = () => {
+  if (taskLocal.value.assignees.length > 0) {
+    tasksFromStore.allTasks.push(taskLocal.value);
+  }
+};
 ///////////////Add Task
 const conversionFun = (name) => {
   conversionMarker.value = name;
