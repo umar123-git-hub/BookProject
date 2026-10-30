@@ -18,6 +18,7 @@ export const useUsersStore = defineStore(
 //   name: "Umar Naeem",
 //   email: "umarnaeem027@gmail.com",
 //   password: "umar123",
+//   pfp:''
 // },
 // {
 //   userName: "talish",
