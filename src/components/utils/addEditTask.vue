@@ -114,10 +114,12 @@
                   v-if="conversionMarker !== 'tags'"
                   class="size-3 md:size-4 cursor-pointer"
                 ></Plus>
-                <TextTaker
+                <div
                   v-else-if="conversionMarker == 'tags'"
-                  v-model="taskLocal.tags"
-                ></TextTaker>
+                  class="w-full relative"
+                >
+                  <TextTaker v-model="taskLocal.tags"></TextTaker>
+                </div>
               </div>
             </div>
             <!-- labels -->
