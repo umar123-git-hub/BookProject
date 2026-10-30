@@ -1,10 +1,13 @@
 <template>
   <div class="p-2 relative">
     <div class="px-2 py-1 flex gap-2">
+      <div class="text-xs border border-gray-400/70 px-2 py-1">
+        {{ selected.length }}
+      </div>
       <template v-for="val in selected">
         <div
           @click="popFun(val)"
-          class="text-xs border border-gray-400/70 px-2 py-1"
+          class="text-xs hidden border border-gray-400/70 px-2 py-1"
         >
           {{ val[field] }}
         </div>
@@ -15,11 +18,15 @@
     </div>
     <div
       v-if="showOptions"
-      class="absolute top-full left-0 bg-white/30 w-full p-2 shadow-2xl border border-gray-400/70"
+      class="absolute top-full left-0 bg-white w-full p-2 shadow-2xl border border-gray-400/70"
     >
       <template v-for="data in multiData">
         <label class="flex gap-2">
-          <input type="checkbox" :value="data" v-model="selected" />
+          <input
+            type="checkbox"
+            :value="data"
+            v-model="selected"
+          />
           <div>{{ data[field] }}</div>
         </label>
       </template>
