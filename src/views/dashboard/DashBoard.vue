@@ -150,14 +150,7 @@
 </template>
 <script setup>
 import { ref, defineAsyncComponent } from "vue";
-import {
-  Summary,
-  Check,
-  Loader,
-  FileWarning,
-  StickyNotePlus,
-  Search,
-} from "@lucide/vue";
+import { Summary, Check, Loader, StickyNotePlus, Search } from "@lucide/vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import TableG from "../../components/utils/TableG.vue";
 const AddEditTask = defineAsyncComponent(
