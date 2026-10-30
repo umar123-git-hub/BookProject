@@ -1,9 +1,6 @@
 <template>
   <Teleport to="#Tel">
-    <div
-      @click="$emit('hide')"
-      class="fixed inset-0 z-20 bg-black/70"
-    >
+    <div @click="$emit('hide')" class="fixed inset-0 z-20 bg-black/70">
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
@@ -114,10 +111,12 @@
                   v-if="conversionMarker !== 'tags'"
                   class="size-3 md:size-4 cursor-pointer"
                 ></Plus>
-                <TextTaker
+                <div
                   v-else-if="conversionMarker == 'tags'"
-                  v-model="taskLocal.tags"
-                ></TextTaker>
+                  class="w-full relative"
+                >
+                  <TextTaker v-model="taskLocal.tags"></TextTaker>
+                </div>
               </div>
             </div>
             <!-- labels -->
@@ -169,11 +168,13 @@
         <!--================== FIELDS ====================-->
         <!------- Add or Cancel  ------->
         <div class="flex items-center gap-2 px-4 pt-2 pb-4">
-          <button class="px-4 py-1 bg-blue-400 text-white rounded">Add</button>
           <button
-            @click="$emit('hide')"
-            class="px-3 py-1 bg-gray-200 rounded"
+            @click="addTaskFun"
+            class="px-4 py-1 bg-blue-400 text-white rounded"
           >
+            Add
+          </button>
+          <button @click="$emit('hide')" class="px-3 py-1 bg-gray-200 rounded">
             Cancel
           </button>
         </div>
@@ -221,7 +222,7 @@ const taskLocal = ref({
   id: crypto.randomUUID(),
   title: "",
   description: "",
-  createdBy: null,
+  createdBy: userFromStore.loggedInUser,
   priority: "",
   assignees: [],
   moduleName: "",
@@ -236,6 +237,9 @@ const taskLocal = ref({
   history: [],
 });
 
+///////////////Add Task
+const addTaskFun = () => {};
+///////////////Add Task
 const conversionFun = (name) => {
   conversionMarker.value = name;
 };
