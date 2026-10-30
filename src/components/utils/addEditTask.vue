@@ -106,10 +106,18 @@
                 <div class="text-xs md:text-sm">Labels</div>
               </div>
               <div
+                ref="tagsCell"
                 class="flex items-center gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
               >
-                <Plus class="size-3 md:size-4 cursor-pointer"></Plus>
-                <TextTaker v-model="taskLocal.tags"></TextTaker>
+                <Plus
+                  @click="conversionFun('tags')"
+                  v-if="conversionMarker !== 'tags'"
+                  class="size-3 md:size-4 cursor-pointer"
+                ></Plus>
+                <TextTaker
+                  v-else-if="conversionMarker == 'tags'"
+                  v-model="taskLocal.tags"
+                ></TextTaker>
               </div>
             </div>
             <!-- labels -->
@@ -122,9 +130,22 @@
                 <div class="text-xs md:text-sm">Assignees</div>
               </div>
               <div
+                ref="assigneesCell"
                 class="flex items-center gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
               >
-                <Plus class="size-3 md:size-4 cursor-pointer"></Plus>
+                <Plus
+                  @click="conversionFun('multi')"
+                  v-if="conversionMarker !== 'multi'"
+                  class="size-3 md:size-4 cursor-pointer"
+                ></Plus>
+                <Multi
+                  v-else-if="conversionMarker == 'multi'"
+                  v-model="taskLocal.assignees"
+                  :multi-data="userFromStore.allUser"
+                  :field="'name'"
+                  class="w-full"
+                >
+                </Multi>
               </div>
             </div>
             <!-- Assignees -->
@@ -179,15 +200,23 @@ import {
   Tags,
   X,
 } from "@lucide/vue";
-import { ref, Teleport } from "vue";
-import Multi from "./Multi.vue";
+import { onClickOutside } from "@vueuse/core";
+import { defineAsyncComponent, ref, Teleport, watch } from "vue";
 import { useUsersStore } from "../../Store/UsersStore";
-import TextTaker from "./textTaker.vue";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+const TextTaker = defineAsyncComponent(() => import("./textTaker.vue"));
+const Multi = defineAsyncComponent(() => import("./Multi.vue"));
 
 const userFromStore = useUsersStore();
 const emit = defineEmits(["hide"]);
+
+// ---------------------MARKERS
+const conversionMarker = ref("");
+watch(conversionMarker, (n) => {
+  console.log(n);
+});
+// ---------------------MARKERS
 const taskLocal = ref({
   id: crypto.randomUUID(),
   title: "",
@@ -206,51 +235,23 @@ const taskLocal = ref({
   comments: [],
   history: [],
 });
-//
-//         <!------- Task start/due ------->
-//         <div class="flex border border-gray-400/80">
-//           <div class="flex gap-2 px-4 py-0.5">
-//             <Calendar class="size-4 lg:size-5"></Calendar>
-//             <div>start/due</div>
-//           </div>
-//           <div class="border-l border-gray-400/80">1</div>
-//         </div>
-//         <!------- Task start/due ------->
-//         <!------- Task Labels ------->
-//         <div class="flex border border-gray-400/80">
-//           <div class="flex gap-2 px-4 py-0.5">
-//             <Tags class="size-4 lg:size-5"></Tags>
-//             <div>Labels</div>
-//           </div>
-//           <div class="border-l border-gray-400/80">
-//             <TextTaker v-model="taskLocal.tags"></TextTaker>
-//           </div>
-//         </div>
-//         <!------- Task Labels ------->
-//         <!------- Task Assignees ------->
-//         <div class="flex border border-gray-400/80">
-//           <div class="flex gap-2 px-4 py-0.5">
-//             <CircleUserRound class="size-4 lg:size-5"></CircleUserRound>
-//             <div>Assignees</div>
-//           </div>
-//           <div class="border-l border-gray-400/80">
-//             <Multi
-//               v-model="taskLocal.assignees"
-//               :multi-data="userFromStore.allUser"
-//               :field="'name'"
-//             ></Multi>
-//           </div>
-//         </div>
-//         <!------- Task Assignees ------->
-//         <!------- Task Time ------->
-//         <div class="flex border border-gray-400/80">
-//           <div class="flex gap-2 px-4 py-0.5">
-//             <Clock></Clock>
-//             <div>Time</div>
-//           </div>
-//           <div class="border-l border-gray-400/80"></div>
-//         </div>
-//         <!------- Task Time  ------->
+
+const conversionFun = (name) => {
+  conversionMarker.value = name;
+};
+
+// ---------------------OUTSIDE CLICK
+const tagsCell = ref(null);
+const assigneesCell = ref(null);
+
+// Only close if this cell's field is the one currently open.
+// Otherwise clicking another "+" would be overwritten by this handler.
+const closeIfActive = (name) => () => {
+  if (conversionMarker.value === name) conversionMarker.value = "";
+};
+
+onClickOutside(tagsCell, closeIfActive("tags"));
+onClickOutside(assigneesCell, closeIfActive("multi"));
 </script>
 
 <!-- const taskLocal = ref({
