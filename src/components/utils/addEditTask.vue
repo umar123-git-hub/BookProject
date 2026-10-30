@@ -2,101 +2,190 @@
   <Teleport to="#Tel">
     <div
       @click="$emit('hide')"
-      class="fixed inset-0 z-20 bg-black/20 backdrop-blur-3xl"
+      class="fixed inset-0 z-20 bg-black/70"
     >
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
-        class="absolute top-1/2 left-1/2 -translate-1/2 bg-amber-50 flex"
+        class="absolute top-1/2 min-w-[80%] md:min-w-[35%] shadow shadow-gray-400 rounded-lg flex flex-col gap-4 left-1/2 -translate-1/2 bg-amber-50"
       >
         <!------- Add Task ------->
-        <div class="flex flex-col gap-2">
-          <!------- written or Cancel ------->
-          <div class="flex border-b justify-between">
-            <div class="font-medium">Add Task</div>
-            <X class="text-gray-400"></X>
-          </div>
-          <!------- written or Cancel ------->
-          <!------- Task Title ------->
-          <label class="flex gap-4 px-2">
-            <div class="text-gray-500">Task Name</div>
-            <input
-              type="text"
-              class="border border-gray-400/60 px-2 outline-none"
-            />
-          </label>
-          <!------- Task Title ------->
-          <!------- Task Description ------->
-          <label class="flex flex-col gap-2 px-2">
-            <div class="text-gray-500">Task Description</div>
-            <textarea
-              class="border border-gray-400/60 px-2 outline-none"
-            ></textarea>
-          </label>
-          <!------- Task Description ------->
-          <!------- Task start/due ------->
-          <div class="flex border border-gray-400/80">
-            <div class="flex gap-2 px-4 py-0.5">
-              <Calendar class="size-4 lg:size-5"></Calendar>
-              <div>start/due</div>
-            </div>
-            <div class="border-l border-gray-400/80">1</div>
-          </div>
-          <!------- Task start/due ------->
-          <!------- Task Labels ------->
-          <div class="flex border border-gray-400/80">
-            <div class="flex gap-2 px-4 py-0.5">
-              <Tags class="size-4 lg:size-5"></Tags>
-              <div>Labels</div>
-            </div>
-            <div class="border-l border-gray-400/80">
-              <TextTaker v-model="taskLocal.tags"></TextTaker>
-            </div>
-          </div>
-          <!------- Task Labels ------->
-          <!------- Task Assignees ------->
-          <div class="flex border border-gray-400/80">
-            <div class="flex gap-2 px-4 py-0.5">
-              <CircleUserRound class="size-4 lg:size-5"></CircleUserRound>
-              <div>Assignees</div>
-            </div>
-            <div class="border-l border-gray-400/80">
-              <Multi
-                v-model="taskLocal.assignees"
-                :multi-data="userFromStore.allUser"
-                :field="'name'"
-              ></Multi>
-            </div>
-          </div>
-          <!------- Task Assignees ------->
-          <!------- Task Time ------->
-          <div class="flex border border-gray-400/80">
-            <div class="flex gap-2 px-4 py-0.5">
-              <Clock></Clock>
-              <div>Time</div>
-            </div>
-            <div class="border-l border-gray-400/80"></div>
-          </div>
-          <!------- Task Time  ------->
-          <!------- Add or Cancel  ------->
-          <div></div>
-          <!------- Add or Cancel  ------->
+
+        <!------- written or Cancel ------->
+        <div
+          class="flex border-b border-gray-300 px-4 md:px-4 lg:px-5 py-2 md:py-3 justify-between"
+        >
+          <div class="font-medium text-xl">Add Task</div>
+          <X class="text-gray-400"></X>
         </div>
-        <!------- Add Task ------->
-        <!------- Task history ------->
-        <div></div>
-        <!------- Task history ------->
+        <!------- written or Cancel ------->
+        <!------- Task Title ------->
+        <label class="flex flex-col gap-1 px-4">
+          <div class="text-base font-semibold text-gray-800">Title :</div>
+          <input
+            type="text"
+            class="outline-none px-1 md:px-2 py-1 md:py-1 text-base text-gray-800 border border-gray-400 focus:border-gray-300 rounded"
+          />
+        </label>
+        <!------- Task Title ------->
+        <!------- Task Description ------->
+        <label class="flex flex-col line gap-2 px-4">
+          <div class="text-base font-semibold text-gray-800">Description :</div>
+          <textarea
+            class="w-full resize-y rounded text-base text-gray-800 border border-gray-300 outline-none px-2 py-1"
+            placeholder="Write something..."
+          ></textarea>
+        </label>
+        <!------- Task Description ------->
+        <!--================== FIELDS ====================-->
+        <div class="flex flex-col gap-1 px-4">
+          <div class="text-base font-semibold text-gray-800">Fields :</div>
+          <div
+            class="flex flex-col text-slate-900 bg-stone-200 border border-gray-300 rounded-lg"
+          >
+            <!-- start and due -->
+            <div class="grid grid-cols-12 border-b border-gray-400">
+              <div
+                class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
+              >
+                <Calendar class="size-3 md:size-4"></Calendar>
+
+                <div class="text-xs md:text-sm">Start / End</div>
+              </div>
+              <div
+                class="flex items-center gap-1 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+              >
+                <div class="flex items-center gap-1">
+                  <VueDatePicker
+                    v-model="taskLocal.startDate"
+                    format="MMM dd"
+                    placeholder="Start"
+                    auto-apply
+                    teleport
+                    :enable-time-picker="false"
+                  >
+                    <template #trigger>
+                      <Calendar class="size-3 md:size-4 cursor-pointer" />
+                    </template>
+                  </VueDatePicker>
+                  <div class="text-xs md:text-sm">
+                    {{
+                      taskLocal.startDate == null
+                        ? "Start"
+                        : taskLocal.startDate
+                    }}
+                  </div>
+                </div>
+                <ArrowBigRight class="size-3 md:size-4"></ArrowBigRight>
+                <div class="flex items-center gap-1">
+                  <div class="text-xs md:text-sm">
+                    {{ taskLocal.endDate == null ? "End" : taskLocal.endDate }}
+                  </div>
+                  <VueDatePicker
+                    v-model="taskLocal.endDate"
+                    format="MMM dd"
+                    placeholder="Start"
+                    auto-apply
+                    teleport
+                    :enable-time-picker="false"
+                  >
+                    <template #trigger>
+                      <Calendar class="size-3 md:size-4 cursor-pointer" />
+                    </template>
+                  </VueDatePicker>
+                </div>
+              </div>
+            </div>
+            <!-- start and due -->
+            <!-- labels -->
+            <div class="grid grid-cols-12 border-b border-gray-400">
+              <div
+                class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
+              >
+                <TagPlus class="size-3 md:size-4"></TagPlus>
+                <div class="text-xs md:text-sm">Labels</div>
+              </div>
+              <div
+                class="flex items-center gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+              >
+                <Plus class="size-3 md:size-4 cursor-pointer"></Plus>
+                <TextTaker v-model="taskLocal.tags"></TextTaker>
+              </div>
+            </div>
+            <!-- labels -->
+            <!-- Assignees -->
+            <div class="grid grid-cols-12 border-b border-gray-400">
+              <div
+                class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
+              >
+                <CircleUserRound class="size-3 md:size-4"></CircleUserRound>
+                <div class="text-xs md:text-sm">Assignees</div>
+              </div>
+              <div
+                class="flex items-center gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+              >
+                <Plus class="size-3 md:size-4 cursor-pointer"></Plus>
+              </div>
+            </div>
+            <!-- Assignees -->
+            <!-- time -->
+            <div class="grid grid-cols-12 border-b border-gray-400">
+              <div
+                class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
+              >
+                <Clock class="size-3 md:size-4"></Clock>
+                <div class="text-xs md:text-sm">Time</div>
+              </div>
+              <div
+                class="flex items-center text-sm md:text-base gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+              >
+                Add estimated time
+              </div>
+            </div>
+            <!-- time -->
+          </div>
+        </div>
+        <!--================== FIELDS ====================-->
+        <!------- Add or Cancel  ------->
+        <div class="flex items-center gap-2 px-4 pt-2 pb-4">
+          <button class="px-4 py-1 bg-blue-400 text-white rounded">Add</button>
+          <button
+            @click="$emit('hide')"
+            class="px-3 py-1 bg-gray-200 rounded"
+          >
+            Cancel
+          </button>
+        </div>
+        <!------- Add or Cancel  ------->
       </div>
+      <!------- Add Task ------->
+      <!------- Task history ------->
+      <!-- <div></div> -->
+      <!------- Task history ------->
+
       <!--=================== ABSOLUTE AREA ========================-->
     </div>
   </Teleport>
 </template>
 <script setup>
-import { Calendar, CircleUserRound, Clock, Tags, X } from "@lucide/vue";
+import {
+  ArrowBigRight,
+  ArrowRight,
+  Calendar,
+  CircleUserRound,
+  Clock,
+  Plus,
+  TagPlus,
+  Tags,
+  X,
+} from "@lucide/vue";
 import { ref, Teleport } from "vue";
 import Multi from "./Multi.vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import TextTaker from "./textTaker.vue";
+import { VueDatePicker } from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
+
 const userFromStore = useUsersStore();
 const emit = defineEmits(["hide"]);
 const taskLocal = ref({
@@ -111,12 +200,57 @@ const taskLocal = ref({
   estimatedTime: { h: 0, m: 0 },
   loggedTime: [],
   attachments: [],
-  startTime: null,
-  endTime: null,
+  startDate: null,
+  endDate: null,
   stage: "To Do",
   comments: [],
   history: [],
 });
+//
+//         <!------- Task start/due ------->
+//         <div class="flex border border-gray-400/80">
+//           <div class="flex gap-2 px-4 py-0.5">
+//             <Calendar class="size-4 lg:size-5"></Calendar>
+//             <div>start/due</div>
+//           </div>
+//           <div class="border-l border-gray-400/80">1</div>
+//         </div>
+//         <!------- Task start/due ------->
+//         <!------- Task Labels ------->
+//         <div class="flex border border-gray-400/80">
+//           <div class="flex gap-2 px-4 py-0.5">
+//             <Tags class="size-4 lg:size-5"></Tags>
+//             <div>Labels</div>
+//           </div>
+//           <div class="border-l border-gray-400/80">
+//             <TextTaker v-model="taskLocal.tags"></TextTaker>
+//           </div>
+//         </div>
+//         <!------- Task Labels ------->
+//         <!------- Task Assignees ------->
+//         <div class="flex border border-gray-400/80">
+//           <div class="flex gap-2 px-4 py-0.5">
+//             <CircleUserRound class="size-4 lg:size-5"></CircleUserRound>
+//             <div>Assignees</div>
+//           </div>
+//           <div class="border-l border-gray-400/80">
+//             <Multi
+//               v-model="taskLocal.assignees"
+//               :multi-data="userFromStore.allUser"
+//               :field="'name'"
+//             ></Multi>
+//           </div>
+//         </div>
+//         <!------- Task Assignees ------->
+//         <!------- Task Time ------->
+//         <div class="flex border border-gray-400/80">
+//           <div class="flex gap-2 px-4 py-0.5">
+//             <Clock></Clock>
+//             <div>Time</div>
+//           </div>
+//           <div class="border-l border-gray-400/80"></div>
+//         </div>
+//         <!------- Task Time  ------->
 </script>
 
 <!-- const taskLocal = ref({
