@@ -1,7 +1,14 @@
 <template>
-  <div class="w-full border bg-white border-white relative">
+  <div class="w-full relative">
+    <slot
+      name="multiHead"
+      v-if="$slots.multiHead"
+      :showOpsFun="showOpsFun"
+      :selected="selected"
+    ></slot>
     <div
-      @click="showOptions = !showOptions"
+      v-else
+      @click="showOpsFun"
       class="w-full px-2 flex items-center cursor-pointer"
     >
       <div class="text-xs w-full">{{ selected.length }} Selected</div>
@@ -11,7 +18,15 @@
         class="size-5 transition-all duration-200"
       ></chevron-down>
     </div>
+    <slot
+      name="multiDrop"
+      v-if="$slots.multiDrop"
+      :showOptions="showOptions"
+      :multiData="multiData"
+      :model="selected"
+    ></slot>
     <div
+      v-else
       v-if="showOptions"
       class="absolute top-full left-0 flex flex-col gap-1 px-2 py-1 bg-white w-full shadow-2xl border border-gray-400/70"
     >
@@ -42,8 +57,10 @@ const props = defineProps({
   },
 });
 const selected = defineModel({ type: Array });
-const showOptions = ref(false);
-
+const showOptions = ref(true);
+const showOpsFun = () => {
+  showOptions.value = !showOptions.value;
+};
 const popFun = (val) => {
   selected.value = selected.value.filter((i) => i !== val);
 };

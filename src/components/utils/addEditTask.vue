@@ -1,6 +1,9 @@
 <template>
   <Teleport to="#Tel">
-    <div @click="$emit('hide')" class="fixed inset-0 z-20 bg-black/70">
+    <div
+      @click="$emit('hide')"
+      class="fixed inset-0 z-20 bg-black/70"
+    >
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
@@ -104,23 +107,39 @@
               </div>
               <div
                 ref="tagsCell"
-                class="flex items-center gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+                class="flex items-center gap-2 relative col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
               >
-                <Plus
+                <div
                   @click="conversionFun('tags')"
                   v-if="conversionMarker !== 'tags'"
-                  class="size-3 md:size-4 cursor-pointer"
-                ></Plus>
+                >
+                  <Plus
+                    v-if="taskLocal.tags.length == 0"
+                    class="size-3 md:size-4 cursor-pointer"
+                  ></Plus>
+                  <div
+                    v-else
+                    class="flex gap-2 flex-wrap px-1"
+                  >
+                    <template v-for="val in taskLocal.tags">
+                      <div
+                        class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
+                      >
+                        <div>{{ val }}</div>
+                      </div>
+                    </template>
+                  </div>
+                </div>
                 <div
                   v-else-if="conversionMarker == 'tags'"
-                  class="w-full relative"
+                  class="w-full"
                 >
                   <TextTaker v-model="taskLocal.tags"></TextTaker>
                 </div>
               </div>
             </div>
             <!-- labels -->
-            <!-- Assignees -->
+            <!--=============================== Assignees =====================================-->
             <div class="grid grid-cols-12 border-b border-gray-400">
               <div
                 class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
@@ -130,13 +149,33 @@
               </div>
               <div
                 ref="assigneesCell"
-                class="flex items-center gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+                class="flex items-center gap-2 col-span-6 lg:col-span-8 border-l border-gray-400"
               >
-                <Plus
+                <!-- plus and selected show TOGGLE AND CHANGE -->
+                <div
                   @click="conversionFun('multi')"
                   v-if="conversionMarker !== 'multi'"
-                  class="size-3 md:size-4 cursor-pointer"
-                ></Plus>
+                  class="w-full px-2"
+                >
+                  <Plus
+                    v-if="taskLocal.assignees.length === 0"
+                    class="size-3 md:size-4 cursor-pointer"
+                  ></Plus>
+                  <div
+                    v-else
+                    class="flex gap-2 flex-wrap px-1"
+                  >
+                    <template
+                      v-for="s in taskLocal.assignees"
+                      :key="s.id"
+                    >
+                      <div class="bg-green-800 text-sm text-white rounded">
+                        {{ s.name }}
+                      </div>
+                    </template>
+                  </div>
+                </div>
+                <!-- plus and selected show TOGGLE AND CHANGE -->
                 <Multi
                   v-else-if="conversionMarker == 'multi'"
                   v-model="taskLocal.assignees"
@@ -144,10 +183,65 @@
                   :field="'name'"
                   class="w-full"
                 >
+                  <!-- SELECTED IN MULTI IN UI IN slots -->
+                  <template #multiHead="{ showOpsFun, selected }">
+                    <div
+                      @click="showOpsFun"
+                      class="relative bg-white py-2 border border-blue-400 rounded"
+                    >
+                      <div
+                        v-if="selected.length === 0"
+                        class="px-2"
+                      >
+                        Please Select
+                      </div>
+                      <div
+                        v-else
+                        class="flex gap-2 items-center px-1 flex-wrap"
+                      >
+                        <template
+                          v-for="select in selected"
+                          :key="select.id"
+                        >
+                          <div
+                            class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
+                          >
+                            {{ select.name }}
+                          </div>
+                        </template>
+                      </div>
+                    </div>
+                  </template>
+                  <!-- SELECTED IN MULTI IN UI IN slots -->
+
+                  <!-- SELECTION AREA IN MULTI SELECT IN MULTI SLOTS -->
+                  <template #multiDrop="{ showOptions, multiData }">
+                    <div
+                      v-if="showOptions"
+                      class="absolute top-full bg-white w-full"
+                    >
+                      <template
+                        v-for="val in multiData"
+                        :key="val.id"
+                      >
+                        <label class="flex gap-1 px-3 py-1">
+                          <input
+                            type="checkbox"
+                            :value="val"
+                            v-model="taskLocal.assignees"
+                          />
+                          <div class="flex gap-1">
+                            {{ val.name }}
+                          </div>
+                        </label>
+                      </template>
+                    </div>
+                  </template>
+                  <!-- SELECTION AREA IN MULTI SELECT IN MULTI SLOTS -->
                 </Multi>
               </div>
             </div>
-            <!-- Assignees -->
+            <!--=============================== Assignees =====================================-->
             <!-- time -->
             <div class="grid grid-cols-12 border-b border-gray-400">
               <div
@@ -174,7 +268,10 @@
           >
             Add
           </button>
-          <button @click="$emit('hide')" class="px-3 py-1 bg-gray-200 rounded">
+          <button
+            @click="$emit('hide')"
+            class="px-3 py-1 bg-gray-200 rounded"
+          >
             Cancel
           </button>
         </div>
