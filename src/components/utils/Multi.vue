@@ -18,34 +18,32 @@
         class="size-5 transition-all duration-200"
       ></chevron-down>
     </div>
-    <slot
-      name="multiDrop"
-      v-if="$slots.multiDrop"
-      :showOptions="showOptions"
-      :multiData="multiData"
-      :model="selected"
-    ></slot>
-    <div
-      v-else
-      v-if="showOptions"
-      class="absolute top-full left-0 flex flex-col gap-1 px-2 py-1 bg-white w-full shadow-2xl border border-gray-400/70"
-    >
-      <template v-for="data in multiData">
-        <label class="flex text-sm gap-1 cursor-pointer">
-          <input
-            type="checkbox"
-            :value="data"
-            v-model="selected"
-          />
-          <div class="line-clamp-1">{{ data[field] }}</div>
-        </label>
-      </template>
-    </div>
+    <Transition name="multiDropTransition">
+      <slot
+        name="multiDrop"
+        v-if="$slots.multiDrop"
+        :showOptions="showOptions"
+        :multiData="multiData"
+        :model="selected"
+      ></slot>
+      <div
+        v-else
+        v-if="showOptions"
+        class="absolute top-full left-0 flex flex-col gap-1 px-2 py-1 bg-white w-full shadow-2xl border border-gray-400/70"
+      >
+        <template v-for="data in multiData">
+          <label class="flex text-sm gap-1 cursor-pointer">
+            <input type="checkbox" :value="data" v-model="selected" />
+            <div class="line-clamp-1">{{ data[field] }}</div>
+          </label>
+        </template>
+      </div>
+    </Transition>
   </div>
 </template>
 <script setup>
 import { ChevronDown } from "@lucide/vue";
-import { ref } from "vue";
+import { ref, Transition } from "vue";
 const props = defineProps({
   multiData: {
     type: Array,
@@ -73,3 +71,14 @@ const popFun = (val) => {
 //         </div>
 //       </template>
 </script>
+<style scoped>
+.multiDropTransition-enter-from,
+.multiDropTransition-leave-to {
+  transform: translateY(30px);
+  opacity: 0;
+}
+.multiDropTransition-enter-active,
+.multiDropTransition-leave-active {
+  transition: all 0.5s ease;
+}
+</style>

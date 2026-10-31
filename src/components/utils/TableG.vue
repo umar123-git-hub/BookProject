@@ -6,10 +6,7 @@
       :table-keys="tableKeys"
     ></slot>
     <colgroup v-else>
-      <template
-        v-for="tableHeading in tableKeys"
-        :key="tableHeading"
-      >
+      <template v-for="tableHeading in tableKeys" :key="tableHeading">
         <col class="min-w-40" />
       </template>
     </colgroup>
@@ -20,19 +17,13 @@
         :table-keys="tableKeys"
       ></slot>
       <tr v-else>
-        <template
-          v-for="tableHeading in tableKeys"
-          :key="tableHeading"
-        >
+        <template v-for="tableHeading in tableKeys" :key="tableHeading">
           <th v-if="tableHeading !== 'id'">{{ formatLabel(tableHeading) }}</th>
         </template>
       </tr>
     </thead>
     <tbody class="">
-      <template
-        v-for="tableRow in tableArr"
-        :key="tableRow.id"
-      >
+      <template v-for="tableRow in tableArr" :key="tableRow.id">
         <slot
           name="tableRowSlot"
           v-if="$slots.tableRowSlot"
