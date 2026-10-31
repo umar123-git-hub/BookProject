@@ -61,11 +61,21 @@
         >
           <!-- PFP AND NAME ,MAIL -->
           <div class="flex items-center gap-2 px-2 py-1">
-            <img
-              :src="userFromStore.loggedInUser.pfp"
-              class="size-15 lg:size-18 rounded-full"
-              alt=""
-            />
+            <div v-if="userFromStore.loggedInUser.pfp !== ''">
+              <img
+                :src="userFromStore.loggedInUser.pfp"
+                class="size-15 lg:size-18 rounded-full"
+                alt=""
+              />
+            </div>
+            <div
+              v-else
+              class="size-7 lg:size-8 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
+            >
+              {{
+                userFromStore.loggedInUser?.name.slice(0, 1).toLocaleUpperCase()
+              }}
+            </div>
             <div class="flex flex-col">
               <div class="text-sm md:text-base lg:text-lg">
                 {{ userFromStore.loggedInUser.name }}
@@ -83,31 +93,6 @@
             <div class="font-semibold">LogOut</div>
           </div>
           <!-- PFP AND NAME ,MAIL -->
-          <!----------------- LogOut ----------------->
-          <!-- <div class="cursor-pointer items-end text-white">
-            <img
-              @click.stop
-              v-if="userFromStore.loggedInUser?.pfp !== ''"
-              class="size-14 lg:size-16 rounded-full"
-              :src="userFromStore.loggedInUser?.pfp"
-            />
-            <div
-              @click.stop
-              v-else
-              class="size-7 lg:size-8 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
-            >
-              {{
-                userFromStore.loggedInUser?.name.slice(0, 1).toLocaleUpperCase()
-              }}
-            </div>
-            {{ userFromStore.loggedInUser?.name }}
-            <div
-              @click="logOut"
-              class="bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
-            ></div>
-            <LogOut class="size-5 lg:size-6"></LogOut>
-          </div> -->
-          <!----------------- LogOut ----------------->
         </div>
       </div>
     </div>
@@ -130,6 +115,7 @@ import { useUsersStore } from "../Store/UsersStore";
 import router from "../router";
 
 const userFromStore = useUsersStore();
+// userFromStore.allUser
 const routeArr = ref([
   { iconComponent: LayoutDashboard, routeName: "DashBoard" },
   { iconComponent: Folder, routeName: "Projects" },
