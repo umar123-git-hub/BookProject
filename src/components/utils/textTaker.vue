@@ -8,10 +8,7 @@
           class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
         >
           <div>{{ val }}</div>
-          <div
-            @click="popFun(val)"
-            class="cursor-pointer"
-          >
+          <div @click="popFun(val)" class="cursor-pointer">
             <X class="size-3"></X>
           </div>
         </div>
@@ -26,11 +23,7 @@
     <div class="flex flex-col gap-1.5">
       <template v-for="tag in tagArr">
         <label class="flex text-sm gap-1 cursor-pointer">
-          <input
-            type="checkbox"
-            :value="tag"
-            v-model="selected"
-          />
+          <input type="checkbox" :value="tag" v-model="selected" />
           <div class="line-clamp-1">{{ tag }}</div>
         </label>
       </template>
@@ -64,12 +57,15 @@ const addWrittenFun = () => {
   tagArr.value.push(written.value);
   written.value = "";
 };
-//  <template v-for="val in selected">
-//         <div
-//           @click="popFun(val)"
-//           class="text-xs border hidden border-gray-400/70"
-//         >
-//           {{ val[field] }}
-//         </div>
-//       </template>
 </script>
+<style scoped>
+.DropTransition-enter-from,
+.DropTransition-leave-to {
+  transform: translateY(30px);
+  opacity: 0;
+}
+.DropTransition-enter-active,
+.DropTransition-leave-active {
+  transition: all 0.5s ease;
+}
+</style>

@@ -14,18 +14,12 @@
         <!-- written -->
         <!-- cards -->
         <div class="grid grid-cols-3 gap-x-2 gap-y-1">
-          <template
-            v-for="card in cardsArr"
-            :key="card"
-          >
+          <template v-for="card in cardsArr" :key="card">
             <div
               :class="card.cardColor"
               class="flex flex-col cursor-pointer gap-1 transition-all duration-150 p-3 border rounded-xl"
             >
-              <component
-                :is="card.iconComp"
-                :class="card.iconColor"
-              />
+              <component :is="card.iconComp" :class="card.iconColor" />
               <div class="flex flex-col">
                 <div class="text-lg font-semibold md:text-xl xl:font-bold">
                   {{ card.uiNum }}
@@ -64,10 +58,7 @@
           <!-- ADD BTN AND WRITTEN -->
           <!-- SELECTION BTNS -->
           <div class="flex items-center gap-1 sm:gap-2 lg:gap-4 py-1">
-            <template
-              v-for="select in selections"
-              :key="select.name"
-            >
+            <template v-for="select in selections" :key="select.name">
               <div
                 class="p-1 sm:py-1 border border-blue-400 rounded text-xs md:text-sm bg-blue-100 hover:bg-blue-200 cursor-pointer transition-all duration-100 text-blue-700"
               >
@@ -94,7 +85,8 @@
           <!-- search -->
           <!-- TABLE -->
           <div class="w-full overflow-auto bg-white h-3/4 rounded-xl">
-            <TableG :table-arr="tasksArr">
+            <TableG :table-arr="tasksFromStore.allTasks">
+              <!-- table head -->
               <template #tableHeadingSlot="{ tableKeys }">
                 <tr class="rounded bg-blue-400">
                   <template
@@ -102,7 +94,9 @@
                     :key="tableHeading"
                   >
                     <th
-                      v-if="tableHeading !== 'id'"
+                      v-if="
+                        tableHeading !== 'id' && tableHeading !== 'description'
+                      "
                       class="text-white text-base lg:text-lg bg-blue-400 sticky top-0"
                     >
                       {{ formatLabel(tableHeading) }}
@@ -110,7 +104,11 @@
                   </template>
                 </tr>
               </template>
+              <!-- table head -->
+              <!-- table row -->
               <template #tableRowSlot="{ tableRow }">
+                <!-- single row -->
+
                 <tr
                   class="text-center z-20 text-sm md:text-base xl:text-lg hover:bg-blue-200"
                 >
@@ -118,15 +116,19 @@
                     v-for="(tableData, key) in tableRow"
                     :key="tableData.id"
                   >
+                    <!-- single data -->
                     <td
-                      v-if="key !== 'id'"
+                      v-if="key !== 'id' && key !== 'description'"
                       class="px-4 py-1.5"
                     >
                       {{ tableData }}
                     </td>
+                    <!-- single data -->
                   </template>
                 </tr>
+                <!-- single row -->
               </template>
+              <!-- table row -->
             </TableG>
           </div>
           <!-- TABLE -->
@@ -152,11 +154,13 @@
 import { ref, defineAsyncComponent } from "vue";
 import { Summary, Check, Loader, StickyNotePlus, Search } from "@lucide/vue";
 import { useUsersStore } from "../../Store/UsersStore";
+import { useTaskStore } from "../../Store/TasksStore.js";
 import TableG from "../../components/utils/TableG.vue";
 const AddEditTask = defineAsyncComponent(
   () => import("../../components/utils/addEditTask.vue"),
 );
 const userFromStore = useUsersStore();
+const tasksFromStore = useTaskStore();
 userFromStore.allUser;
 const addEditMarker = ref(false);
 const formatLabel = (str) => {
