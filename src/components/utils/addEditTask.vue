@@ -340,6 +340,7 @@ import { useUsersStore } from "../../Store/UsersStore";
 import { useTaskStore } from "../../Store/TasksStore.js";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
+import { addTask } from "../../services/AddTaskService.js";
 const TextTaker = defineAsyncComponent(() => import("./textTaker.vue"));
 const Multi = defineAsyncComponent(() => import("./Multi.vue"));
 
@@ -374,9 +375,12 @@ const taskLocal = ref({
 
 ///////////////Add Task
 const addTaskFun = () => {
-  if (taskLocal.value.assignees.length > 0) {
-    tasksFromStore.allTasks.push(taskLocal.value);
-  }
+  addTask(taskLocal.value).then((res) => {
+    console.log(res);
+  });
+  // if (taskLocal.value.assignees.length > 0) {
+  //   tasksFromStore.allTasks.push(taskLocal.value);
+  // }
 };
 ///////////////Add Task
 const conversionFun = (name) => {
