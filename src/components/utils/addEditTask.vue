@@ -1,9 +1,6 @@
 <template>
   <Teleport to="#Tel">
-    <div
-      @click="$emit('hide')"
-      class="fixed inset-0 z-20 bg-black/70"
-    >
+    <div @click="$emit('hide')" class="fixed inset-0 z-20 bg-black/70">
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
@@ -117,10 +114,7 @@
                     v-if="taskLocal.tags.length == 0"
                     class="size-3 md:size-4 cursor-pointer"
                   ></Plus>
-                  <div
-                    v-else
-                    class="flex gap-2 flex-wrap px-1"
-                  >
+                  <div v-else class="flex gap-2 flex-wrap px-1">
                     <template v-for="val in taskLocal.tags">
                       <div
                         class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
@@ -130,10 +124,7 @@
                     </template>
                   </div>
                 </div>
-                <div
-                  v-else-if="conversionMarker == 'tags'"
-                  class="w-full"
-                >
+                <div v-else-if="conversionMarker == 'tags'" class="w-full">
                   <TextTaker v-model="taskLocal.tags"></TextTaker>
                 </div>
               </div>
@@ -161,14 +152,8 @@
                     v-if="taskLocal.assignees.length === 0"
                     class="size-3 md:size-4 cursor-pointer"
                   ></Plus>
-                  <div
-                    v-else
-                    class="flex gap-2 flex-wrap px-1"
-                  >
-                    <template
-                      v-for="s in taskLocal.assignees"
-                      :key="s.id"
-                    >
+                  <div v-else class="flex gap-2 flex-wrap px-1">
+                    <template v-for="s in taskLocal.assignees" :key="s.id">
                       <div class="bg-green-800 text-sm text-white rounded">
                         {{ s.name }}
                       </div>
@@ -189,20 +174,14 @@
                       @click="showOpsFun"
                       class="relative bg-white py-2 border border-blue-400 rounded"
                     >
-                      <div
-                        v-if="selected.length === 0"
-                        class="px-2"
-                      >
+                      <div v-if="selected.length === 0" class="px-2">
                         Please Select
                       </div>
                       <div
                         v-else
                         class="flex gap-2 items-center px-1 flex-wrap"
                       >
-                        <template
-                          v-for="select in selected"
-                          :key="select.id"
-                        >
+                        <template v-for="select in selected" :key="select.id">
                           <div
                             class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
                           >
@@ -220,10 +199,7 @@
                       v-if="showOptions"
                       class="absolute top-full bg-white w-full"
                     >
-                      <template
-                        v-for="val in multiData"
-                        :key="val.id"
-                      >
+                      <template v-for="val in multiData" :key="val.id">
                         <label class="flex gap-1 px-3 py-1">
                           <input
                             type="checkbox"
@@ -251,9 +227,48 @@
                 <div class="text-xs md:text-sm">Time</div>
               </div>
               <div
+                @click="conversionFun('time')"
+                v-if="conversionMarker == ''"
                 class="flex items-center text-sm md:text-base gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
               >
                 Add estimated time
+              </div>
+              <div
+                v-else-if="conversionMarker == 'time'"
+                class="flex items-center text-sm md:text-base gap-2 col-span-6 lg:col-span-8 border-l px-2 py-1 border-gray-400"
+              >
+                <label class="flex flex-col">
+                  <div class="text-sm">hour:</div>
+                  <input
+                    type="number"
+                    class="w-2/3 outline-none border border-gray-400 rounded"
+                    v-model="taskLocal.estimatedTime.h"
+                  />
+                </label>
+                <label class="flex flex-col">
+                  <div class="text-sm">min:</div>
+                  <input
+                    type="number"
+                    class="w-2/3 outline-none border border-gray-400 rounded"
+                    v-model="taskLocal.estimatedTime.m"
+                  />
+                </label>
+                <!------- Upload or Cancel  ------->
+                <div class="flex items-center gap-2 px-4">
+                  <button
+                    @click=""
+                    class="px-2 py-1 text-sm bg-blue-400 text-white rounded"
+                  >
+                    Upload
+                  </button>
+                  <button
+                    @click="conversionFun('')"
+                    class="px-3 py-1 text-sm bg-gray-200 rounded"
+                  >
+                    Cancel
+                  </button>
+                </div>
+                <!------- Upload or Cancel  ------->
               </div>
             </div>
             <!-- time -->
@@ -268,10 +283,7 @@
           >
             Add
           </button>
-          <button
-            @click="$emit('hide')"
-            class="px-3 py-1 bg-gray-200 rounded"
-          >
+          <button @click="$emit('hide')" class="px-3 py-1 bg-gray-200 rounded">
             Cancel
           </button>
         </div>
@@ -359,6 +371,7 @@ const closeIfActive = (name) => () => {
 
 onClickOutside(tagsCell, closeIfActive("tags"));
 onClickOutside(assigneesCell, closeIfActive("multi"));
+onClickOutside(assigneesCell, closeIfActive("time"));
 </script>
 
 <!-- const taskLocal = ref({
