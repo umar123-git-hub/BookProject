@@ -96,10 +96,10 @@
 import { ref } from "vue";
 import { useUsersStore } from "../Store/UsersStore";
 import { useRouter } from "vue-router";
-import router from "../router";
-import DashBoard from "./dashboard/DashBoard.vue";
-const usersFromStore = useUsersStore();
+import { verifyLogIn } from "../services/LoginService.js";
 
+const usersFromStore = useUsersStore();
+const router = useRouter();
 const loginOk = defineModel({
   type: Boolean,
 });
@@ -108,26 +108,10 @@ const userNameModel = ref("");
 const passwordModel = ref("");
 
 const loginFun = () => {
-  let required = usersFromStore.allUser.find(
-    (i) => i.userName === userNameModel.value.trim().toLocaleLowerCase(),
-  );
-  if (required) {
-    if (required.password === passwordModel.value) {
-      usersFromStore.loggedInUser = required;
-      router.push({ name: "DashBoard" });
-    }
-  }
-
-  // if user is deleted then its username must be stored permanently
-  // let required = usersFromStore.allUser.filter(
-  //   (i) => i.userName === userNameModel.value.trim().toLocaleLowerCase(),
-  // );
-  // if (required.length == 0) return;
-  // if (required.filter((i) => i.password === passwordModel.value)) {
-  //   router.push("/dashboard");
-
-  // } else {
-  //   return console.log("!");
-  // }
+  verifyLogIn(userNameModel.value, passwordModel.value).then((res) => {
+    usersFromStore.loggedInUser = res;
+    console.log("loggedInUser", res);
+    router.push({ name: "DashBoard" });
+  });
 };
 </script>

@@ -14,12 +14,18 @@
         <!-- written -->
         <!-- cards -->
         <div class="grid grid-cols-3 gap-x-2 gap-y-1">
-          <template v-for="card in cardsArr" :key="card">
+          <template
+            v-for="card in cardsArr"
+            :key="card"
+          >
             <div
               :class="card.cardColor"
               class="flex flex-col cursor-pointer gap-1 transition-all duration-150 p-3 border rounded-xl"
             >
-              <component :is="card.iconComp" :class="card.iconColor" />
+              <component
+                :is="card.iconComp"
+                :class="card.iconColor"
+              />
               <div class="flex flex-col">
                 <div class="text-lg font-semibold md:text-xl xl:font-bold">
                   {{ card.uiNum }}
@@ -58,7 +64,10 @@
           <!-- ADD BTN AND WRITTEN -->
           <!-- SELECTION BTNS -->
           <div class="flex items-center gap-1 sm:gap-2 lg:gap-4 py-1">
-            <template v-for="select in selections" :key="select.name">
+            <template
+              v-for="select in selections"
+              :key="select.name"
+            >
               <div
                 class="p-1 sm:py-1 border border-blue-400 rounded text-xs md:text-sm bg-blue-100 hover:bg-blue-200 cursor-pointer transition-all duration-100 text-blue-700"
               >
@@ -85,7 +94,8 @@
           <!-- search -->
           <!-- TABLE -->
           <div class="w-full overflow-auto bg-white h-3/4 rounded-xl">
-            <TableG :table-arr="tasksFromStore.allTasks">
+            {{ tasksArr }}
+            <TableG :table-arr="tasksArr">
               <!-- table head -->
               <template #tableHeadingSlot="{ tableKeys }">
                 <tr class="rounded bg-blue-400">
@@ -151,11 +161,12 @@
   </div>
 </template>
 <script setup>
-import { ref, defineAsyncComponent } from "vue";
+import { ref, defineAsyncComponent, onMounted } from "vue";
 import { Summary, Check, Loader, StickyNotePlus, Search } from "@lucide/vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import { useTaskStore } from "../../Store/TasksStore.js";
 import TableG from "../../components/utils/TableG.vue";
+import { getAllTasks } from "../../services/TaskService.js";
 const AddEditTask = defineAsyncComponent(
   () => import("../../components/utils/addEditTask.vue"),
 );
@@ -169,72 +180,7 @@ const formatLabel = (str) => {
     .replace(/^\w/, (char) => char.toUpperCase());
 };
 
-const tasksArr = ref([
-  {
-    id: crypto.randomUUID(),
-    title: "Design login page UI",
-    category: "UI/UX",
-    date: "Today, 5:00 PM",
-    status: "In Progress",
-    completed: false,
-  },
-  {
-    id: crypto.randomUUID(),
-    title: "Set up project repository",
-    category: "Development",
-    date: "Today, 10:00 AM",
-    status: "Completed",
-    completed: true,
-  },
-  {
-    id: crypto.randomUUID(),
-    title: "Write API documentation",
-    category: "Backend",
-    date: "Tomorrow, 11:00 AM",
-    status: "To Do",
-    completed: false,
-  },
-  {
-    id: crypto.randomUUID(),
-    title: "Prepare presentation",
-    category: "Work",
-    date: "May 18, 2025",
-    status: "To Do",
-    completed: false,
-  },
-  {
-    id: crypto.randomUUID(),
-    title: "Fix responsive issues",
-    category: "Frontend",
-    date: "May 14, 2025",
-    status: "Completed",
-    completed: true,
-  },
-  {
-    id: crypto.randomUUID(),
-    title: "Plan next sprint",
-    category: "Planning",
-    date: "May 20, 2025",
-    status: "To Do",
-    completed: false,
-  },
-  {
-    id: crypto.randomUUID(),
-    title: "Update dependencies",
-    category: "Maintenance",
-    date: "May 22, 2025",
-    status: "In Progress",
-    completed: false,
-  },
-  {
-    id: crypto.randomUUID(),
-    title: "Review pull requests",
-    category: "Development",
-    date: "May 23, 2025",
-    status: "To Do",
-    completed: false,
-  },
-]);
+const tasksArr = ref([]);
 
 const cardsArr = ref([
   {
@@ -276,4 +222,10 @@ const selections = ref([
   { name: "In Progress" },
   { name: "Completed" },
 ]);
+
+onMounted(() => {
+  getAllTasks().then((res) => {
+    tasksArr.value = res;
+  });
+});
 </script>

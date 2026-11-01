@@ -119,6 +119,8 @@ const routeArr = ref([
   { iconComponent: Clock2, routeName: "TimeLog" },
 ]);
 
+// console.log("userFromStore.loggedInUser", userFromStore.loggedInUser);
+
 const changeRoute = (r) => {
   router.push({ name: r.routeName });
 };
