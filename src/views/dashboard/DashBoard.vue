@@ -95,51 +95,7 @@
           <!-- TABLE -->
           <div class="w-full overflow-auto bg-white h-3/4 rounded-xl">
             {{ tasksArr }}
-            <TableG :table-arr="tasksArr">
-              <!-- table head -->
-              <template #tableHeadingSlot="{ tableKeys }">
-                <tr class="rounded bg-blue-400">
-                  <template
-                    v-for="tableHeading in tableKeys"
-                    :key="tableHeading"
-                  >
-                    <th
-                      v-if="
-                        tableHeading !== 'id' && tableHeading !== 'description'
-                      "
-                      class="text-white text-base lg:text-lg bg-blue-400 sticky top-0"
-                    >
-                      {{ formatLabel(tableHeading) }}
-                    </th>
-                  </template>
-                </tr>
-              </template>
-              <!-- table head -->
-              <!-- table row -->
-              <template #tableRowSlot="{ tableRow }">
-                <!-- single row -->
-
-                <tr
-                  class="text-center z-20 text-sm md:text-base xl:text-lg hover:bg-blue-200"
-                >
-                  <template
-                    v-for="(tableData, key) in tableRow"
-                    :key="tableData.id"
-                  >
-                    <!-- single data -->
-                    <td
-                      v-if="key !== 'id' && key !== 'description'"
-                      class="px-4 py-1.5"
-                    >
-                      {{ tableData }}
-                    </td>
-                    <!-- single data -->
-                  </template>
-                </tr>
-                <!-- single row -->
-              </template>
-              <!-- table row -->
-            </TableG>
+            <TableG :table-arr="tasksArr"></TableG>
           </div>
           <!-- TABLE -->
         </div>
@@ -165,14 +121,16 @@ import { ref, defineAsyncComponent, onMounted } from "vue";
 import { Summary, Check, Loader, StickyNotePlus, Search } from "@lucide/vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import { useTaskStore } from "../../Store/TasksStore.js";
-import TableG from "../../components/utils/TableG.vue";
+const TableG = defineAsyncComponent(
+  () => import("../../components/utils/TableG.vue"),
+);
 import { getAllTasks } from "../../services/TaskService.js";
 const AddEditTask = defineAsyncComponent(
   () => import("../../components/utils/addEditTask.vue"),
 );
 const userFromStore = useUsersStore();
 const tasksFromStore = useTaskStore();
-userFromStore.allUser;
+
 const addEditMarker = ref(false);
 const formatLabel = (str) => {
   return str
@@ -224,8 +182,13 @@ const selections = ref([
 ]);
 
 onMounted(() => {
+  console.log("userFromStore.loggedInUser.id", userFromStore.loggedInUser.id);
   getAllTasks().then((res) => {
-    tasksArr.value = res;
+    console.log("res", res);
+    tasksArr.value = res.filter((f) =>
+      f.assignees.some((s) => s == userFromStore.loggedInUser.id),
+    );
+    console.log("tasksArr.value", tasksArr.value);
   });
 });
 </script>

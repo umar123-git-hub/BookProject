@@ -1,39 +1,26 @@
 <template>
-  <table class="w-full border-separate border-spacing-0 lg:w-full">
-    <slot
-      name="tableColsSlot"
-      v-if="$slots.tableColsSlot"
-      :table-keys="tableKeys"
-    ></slot>
-    <colgroup v-else>
-      <template v-for="tableHeading in tableKeys" :key="tableHeading">
-        <col class="min-w-40" />
-      </template>
-    </colgroup>
+  <table class="w-full border-collapse">
     <thead>
-      <slot
-        name="tableHeadingSlot"
-        v-if="$slots.tableHeadingSlot"
-        :table-keys="tableKeys"
-      ></slot>
-      <tr v-else>
-        <template v-for="tableHeading in tableKeys" :key="tableHeading">
-          <th v-if="tableHeading !== 'id'">{{ formatLabel(tableHeading) }}</th>
+      <tr>
+        <template
+          v-for="thead in tableKeys"
+          :key="thead"
+        >
+          <th>{{ h }}</th>
         </template>
       </tr>
     </thead>
-    <tbody class="">
-      <template v-for="tableRow in tableArr" :key="tableRow.id">
-        <slot
-          name="tableRowSlot"
-          v-if="$slots.tableRowSlot"
-          :table-row="tableRow"
-          :actions="actions"
-        >
-        </slot>
-        <tr v-else>
-          <template v-for="(TableData, key) in tableRow">
-            <td v-if="key !== 'id'">{{ TableData }}</td>
+    <tbody>
+      <template
+        v-for="tableRow in tableArr"
+        :key="tableRow"
+      >
+        <tr>
+          <template
+            v-for="(tableData, i) in tableRow"
+            :key="i"
+          >
+            <td>{{ tableData }}</td>
           </template>
         </tr>
       </template>
@@ -53,7 +40,6 @@ const props = defineProps({
       },
     ],
   },
-  actions: Array,
 });
 
 const selectedValueByTable = defineModel({ type: Object });
@@ -64,16 +50,5 @@ const formatLabel = (str) => {
     .replace(/^\w/, (char) => char.toUpperCase());
 };
 
-const tableKeys = computed(() => {
-  if (props.tableArr.length == 0) {
-    let arr = Object.keys({
-      head: "data",
-      head1: "data",
-      head2: "data",
-    });
-    return arr;
-  } else {
-    return Object.keys(props.tableArr[0]);
-  }
-});
+const tableKeys = ref(Object.keys(props.tableArr[0]));
 </script>
