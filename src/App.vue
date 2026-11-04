@@ -2,7 +2,7 @@
   <div class="h-full w-full relative bg-white flex">
     <AppNav></AppNav>
     <Loader v-if="st.loadMarker"></Loader>
-    <div class="w-full">
+    <div class="w-full bg-green-300">
       <RouterView></RouterView>
     </div>
   </div>
