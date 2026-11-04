@@ -1,6 +1,9 @@
 <template>
   <Teleport to="#Tel">
-    <div @click="$emit('hide')" class="fixed inset-0 z-20 bg-black/70">
+    <div
+      @click="$emit('hide')"
+      class="fixed inset-0 z-20 bg-black/70"
+    >
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
@@ -18,7 +21,9 @@
         <!------- written or Cancel ------->
         <!------- Task Title ------->
         <label class="flex flex-col gap-1 px-4">
-          <div class="text-base font-semibold text-gray-800">Title :</div>
+          <div class="text-base font-semibold text-gray-800">
+            Title :{{ taskLocal.assignees }}
+          </div>
           <input
             type="text"
             class="outline-none px-1 md:px-2 py-1 md:py-1 text-base text-gray-800 border border-gray-400 focus:border-gray-300 rounded"
@@ -117,7 +122,10 @@
                       v-if="taskLocal.tags.length == 0"
                       class="size-3 md:size-4 cursor-pointer"
                     ></Plus>
-                    <div v-else class="flex gap-2 flex-wrap px-1">
+                    <div
+                      v-else
+                      class="flex gap-2 flex-wrap px-1"
+                    >
                       <template v-for="val in taskLocal.tags">
                         <div
                           class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
@@ -127,7 +135,10 @@
                       </template>
                     </div>
                   </div>
-                  <div v-else-if="conversionMarker == 'tags'" class="w-full">
+                  <div
+                    v-else-if="conversionMarker == 'tags'"
+                    class="w-full"
+                  >
                     <TextTaker v-model="taskLocal.tags"></TextTaker>
                   </div>
                 </Transition>
@@ -156,9 +167,18 @@
                     v-if="taskLocal.assignees.length === 0"
                     class="size-3 md:size-4 cursor-pointer"
                   ></Plus>
-                  <div v-else class="flex items-center gap-2 flex-wrap px-1">
-                    <template v-for="s in taskLocal.assignees" :key="s.id">
-                      <div v-if="s.pfp !== ''" class="flex gap-1 items-center">
+                  <div
+                    v-else
+                    class="flex items-center gap-2 flex-wrap px-1"
+                  >
+                    <template
+                      v-for="s in taskLocal.assignees"
+                      :key="s.id"
+                    >
+                      <div
+                        v-if="s.pfp !== ''"
+                        class="flex gap-1 items-center"
+                      >
                         <img
                           :src="s.pfp"
                           class="size-5 lg:size-6 rounded-full"
@@ -188,14 +208,20 @@
                       @click="showOpsFun"
                       class="relative bg-white py-2 border border-blue-400 rounded"
                     >
-                      <div v-if="selected.length === 0" class="px-2">
+                      <div
+                        v-if="selected.length === 0"
+                        class="px-2"
+                      >
                         Please Select
                       </div>
                       <div
                         v-else
                         class="flex gap-1 items-center max-w-[80%] flex-wrap"
                       >
-                        <template v-for="select in selected" :key="select.id">
+                        <template
+                          v-for="select in selected"
+                          :key="select.id"
+                        >
                           <div
                             v-if="select.pfp !== ''"
                             class="flex gap-1 items-center"
@@ -220,16 +246,20 @@
                   <!-- SELECTED IN MULTI IN UI IN slots -->
 
                   <!-- SELECTION AREA IN MULTI SELECT IN MULTI SLOTS -->
+
                   <template #multiDrop="{ showOptions, multiData }">
                     <div
                       v-if="showOptions"
                       class="absolute top-full bg-white w-full"
                     >
-                      <template v-for="val in multiData" :key="val.id">
+                      <template
+                        v-for="val in multiData"
+                        :key="val.id"
+                      >
                         <label class="flex gap-1 px-3 py-1">
                           <input
                             type="checkbox"
-                            :value="val"
+                            :value="val.id"
                             v-model="taskLocal.assignees"
                           />
                           <div class="flex gap-1">
@@ -310,7 +340,10 @@
           >
             Add
           </button>
-          <button @click="$emit('hide')" class="px-3 py-1 bg-gray-200 rounded">
+          <button
+            @click="$emit('hide')"
+            class="px-3 py-1 bg-gray-200 rounded"
+          >
             Cancel
           </button>
         </div>
@@ -335,12 +368,19 @@ import {
   X,
 } from "@lucide/vue";
 import { onClickOutside } from "@vueuse/core";
-import { defineAsyncComponent, ref, Teleport, Transition, watch } from "vue";
+import {
+  defineAsyncComponent,
+  ref,
+  Teleport,
+  Transition,
+  watch,
+  onMounted,
+} from "vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import { useTaskStore } from "../../Store/TasksStore.js";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { addTask } from "../../services/AddTaskService.js";
+import { addTask } from "../../services/TaskService.js";
 const TextTaker = defineAsyncComponent(() => import("./textTaker.vue"));
 const Multi = defineAsyncComponent(() => import("./Multi.vue"));
 
@@ -355,10 +395,9 @@ watch(conversionMarker, (n) => {
 });
 // ---------------------MARKERS
 const taskLocal = ref({
-  id: crypto.randomUUID(),
   title: "",
   description: "",
-  createdBy: userFromStore.loggedInUser,
+  createdBy: userFromStore.loggedInUser.id,
   priority: "",
   assignees: [],
   moduleName: "",
@@ -401,6 +440,10 @@ const closeIfActive = (name) => () => {
 onClickOutside(tagsCell, closeIfActive("tags"));
 onClickOutside(assigneesCell, closeIfActive("multi"));
 onClickOutside(timeCell, closeIfActive("time"));
+
+onMounted(() => {
+  console.log(22);
+});
 </script>
 <style scoped>
 .conversionTransition-enter-from,
