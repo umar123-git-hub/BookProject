@@ -97,6 +97,7 @@ import { ref } from "vue";
 import { useUsersStore } from "../Store/UsersStore";
 import { useRouter } from "vue-router";
 import { verifyLogIn } from "../services/LoginService.js";
+import axios from "axios";
 
 const usersFromStore = useUsersStore();
 const router = useRouter();
