@@ -16,12 +16,18 @@
     <!--================ LOGO --================-->
     <!--=================== SELECTIONS ====================-->
     <div class="flex flex-col gap-5">
-      <template v-for="routeSingle in routeArr" :key="routeSingle">
+      <template
+        v-for="routeSingle in routeArr"
+        :key="routeSingle"
+      >
         <div
           @click="changeRoute(routeSingle)"
           class="flex flex-col items-center cursor-pointer gap-2 px-1 lg:px-2 text-white"
         >
-          <component class="size-5 lg:size-6" :is="routeSingle.iconComponent" />
+          <component
+            class="size-5 lg:size-6"
+            :is="routeSingle.iconComponent"
+          />
           <div class="text-xs">{{ routeSingle.routeName }}</div>
         </div>
       </template>
@@ -33,12 +39,15 @@
       <div class="cursor-pointer pb- text-white">
         <Bell class="size-5 lg:size-6"></Bell>
       </div>
-      <div @click="accountDiaOpen" class="relative cursor-pointer text-white">
+      <div
+        @click="accountDiaOpen"
+        class="relative cursor-pointer text-white"
+      >
         <CircleUser v-if="userFromStore.loggedInUser == null" />
         <img
-          v-else-if="userFromStore.loggedInUser?.pfp !== ''"
+          v-else-if="userFromStore.loggedInUser.pfp !== ''"
           class="size-7 lg:size-8 rounded-full"
-          :src="userFromStore.loggedInUser?.pfp"
+          :src="userFromStore.loggedInUser.pfp"
         />
         <div
           v-else

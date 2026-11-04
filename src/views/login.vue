@@ -112,6 +112,7 @@ const loginFun = () => {
   verifyLogIn(userNameModel.value, passwordModel.value).then((res) => {
     usersFromStore.loggedInUser = res;
     console.log("loggedInUser", res);
+    console.log("in login", usersFromStore.loadMarker);
     router.push({ name: "DashBoard" });
   });
 };

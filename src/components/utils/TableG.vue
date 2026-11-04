@@ -6,7 +6,7 @@
           v-for="thead in tableKeys"
           :key="thead"
         >
-          <th>{{ h }}</th>
+          <th>{{ formatLabel(thead) }}</th>
         </template>
       </tr>
     </thead>

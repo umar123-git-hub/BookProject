@@ -94,8 +94,10 @@
           <!-- search -->
           <!-- TABLE -->
           <div class="w-full overflow-auto bg-white h-3/4 rounded-xl">
-            {{ tasksArr }}
-            <TableG :table-arr="tasksArr"></TableG>
+            <TableG
+              v-if="tasksArr.length !== 0"
+              :table-arr="tasksArr"
+            ></TableG>
           </div>
           <!-- TABLE -->
         </div>
@@ -129,7 +131,6 @@ const AddEditTask = defineAsyncComponent(
   () => import("../../components/utils/addEditTask.vue"),
 );
 const userFromStore = useUsersStore();
-const tasksFromStore = useTaskStore();
 
 const addEditMarker = ref(false);
 const formatLabel = (str) => {
