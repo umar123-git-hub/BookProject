@@ -1,9 +1,6 @@
 <template>
   <Teleport to="#Tel">
-    <div
-      @click="$emit('hide')"
-      class="fixed inset-0 z-20 bg-black/70"
-    >
+    <div @click="$emit('hide')" class="fixed inset-0 z-20 bg-black/70">
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
@@ -122,10 +119,7 @@
                       v-if="taskLocal.tags.length == 0"
                       class="size-3 md:size-4 cursor-pointer"
                     ></Plus>
-                    <div
-                      v-else
-                      class="flex gap-2 flex-wrap px-1"
-                    >
+                    <div v-else class="flex gap-2 flex-wrap px-1">
                       <template v-for="val in taskLocal.tags">
                         <div
                           class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
@@ -138,9 +132,7 @@
                   <div
                     v-else-if="conversionMarker == 'tags'"
                     class="w-full"
-                  >
-                    <TextTaker v-model="taskLocal.tags"></TextTaker>
-                  </div>
+                  ></div>
                 </Transition>
               </div>
             </div>
@@ -362,7 +354,6 @@ import { useTaskStore } from "../../Store/TasksStore.js";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 import { addTask } from "../../services/TaskService.js";
-const TextTaker = defineAsyncComponent(() => import("./textTaker.vue"));
 const Multi = defineAsyncComponent(() => import("./Multi.vue"));
 
 const userFromStore = useUsersStore();
