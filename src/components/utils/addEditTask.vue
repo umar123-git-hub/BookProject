@@ -1,6 +1,9 @@
 <template>
   <Teleport to="#Tel">
-    <div @click="$emit('hide')" class="fixed inset-0 z-20 bg-black/70">
+    <div
+      @click="$emit('hide')"
+      class="fixed inset-0 z-20 bg-black/70"
+    >
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
@@ -18,7 +21,9 @@
         <!------- written or Cancel ------->
         <!------- Task Title ------->
         <label class="flex flex-col gap-1 px-4">
-          <div class="text-base font-semibold text-gray-800">Title :</div>
+          <div class="text-base font-semibold text-gray-800">
+            Title :{{ taskLocal.assignees }}
+          </div>
           <input
             type="text"
             class="outline-none px-1 md:px-2 py-1 md:py-1 text-base text-gray-800 border border-gray-400 focus:border-gray-300 rounded"
@@ -117,7 +122,10 @@
                       v-if="taskLocal.tags.length == 0"
                       class="size-3 md:size-4 cursor-pointer"
                     ></Plus>
-                    <div v-else class="flex gap-2 flex-wrap px-1">
+                    <div
+                      v-else
+                      class="flex gap-2 flex-wrap px-1"
+                    >
                       <template v-for="val in taskLocal.tags">
                         <div
                           class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
@@ -127,7 +135,10 @@
                       </template>
                     </div>
                   </div>
-                  <div v-else-if="conversionMarker == 'tags'" class="w-full">
+                  <div
+                    v-else-if="conversionMarker == 'tags'"
+                    class="w-full"
+                  >
                     <TextTaker v-model="taskLocal.tags"></TextTaker>
                   </div>
                 </Transition>
@@ -232,7 +243,7 @@
                         <label class="flex gap-1 px-3 py-1">
                           <input
                             type="checkbox"
-                            :value="val.id"
+                            :value="val"
                             v-model="taskLocal.assignees"
                           />
                           <div class="flex gap-1">
