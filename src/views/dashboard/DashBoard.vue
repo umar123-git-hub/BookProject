@@ -13,7 +13,7 @@
         </div>
         <!-- written -->
         <!-- cards -->
-        <div class="grid grid-cols-3 gap-x-2 gap-y-1">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-1">
           <template
             v-for="card in cardsArr"
             :key="card"
@@ -53,33 +53,38 @@
             </div>
             <button
               @click="addEditMarker = !addEditMarker"
-              class="flex items-center text-white gap-0.5 shadow-xl transition-all duration-100 bg-blue-300 hover:bg-blue-400 cursor-pointer rounded p-1"
+              class="flex items-center text-white gap-0.5 shadow-xl transition-all duration-100 bg-mauve-500 hover:bg-mauve-600 cursor-pointer rounded py-1 px-2"
             >
               <StickyNotePlus
                 class="size-4 md:size-5 xl:size7"
               ></StickyNotePlus>
-              <div class="text-xs md:text-sm">Add Task</div>
+              <div class="text-xs md:text-sm font-semibold">Add Task</div>
             </button>
           </div>
           <!-- ADD BTN AND WRITTEN -->
-          <!-- SELECTION BTNS -->
-          <div class="flex items-center gap-1 sm:gap-2 lg:gap-4 py-1">
-            <template
-              v-for="select in selections"
-              :key="select.name"
-            >
-              <div
-                class="p-1 sm:py-1 border border-blue-400 rounded text-xs md:text-sm bg-blue-100 hover:bg-blue-200 cursor-pointer transition-all duration-100 text-blue-700"
-              >
-                {{ select.name }}
-              </div>
-            </template>
-          </div>
-          <!-- SELECTION BTNS -->
         </div>
         <!--================ ADD BTN AND WRITTEN AND SELECTION BTNS  ========================-->
         <!-- SEARCH AND TABLE -->
         <div class="flex flex-col gap-3">
+          <!-- SELECTION BTNS -->
+          <OptionsTabs :tabs-arr="selectionsArr">
+            <template #tabsDirectionSlot="{ tabsArr }">
+              <div class="flex items-center gap-3 w-max">
+                <template
+                  v-for="tab in tabsArr"
+                  :key="tab"
+                >
+                  <div
+                    class="px-2 py-0.5 md:py-1 md:px-2.5 lg:px-3 text-gray-100 bg-mauve-500/85 rounded shadow-lg border border-blue-950/0 font-semibold text-xs hover:scale-110 cursor-pointer transition-all duration-75"
+                  >
+                    {{ tab.name }}
+                  </div>
+                </template>
+              </div>
+            </template>
+          </OptionsTabs>
+          <!-- SELECTION BTNS -->
+
           <!-- search -->
           <div
             class="flex items-center backdrop-blur-2xl bg-white shadow-xl rounded-xl gap-2 px-3 py-2 border border-white w-full"
@@ -120,13 +125,21 @@
 </template>
 <script setup>
 import { ref, defineAsyncComponent, onMounted } from "vue";
-import { Summary, Check, Loader, StickyNotePlus, Search } from "@lucide/vue";
+import {
+  Summary,
+  Check,
+  Loader,
+  StickyNotePlus,
+  Search,
+  ListTodo,
+} from "@lucide/vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import { useTaskStore } from "../../Store/TasksStore.js";
 const TableG = defineAsyncComponent(
   () => import("../../components/utils/TableG.vue"),
 );
 import { getAllTasks } from "../../services/TaskService.js";
+import OptionsTabs from "../../components/utils/OptionsTabs/OptionsTabs.vue";
 const AddEditTask = defineAsyncComponent(
   () => import("../../components/utils/addEditTask.vue"),
 );
@@ -151,20 +164,28 @@ const cardsArr = ref([
     iconColor: "bg-blue-500 text-blue-100 p-1 rounded-full size-7 md:size-8",
   },
   {
-    name: "Completed",
-    iconComp: Check,
+    name: "To Do",
+    iconComp: ListTodo,
     uiNum: 3,
     cardColor:
-      "bg-green-50 text-green-800 border-green-100 shadow hover:shadow-lg ",
-    iconColor: "bg-green-500 text-green-100 p-1 rounded-full size-7 md:size-8",
+      "bg-red-100 text-red-700 border-red-200/70  shadow hover:shadow-lg ",
+    iconColor: "bg-red-500 text-white p-1 rounded-full size-7 md:size-8",
   },
   {
     name: "In Progress",
     iconComp: Loader,
     uiNum: 3,
     cardColor:
-      "bg-amber-50 text-yellow-800 border-amber-100  shadow hover:shadow-lg ",
+      "bg-amber-50 text-yellow-700 border-amber-100  shadow hover:shadow-lg ",
     iconColor: "bg-amber-500 text-white p-1 rounded-full size-7 md:size-8",
+  },
+  {
+    name: "Completed",
+    iconComp: Check,
+    uiNum: 3,
+    cardColor:
+      "bg-green-50 text-green-800 border-green-100 shadow hover:shadow-lg ",
+    iconColor: "bg-green-500 text-green-100 p-1 rounded-full size-7 md:size-8",
   },
   // {
   //   name: "Overdue",
@@ -174,8 +195,7 @@ const cardsArr = ref([
   //   iconColor: "bg-red-600 text-red-50 p-1 rounded-full size-6 md:size-7",
   // },
 ]);
-
-const selections = ref([
+const selectionsArr = ref([
   { name: "All" },
   { name: "To Do" },
   { name: "In Progress" },
@@ -187,7 +207,7 @@ onMounted(() => {
   getAllTasks().then((res) => {
     console.log("res", res);
     tasksArr.value = res.filter((f) =>
-      f.assignees.some((s) => s == userFromStore.loggedInUser.id),
+      f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
     );
     console.log("tasksArr.value", tasksArr.value);
   });

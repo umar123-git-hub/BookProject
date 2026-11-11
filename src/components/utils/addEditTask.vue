@@ -1,6 +1,13 @@
 <template>
   <Teleport to="#Tel">
-    <div @click="$emit('hide')" class="fixed inset-0 z-20 bg-black/70">
+    <div
+      @click="$emit('hide')"
+      class="fixed inset-0 z-20 bg-black/70"
+    >
+      <div class="bg-black text-white">
+        {{ userFromStore.allUser }}
+      </div>
+
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
@@ -73,14 +80,18 @@
                     {{
                       taskLocal.startDate == null
                         ? "Start"
-                        : taskLocal.startDate
+                        : format(taskLocal.startDate, "dd MMM yyyy")
                     }}
                   </div>
                 </div>
                 <ArrowBigRight class="size-3 md:size-4"></ArrowBigRight>
                 <div class="flex items-center gap-1">
                   <div class="text-xs md:text-sm">
-                    {{ taskLocal.endDate == null ? "End" : taskLocal.endDate }}
+                    {{
+                      taskLocal.endDate == null
+                        ? "End"
+                        : format(taskLocal.endDate, "dd MMM yyyy")
+                    }}
                   </div>
                   <VueDatePicker
                     v-model="taskLocal.endDate"
@@ -119,7 +130,10 @@
                       v-if="taskLocal.tags.length == 0"
                       class="size-3 md:size-4 cursor-pointer"
                     ></Plus>
-                    <div v-else class="flex gap-2 flex-wrap px-1">
+                    <div
+                      v-else
+                      class="flex gap-2 flex-wrap px-1"
+                    >
                       <template v-for="val in taskLocal.tags">
                         <div
                           class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
@@ -159,9 +173,18 @@
                     v-if="taskLocal.assignees.length === 0"
                     class="size-3 md:size-4 cursor-pointer"
                   ></Plus>
-                  <div v-else class="flex items-center gap-2 flex-wrap px-1">
-                    <template v-for="s in taskLocal.assignees" :key="s.id">
-                      <div v-if="s.pfp !== ''" class="flex gap-1 items-center">
+                  <div
+                    v-else
+                    class="flex items-center gap-2 flex-wrap px-1"
+                  >
+                    <template
+                      v-for="s in taskLocal.assignees"
+                      :key="s.id"
+                    >
+                      <div
+                        v-if="s.pfp !== ''"
+                        class="flex gap-1 items-center"
+                      >
                         <img
                           :src="s.pfp"
                           class="size-5 lg:size-6 rounded-full"
@@ -189,37 +212,11 @@
                   <template #multiHead="{ showOpsFun, selected }">
                     <div
                       @click="showOpsFun"
-                      class="relative bg-white py-2 border border-blue-400 rounded"
+                      class="relative flex items-center bg-white py-2 border border-blue-400 rounded"
                     >
-                      <div v-if="selected.length === 0" class="px-2">
-                        Please Select
-                      </div>
-                      <div
-                        v-else
-                        class="flex gap-1 items-center max-w-[80%] flex-wrap"
-                      >
-                        <template v-for="select in selected" :key="select.id">
-                          <div v-if="false" class="flex gap-1 items-center">
-                            <img
-                              :src="select.pfp"
-                              class="size-5 lg:size-6 rounded-full"
-                              alt=""
-                            />
-                          </div>
-                          <div
-                            v-else
-                            class="size-5 lg:size-6 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
-                          >
-                            {{
-                              userFromStore.allUser
-                                .find((i) => i.id == select)
-                                .name.slice(0, 1)
-                                .toLocaleUpperCase()
-                            }}
-                          </div>
-                          <!-- <div class="text-xs">{{ select }}</div> -->
-                        </template>
-                      </div>
+                      <template v-for="select in selected">
+                        <div>{{ select.name.split(" ") }}</div>
+                      </template>
                     </div>
                   </template>
                   <!-- SELECTED IN MULTI IN UI IN slots -->
@@ -231,7 +228,10 @@
                       v-if="showOptions"
                       class="absolute top-full bg-white w-full"
                     >
-                      <template v-for="val in multiData" :key="val.id">
+                      <template
+                        v-for="val in multiData"
+                        :key="val.id"
+                      >
                         <label class="flex gap-1 px-3 py-1">
                           <input
                             type="checkbox"
@@ -316,7 +316,10 @@
           >
             Add
           </button>
-          <button @click="$emit('hide')" class="px-3 py-1 bg-gray-200 rounded">
+          <button
+            @click="$emit('hide')"
+            class="px-3 py-1 bg-gray-200 rounded"
+          >
             Cancel
           </button>
         </div>
@@ -331,15 +334,14 @@
 <script setup>
 import {
   ArrowBigRight,
-  ArrowRight,
   Calendar,
   CircleUserRound,
   Clock,
   Plus,
   TagPlus,
-  Tags,
   X,
 } from "@lucide/vue";
+import { format } from "date-fns";
 import { onClickOutside } from "@vueuse/core";
 import {
   defineAsyncComponent,
@@ -384,6 +386,10 @@ const taskLocal = ref({
   history: [],
 });
 
+const st = ref("umar naeem");
+
+console.log(st.value.split(" ").map((s) => s.slice(0, 1)));
+
 ///////////////Add Task
 const addTaskFun = () => {
   addTask(taskLocal.value).then((res) => {
@@ -413,9 +419,7 @@ onClickOutside(tagsCell, closeIfActive("tags"));
 onClickOutside(assigneesCell, closeIfActive("multi"));
 onClickOutside(timeCell, closeIfActive("time"));
 
-onMounted(() => {
-  console.log(22);
-});
+onMounted(() => {});
 </script>
 <style scoped>
 .conversionTransition-enter-from,
