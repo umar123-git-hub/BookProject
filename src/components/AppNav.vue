@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sticky top-0 w-max z-10 text-white h-screen py-4 bg-purple-900/80 flex flex-col items-center justify-between"
+    class="sticky top-0 w-max z-10 text-white h-screen py-4 bg-mauve-500 flex flex-col items-center justify-between"
   >
     <!--================ LOGO --================-->
     <div class="flex flex-col justify-center lg:px-1 gap-3 items-center">
