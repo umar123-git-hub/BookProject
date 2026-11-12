@@ -1,26 +1,18 @@
 <template>
   <Teleport to="#Tel">
-    <div
-      @click="$emit('hide')"
-      class="fixed inset-0 z-20 bg-black/70"
-    >
-      <div class="bg-black text-white">
-        {{ userFromStore.allUser }}
-      </div>
-
+    <div @click="$emit('hide')" class="fixed inset-0 z-20 bg-black/70">
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
         class="absolute top-1/2 w-100 sm:w-120 md:w-150 shadow shadow-gray-400 rounded-lg flex flex-col gap-4 left-1/2 -translate-1/2 bg-amber-50"
       >
-        {{ labelModel }}
         <!------- Add Task ------->
         <!------- written or Cancel ------->
         <div
           class="flex border-b border-gray-300 px-4 md:px-4 lg:px-5 py-2 md:py-3 justify-between"
         >
           <div class="font-medium text-xl">Add Task</div>
-          <X class="text-gray-400"></X>
+          <X @click="$emit('hide')" class="text-gray-400"></X>
         </div>
         <!------- written or Cancel ------->
         <!------- Task Title ------->
@@ -116,7 +108,7 @@
                 <div class="text-xs md:text-sm">Labels</div>
               </div>
               <div
-                class="flex flex-col items-center gap-2 relative col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+                class="flex flex-col gap-1 relative col-span-6 lg:col-span-8 border-l px-2 py-1 border-gray-400"
               >
                 <!-- ref="tagsCell" -->
                 <!-- <Transition name="conversionTransition">
@@ -146,18 +138,34 @@
                     class="w-full"
                   ></div>
                 </Transition> -->
-                <div v-if="taskLocal.tags.length == 0">Please Enter</div>
                 <div
-                  class="flex items-center w-full gap-2 px-1 py-0.5 line-clamp-1"
+                  v-if="taskLocal.tags.length == 0"
+                  class="border border-gray-400 px-2 text-sm text-gray-400 rounded"
+                >
+                  Please Enter Tags ...
+                </div>
+                <div
+                  v-else
+                  class="flex items-center w-full gap-2 px-1 py-1 line-clamp-1 border border-gray-400 text-sm rounded overflow-auto scrollbar-thin"
                 >
                   <template v-for="tag in taskLocal.tags">
-                    <div class="bg-gray-700 text-white">{{ tag }}</div>
+                    <div
+                      class="bg-gray-700 px-2 text-white rounded relative group"
+                    >
+                      {{ tag }}
+                      <X
+                        @click="chooseFilterForTags(tag)"
+                        class="absolute hidden group-hover:block size-3 cursor-pointer -top-1 -right-2 bg-red-300 rounded text-white"
+                      ></X>
+                    </div>
                   </template>
                 </div>
                 <input
                   type="text"
                   v-model="labelModel"
                   @keydown.enter="labelPush()"
+                  placeholder="Enter here ..."
+                  class="outline-none border border-gray-400 px-2 rounded"
                 />
               </div>
             </div>
@@ -184,10 +192,7 @@
                     class="size-3 md:size-4 cursor-pointer"
                   ></Plus>
                   <div class="flex items-center gap-2 flex-wrap px-1">
-                    <template
-                      v-for="s in taskLocal.assignees"
-                      :key="s.id"
-                    >
+                    <template v-for="s in taskLocal.assignees" :key="s.id">
                       <div
                         v-if="s.pfp"
                         class="flex relative group gap-1 items-center"
@@ -212,6 +217,7 @@
                             .join("")
                         }}
                         <X
+                          @click="chooseFilterForAssignees(s)"
                           class="absolute hidden group-hover:block size-3 cursor-pointer -top-2 -right-1 bg-red-300 rounded text-white"
                         ></X>
                       </div>
@@ -255,10 +261,7 @@
                       v-if="showOptions"
                       class="absolute top-full bg-white w-full"
                     >
-                      <template
-                        v-for="val in multiData"
-                        :key="val.id"
-                      >
+                      <template v-for="val in multiData" :key="val.id">
                         <label class="flex gap-1 px-3 py-1">
                           <input
                             type="checkbox"
@@ -343,10 +346,7 @@
           >
             Add
           </button>
-          <button
-            @click="$emit('hide')"
-            class="px-3 py-1 bg-gray-200 rounded"
-          >
+          <button @click="$emit('hide')" class="px-3 py-1 bg-gray-200 rounded">
             Cancel
           </button>
         </div>
@@ -433,6 +433,19 @@ const labelPush = () => {
   taskLocal.value.tags.push(labelModel.value);
   labelModel.value = "";
 };
+
+///////////////////////////// chooseFilterFun
+
+const chooseFilterForTags = (tag) => {
+  taskLocal.value.tags = taskLocal.value.tags.filter((i) => i !== tag);
+  console.log(taskLocal.value.tags);
+};
+const chooseFilterForAssignees = (s) => {
+  taskLocal.value.assignees = taskLocal.value.assignees.filter((i) => i !== s);
+  console.log(taskLocal.value.assignees);
+};
+
+///////////////////////////// chooseFilterFun
 // ---------------------OUTSIDE CLICK
 const tagsCell = ref(null);
 const assigneesCell = ref(null);
