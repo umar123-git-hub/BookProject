@@ -16,18 +16,12 @@
     <!--================ LOGO --================-->
     <!--=================== SELECTIONS ====================-->
     <div class="flex flex-col gap-5">
-      <template
-        v-for="routeSingle in routeArr"
-        :key="routeSingle"
-      >
+      <template v-for="routeSingle in routeArr" :key="routeSingle">
         <div
           @click="changeRoute(routeSingle)"
           class="flex flex-col items-center cursor-pointer gap-2 px-1 lg:px-2 text-white"
         >
-          <component
-            class="size-5 lg:size-6"
-            :is="routeSingle.iconComponent"
-          />
+          <component class="size-5 lg:size-6" :is="routeSingle.iconComponent" />
           <div class="text-xs">{{ routeSingle.routeName }}</div>
         </div>
       </template>
@@ -39,21 +33,23 @@
       <div class="cursor-pointer pb- text-white">
         <Bell class="size-5 lg:size-6"></Bell>
       </div>
-      <div
-        @click="accountDiaOpen"
-        class="relative cursor-pointer text-white"
-      >
+      <div @click="accountDiaOpen" class="relative cursor-pointer text-white">
         <CircleUser v-if="userFromStore.loggedInUser == null" />
         <img
-          v-else-if="userFromStore.loggedInUser.pfp !== ''"
+          v-else-if="userFromStore.loggedInUser.pfp"
           class="size-7 lg:size-8 rounded-full"
           :src="userFromStore.loggedInUser.pfp"
         />
         <div
           v-else
-          class="size-7 lg:size-8 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
+          class="px-2 py-1 text-xs text-white bg-mauve-600 border border-white rounded-full"
         >
-          {{ userFromStore.loggedInUser?.name.slice(0, 1).toLocaleUpperCase() }}
+          {{
+            userFromStore.loggedInUser?.name
+              .split(" ")
+              .map((s) => s.slice(0, 1).toLocaleUpperCase())
+              .join("")
+          }}
         </div>
         <Transition name="logoutPanelTransition">
           <div
@@ -63,7 +59,7 @@
           >
             <!-- PFP AND NAME ,MAIL -->
             <div class="flex items-center gap-2 px-2 py-1">
-              <div v-if="userFromStore.loggedInUser.pfp !== ''">
+              <div v-if="userFromStore.loggedInUser.pfp">
                 <img
                   :src="userFromStore.loggedInUser.pfp"
                   class="size-15 lg:size-18 rounded-full"
@@ -72,12 +68,13 @@
               </div>
               <div
                 v-else
-                class="size-7 lg:size-8 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
+                class="px-2 py-1 text-xs text-white bg-mauve-600 rounded-full"
               >
                 {{
                   userFromStore.loggedInUser?.name
-                    .slice(0, 1)
-                    .toLocaleUpperCase()
+                    .split(" ")
+                    .map((s) => s.slice(0, 1).toLocaleUpperCase())
+                    .join("")
                 }}
               </div>
               <div class="flex flex-col">
