@@ -11,10 +11,10 @@
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
-        class="absolute top-1/2 min-w-[80%] md:min-w-[35%] shadow shadow-gray-400 rounded-lg flex flex-col gap-4 left-1/2 -translate-1/2 bg-amber-50"
+        class="absolute top-1/2 w-100 sm:w-120 md:w-150 shadow shadow-gray-400 rounded-lg flex flex-col gap-4 left-1/2 -translate-1/2 bg-amber-50"
       >
+        {{ labelModel }}
         <!------- Add Task ------->
-
         <!------- written or Cancel ------->
         <div
           class="flex border-b border-gray-300 px-4 md:px-4 lg:px-5 py-2 md:py-3 justify-between"
@@ -25,9 +25,7 @@
         <!------- written or Cancel ------->
         <!------- Task Title ------->
         <label class="flex flex-col gap-1 px-4">
-          <div class="text-base font-semibold text-gray-800">
-            Title :{{ taskLocal.assignees }}
-          </div>
+          <div class="text-base font-semibold text-gray-800">Title :</div>
           <input
             type="text"
             class="outline-none px-1 md:px-2 py-1 md:py-1 text-base text-gray-800 border border-gray-400 focus:border-gray-300 rounded"
@@ -118,10 +116,10 @@
                 <div class="text-xs md:text-sm">Labels</div>
               </div>
               <div
-                ref="tagsCell"
-                class="flex items-center gap-2 relative col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+                class="flex flex-col items-center gap-2 relative col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
               >
-                <Transition name="conversionTransition">
+                <!-- ref="tagsCell" -->
+                <!-- <Transition name="conversionTransition">
                   <div
                     @click="conversionFun('tags')"
                     v-if="conversionMarker !== 'tags'"
@@ -147,7 +145,20 @@
                     v-else-if="conversionMarker == 'tags'"
                     class="w-full"
                   ></div>
-                </Transition>
+                </Transition> -->
+                <div v-if="taskLocal.tags.length == 0">Please Enter</div>
+                <div
+                  class="flex items-center w-full gap-2 px-1 py-0.5 line-clamp-1"
+                >
+                  <template v-for="tag in taskLocal.tags">
+                    <div class="bg-gray-700 text-white">{{ tag }}</div>
+                  </template>
+                </div>
+                <input
+                  type="text"
+                  v-model="labelModel"
+                  @keydown.enter="labelPush()"
+                />
               </div>
             </div>
             <!-- labels -->
@@ -165,37 +176,44 @@
               >
                 <!-- plus and selected show TOGGLE AND CHANGE -->
                 <div
-                  @click="conversionFun('multi')"
                   v-if="conversionMarker !== 'multi'"
-                  class="w-full px-2"
+                  class="w-full px-2 flex items-center"
                 >
                   <Plus
-                    v-if="taskLocal.assignees.length === 0"
+                    @click="conversionFun('multi')"
                     class="size-3 md:size-4 cursor-pointer"
                   ></Plus>
-                  <div
-                    v-else
-                    class="flex items-center gap-2 flex-wrap px-1"
-                  >
+                  <div class="flex items-center gap-2 flex-wrap px-1">
                     <template
                       v-for="s in taskLocal.assignees"
                       :key="s.id"
                     >
                       <div
-                        v-if="s.pfp !== ''"
-                        class="flex gap-1 items-center"
+                        v-if="s.pfp"
+                        class="flex relative group gap-1 items-center"
                       >
                         <img
                           :src="s.pfp"
                           class="size-5 lg:size-6 rounded-full"
                           alt=""
                         />
+                        <X
+                          class="absolute hidden group-hover:block size-3 cursor-pointer -top-2 -right-1 bg-red-300 rounded text-white"
+                        ></X>
                       </div>
                       <div
                         v-else
-                        class="size-5 lg:size-6 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
+                        class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                       >
-                        {{ s.name.slice(0, 1).toLocaleUpperCase() }}
+                        {{
+                          s.name
+                            .split(" ")
+                            .map((s) => s.slice(0, 1).toLocaleUpperCase())
+                            .join("")
+                        }}
+                        <X
+                          class="absolute hidden group-hover:block size-3 cursor-pointer -top-2 -right-1 bg-red-300 rounded text-white"
+                        ></X>
                       </div>
                     </template>
                   </div>
@@ -211,11 +229,20 @@
                   <!-- SELECTED IN MULTI IN UI IN slots -->
                   <template #multiHead="{ showOpsFun, selected }">
                     <div
-                      @click="showOpsFun"
-                      class="relative flex items-center bg-white py-2 border border-blue-400 rounded"
+                      class="relative px-2 flex items-center gap-1 bg-white py-2 border border-blue-400 rounded"
                     >
+                      <div v-if="selected.length == 0">Please Select</div>
                       <template v-for="select in selected">
-                        <div>{{ select.name.split(" ") }}</div>
+                        <div
+                          class="px-2 py-1 text-xs text-white bg-mauve-500 rounded-full"
+                        >
+                          {{
+                            select.name
+                              .split(" ")
+                              .map((s) => s.slice(0, 1).toLocaleUpperCase())
+                              .join("")
+                          }}
+                        </div>
                       </template>
                     </div>
                   </template>
@@ -372,7 +399,7 @@ const taskLocal = ref({
   title: "",
   description: "",
   createdBy: userFromStore.loggedInUser.id,
-  priority: "",
+  priority: "Low",
   assignees: [],
   moduleName: "",
   tags: [],
@@ -386,9 +413,7 @@ const taskLocal = ref({
   history: [],
 });
 
-const st = ref("umar naeem");
-
-console.log(st.value.split(" ").map((s) => s.slice(0, 1)));
+// console.log(st.value.split(" ").map((s) => s.slice(0, 1).toLocaleUpperCase()));
 
 ///////////////Add Task
 const addTaskFun = () => {
@@ -403,7 +428,11 @@ const addTaskFun = () => {
 const conversionFun = (name) => {
   conversionMarker.value = name;
 };
-
+const labelModel = ref("");
+const labelPush = () => {
+  taskLocal.value.tags.push(labelModel.value);
+  labelModel.value = "";
+};
 // ---------------------OUTSIDE CLICK
 const tagsCell = ref(null);
 const assigneesCell = ref(null);
