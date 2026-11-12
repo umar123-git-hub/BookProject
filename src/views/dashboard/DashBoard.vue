@@ -102,7 +102,94 @@
             <TableG
               v-if="tasksArr.length !== 0"
               :table-arr="tasksArr"
-            ></TableG>
+              :table-design="tableDesign"
+            >
+              <template #simple="{ simpleData }">
+                <div class="px-2 flex justify-center items-center">
+                  {{ simpleData }}
+                </div>
+              </template>
+              <template #simpleArraySlot="{ tdData }">
+                <div class="flex gap-1 items-center py-1 line-clamp-2">
+                  <template
+                    v-for="t in tdData"
+                    :key="t.id"
+                  >
+                    <div
+                      class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
+                    >
+                      {{ t }}
+                    </div>
+                  </template>
+                </div>
+              </template>
+              <template #arrayOfObjectSlot="{ tdData }">
+                <div class="flex gap-1 justify-center items-center py-1">
+                  <template
+                    v-for="t in tdData"
+                    :key="t.id"
+                  >
+                    <div
+                      class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
+                    >
+                      {{
+                        t.name
+                          .split(" ")
+                          .map((s) => s.slice(0, 1).toLocaleUpperCase())
+                          .join("")
+                      }}
+                    </div>
+                  </template>
+                </div>
+              </template>
+              <template #DateSlot="{ tdData }">
+                <div class="flex justify-center items-center">
+                  {{ format(tdData, "dd MMM yyyy") }}
+                </div>
+              </template>
+              <template #objectSlot="{ tdData }">
+                <div class="flex gap-2">
+                  <template
+                    v-for="(time, tKey) in tdData"
+                    :key="time"
+                  >
+                    <div class="flex gap-1">
+                      <div class="col-span-1">{{ time }}</div>
+                      <div class="col-span-4">
+                        {{ tKey == "h" ? "Hour" : "Min" }}
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </template>
+
+              <!-- EXTRAS TCOL HANDLING -->
+              <template #extraCol>
+                <col :style="{ width: 200 + 'px' }" />
+              </template>
+              <template #extraTh>
+                <th>Actions</th>
+              </template>
+              <template #extraTd="{ tableRow }">
+                <td class="">
+                  <div class="flex items-center justify-center gap-5">
+                    <template
+                      v-for="action in actionsArr"
+                      :key="action"
+                    >
+                      <component
+                        @click="
+                          action.name == 'delete' ? deleteFun(tableRow) : ''
+                        "
+                        class="cursor-pointer"
+                        :is="action.iconComp"
+                      />
+                    </template>
+                  </div>
+                </td>
+              </template>
+              <!-- EXTRAS TCOL HANDLING -->
+            </TableG>
           </div>
           <!-- TABLE -->
         </div>
@@ -132,16 +219,19 @@ import {
   StickyNotePlus,
   Search,
   ListTodo,
+  Trash,
+  Edit,
 } from "@lucide/vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import { useTaskStore } from "../../Store/TasksStore.js";
-const TableG = defineAsyncComponent(
-  () => import("../../components/utils/TableG.vue"),
-);
-import { getAllTasks } from "../../services/TaskService.js";
+import { getAllTasks, deleteTask } from "../../services/TaskService.js";
+import { format } from "date-fns";
 import OptionsTabs from "../../components/utils/OptionsTabs/OptionsTabs.vue";
 const AddEditTask = defineAsyncComponent(
   () => import("../../components/utils/addEditTask.vue"),
+);
+const TableG = defineAsyncComponent(
+  () => import("../../components/utils/TableG.vue"),
 );
 const userFromStore = useUsersStore();
 
@@ -153,6 +243,27 @@ const formatLabel = (str) => {
 };
 
 const tasksArr = ref([]);
+
+const tableDesign = ref([
+  { header: "Title", field: "title", wid: "300px", simple: true },
+  {
+    header: "Assignees",
+    field: "assignees",
+    wid: "150px ",
+    arrayOfObjectSlot: true,
+  },
+  { header: "Stage", field: "stage", wid: "70px" },
+  { header: "Priority", field: "priority", wid: "70px", simple: true },
+  { header: "Tags", field: "tags", wid: "200px", simpleArraySlot: true },
+  { header: "Start Date", field: "startDate", wid: "200px", DateSlot: true },
+  { header: "End Date", field: "endDate", wid: "200px", DateSlot: true },
+  {
+    header: "Estimated Time",
+    field: "estimatedTime",
+    wid: "100px",
+    objectSlot: true,
+  },
+]);
 
 const cardsArr = ref([
   {
@@ -201,7 +312,13 @@ const selectionsArr = ref([
   { name: "In Progress" },
   { name: "Completed" },
 ]);
-
+const actionsArr = ref([
+  { name: "edit", iconComp: Edit },
+  { name: "delete", iconComp: Trash },
+]);
+const deleteFun = (toBeDelete) => {
+  deleteTask(toBeDelete.id);
+};
 onMounted(() => {
   console.log("userFromStore.loggedInUser.id", userFromStore.loggedInUser.id);
   getAllTasks().then((res) => {
