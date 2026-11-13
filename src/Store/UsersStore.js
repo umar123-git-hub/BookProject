@@ -6,8 +6,9 @@ export const useUsersStore = defineStore(
   () => {
     const loggedInUser = ref(null);
     const loadMarker = ref(false);
+    const refreshMarker = ref(0);
     const allUser = ref([]);
-    return { allUser, loggedInUser, loadMarker };
+    return { allUser, loggedInUser, loadMarker, refreshMarker };
   },
   {
     persist: true,
