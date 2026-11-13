@@ -110,7 +110,9 @@
                 </div>
               </template>
               <template #simpleArraySlot="{ tdData }">
-                <div class="flex gap-1 items-center py-1 line-clamp-2">
+                <div
+                  class="flex flex-wrap gap-1 items-center py-1 line-clamp-2"
+                >
                   <template
                     v-for="t in tdData"
                     :key="t.id"
@@ -205,13 +207,14 @@
     <!-- DIALOGUE -->
     <AddEditTask
       v-if="addEditMarker"
+      @refresh="refreshFun()"
       @hide="addEditMarker = false"
     ></AddEditTask>
     <!-- DIALOGUE -->
   </div>
 </template>
 <script setup>
-import { ref, defineAsyncComponent, onMounted } from "vue";
+import { ref, defineAsyncComponent, onMounted, computed } from "vue";
 import {
   Summary,
   Check,
@@ -316,10 +319,11 @@ const actionsArr = ref([
   { name: "edit", iconComp: Edit },
   { name: "delete", iconComp: Trash },
 ]);
+const refreshComp = computed(() => userFromStore.refreshMarker);
 const deleteFun = (toBeDelete) => {
   deleteTask(toBeDelete.id);
 };
-onMounted(() => {
+const refreshFun = () => {
   console.log("userFromStore.loggedInUser.id", userFromStore.loggedInUser.id);
   getAllTasks().then((res) => {
     console.log("res", res);
@@ -328,5 +332,9 @@ onMounted(() => {
     );
     console.log("tasksArr.value", tasksArr.value);
   });
+  addEditMarker.value = false;
+};
+onMounted(() => {
+  refreshFun();
 });
 </script>
