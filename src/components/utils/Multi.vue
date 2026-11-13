@@ -33,7 +33,11 @@
       >
         <template v-for="data in multiData">
           <label class="flex text-sm gap-1 cursor-pointer">
-            <input type="checkbox" :value="data" v-model="selected" />
+            <input
+              type="checkbox"
+              :value="data"
+              v-model="selected"
+            />
             <div class="line-clamp-1">{{ data[field] }}</div>
           </label>
         </template>

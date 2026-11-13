@@ -1,6 +1,6 @@
 <template>
   <div
-    class="sticky top-0 w-max z-10 text-white h-screen py-4 bg-purple-900/80 flex flex-col items-center justify-between"
+    class="sticky top-0 w-max z-10 text-white h-screen py-4 bg-mauve-500 flex flex-col items-center justify-between"
   >
     <!--================ LOGO --================-->
     <div class="flex flex-col justify-center lg:px-1 gap-3 items-center">
@@ -36,15 +36,20 @@
       <div @click="accountDiaOpen" class="relative cursor-pointer text-white">
         <CircleUser v-if="userFromStore.loggedInUser == null" />
         <img
-          v-else-if="userFromStore.loggedInUser?.pfp !== ''"
+          v-else-if="userFromStore.loggedInUser.pfp"
           class="size-7 lg:size-8 rounded-full"
-          :src="userFromStore.loggedInUser?.pfp"
+          :src="userFromStore.loggedInUser.pfp"
         />
         <div
           v-else
-          class="size-7 lg:size-8 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
+          class="px-2 py-1 text-xs text-white bg-mauve-600 border border-white rounded-full"
         >
-          {{ userFromStore.loggedInUser?.name.slice(0, 1).toLocaleUpperCase() }}
+          {{
+            userFromStore.loggedInUser?.name
+              .split(" ")
+              .map((s) => s.slice(0, 1).toLocaleUpperCase())
+              .join("")
+          }}
         </div>
         <Transition name="logoutPanelTransition">
           <div
@@ -54,7 +59,7 @@
           >
             <!-- PFP AND NAME ,MAIL -->
             <div class="flex items-center gap-2 px-2 py-1">
-              <div v-if="userFromStore.loggedInUser.pfp !== ''">
+              <div v-if="userFromStore.loggedInUser.pfp">
                 <img
                   :src="userFromStore.loggedInUser.pfp"
                   class="size-15 lg:size-18 rounded-full"
@@ -63,12 +68,13 @@
               </div>
               <div
                 v-else
-                class="size-7 lg:size-8 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
+                class="px-2 py-1 text-xs text-white bg-mauve-600 rounded-full"
               >
                 {{
                   userFromStore.loggedInUser?.name
-                    .slice(0, 1)
-                    .toLocaleUpperCase()
+                    .split(" ")
+                    .map((s) => s.slice(0, 1).toLocaleUpperCase())
+                    .join("")
                 }}
               </div>
               <div class="flex flex-col">

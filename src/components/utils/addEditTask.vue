@@ -4,16 +4,15 @@
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
-        class="absolute top-1/2 min-w-[80%] md:min-w-[35%] shadow shadow-gray-400 rounded-lg flex flex-col gap-4 left-1/2 -translate-1/2 bg-amber-50"
+        class="absolute top-1/2 w-100 sm:w-120 md:w-150 shadow shadow-gray-400 rounded-lg flex flex-col gap-4 left-1/2 -translate-1/2 bg-amber-50"
       >
         <!------- Add Task ------->
-
         <!------- written or Cancel ------->
         <div
           class="flex border-b border-gray-300 px-4 md:px-4 lg:px-5 py-2 md:py-3 justify-between"
         >
           <div class="font-medium text-xl">Add Task</div>
-          <X class="text-gray-400"></X>
+          <X @click="$emit('hide')" class="text-gray-400"></X>
         </div>
         <!------- written or Cancel ------->
         <!------- Task Title ------->
@@ -71,14 +70,18 @@
                     {{
                       taskLocal.startDate == null
                         ? "Start"
-                        : taskLocal.startDate
+                        : format(taskLocal.startDate, "dd MMM yyyy")
                     }}
                   </div>
                 </div>
                 <ArrowBigRight class="size-3 md:size-4"></ArrowBigRight>
                 <div class="flex items-center gap-1">
                   <div class="text-xs md:text-sm">
-                    {{ taskLocal.endDate == null ? "End" : taskLocal.endDate }}
+                    {{
+                      taskLocal.endDate == null
+                        ? "End"
+                        : format(taskLocal.endDate, "dd MMM yyyy")
+                    }}
                   </div>
                   <VueDatePicker
                     v-model="taskLocal.endDate"
@@ -105,10 +108,10 @@
                 <div class="text-xs md:text-sm">Labels</div>
               </div>
               <div
-                ref="tagsCell"
-                class="flex items-center gap-2 relative col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+                class="flex flex-col gap-1 relative col-span-6 lg:col-span-8 border-l px-2 py-1 border-gray-400"
               >
-                <Transition name="conversionTransition">
+                <!-- ref="tagsCell" -->
+                <!-- <Transition name="conversionTransition">
                   <div
                     @click="conversionFun('tags')"
                     v-if="conversionMarker !== 'tags'"
@@ -117,7 +120,10 @@
                       v-if="taskLocal.tags.length == 0"
                       class="size-3 md:size-4 cursor-pointer"
                     ></Plus>
-                    <div v-else class="flex gap-2 flex-wrap px-1">
+                    <div
+                      v-else
+                      class="flex gap-2 flex-wrap px-1"
+                    >
                       <template v-for="val in taskLocal.tags">
                         <div
                           class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
@@ -127,10 +133,40 @@
                       </template>
                     </div>
                   </div>
-                  <div v-else-if="conversionMarker == 'tags'" class="w-full">
-                    <TextTaker v-model="taskLocal.tags"></TextTaker>
-                  </div>
-                </Transition>
+                  <div
+                    v-else-if="conversionMarker == 'tags'"
+                    class="w-full"
+                  ></div>
+                </Transition> -->
+                <div
+                  v-if="taskLocal.tags.length == 0"
+                  class="border border-gray-400 px-2 text-sm text-gray-400 rounded"
+                >
+                  Please Enter Tags ...
+                </div>
+                <div
+                  v-else
+                  class="flex items-center w-full gap-2 px-1 py-1 line-clamp-1 border border-gray-400 text-sm rounded overflow-auto scrollbar-thin"
+                >
+                  <template v-for="tag in taskLocal.tags">
+                    <div
+                      class="bg-gray-700 px-2 text-white rounded relative group"
+                    >
+                      {{ tag }}
+                      <X
+                        @click="chooseFilterForTags(tag)"
+                        class="absolute hidden group-hover:block size-3 cursor-pointer -top-1 -right-2 bg-red-300 rounded text-white"
+                      ></X>
+                    </div>
+                  </template>
+                </div>
+                <input
+                  type="text"
+                  v-model="labelModel"
+                  @keydown.enter="labelPush()"
+                  placeholder="Enter here ..."
+                  class="outline-none border border-gray-400 px-2 rounded"
+                />
               </div>
             </div>
             <!-- labels -->
@@ -148,28 +184,42 @@
               >
                 <!-- plus and selected show TOGGLE AND CHANGE -->
                 <div
-                  @click="conversionFun('multi')"
                   v-if="conversionMarker !== 'multi'"
-                  class="w-full px-2"
+                  class="w-full px-2 flex items-center"
                 >
                   <Plus
-                    v-if="taskLocal.assignees.length === 0"
+                    @click="conversionFun('multi')"
                     class="size-3 md:size-4 cursor-pointer"
                   ></Plus>
-                  <div v-else class="flex items-center gap-2 flex-wrap px-1">
+                  <div class="flex items-center gap-2 flex-wrap px-1">
                     <template v-for="s in taskLocal.assignees" :key="s.id">
-                      <div v-if="s.pfp !== ''" class="flex gap-1 items-center">
+                      <div
+                        v-if="s.pfp"
+                        class="flex relative group gap-1 items-center"
+                      >
                         <img
                           :src="s.pfp"
                           class="size-5 lg:size-6 rounded-full"
                           alt=""
                         />
+                        <X
+                          class="absolute hidden group-hover:block size-3 cursor-pointer -top-2 -right-1 bg-red-300 rounded text-white"
+                        ></X>
                       </div>
                       <div
                         v-else
-                        class="size-5 lg:size-6 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
+                        class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                       >
-                        {{ s.name.slice(0, 1).toLocaleUpperCase() }}
+                        {{
+                          s.name
+                            .split(" ")
+                            .map((s) => s.slice(0, 1).toLocaleUpperCase())
+                            .join("")
+                        }}
+                        <X
+                          @click="chooseFilterForAssignees(s)"
+                          class="absolute hidden group-hover:block size-3 cursor-pointer -top-2 -right-1 bg-red-300 rounded text-white"
+                        ></X>
                       </div>
                     </template>
                   </div>
@@ -185,41 +235,27 @@
                   <!-- SELECTED IN MULTI IN UI IN slots -->
                   <template #multiHead="{ showOpsFun, selected }">
                     <div
-                      @click="showOpsFun"
-                      class="relative bg-white py-2 border border-blue-400 rounded"
+                      class="relative px-2 flex items-center gap-1 bg-white py-2 border border-blue-400 rounded"
                     >
-                      <div v-if="selected.length === 0" class="px-2">
-                        Please Select
-                      </div>
-                      <div
-                        v-else
-                        class="flex gap-1 items-center max-w-[80%] flex-wrap"
-                      >
-                        <template v-for="select in selected" :key="select.id">
-                          <div
-                            v-if="select.pfp !== ''"
-                            class="flex gap-1 items-center"
-                          >
-                            <img
-                              :src="select.pfp"
-                              class="size-5 lg:size-6 rounded-full"
-                              alt=""
-                            />
-                          </div>
-                          <div
-                            v-else
-                            class="size-5 lg:size-6 bg-white text text-purple-800 text-center font-bold text-xl rounded-full"
-                          >
-                            {{ select.name.slice(0, 1).toLocaleUpperCase() }}
-                          </div>
-                          <div class="text-xs">{{ select.name }}</div>
-                        </template>
-                      </div>
+                      <div v-if="selected.length == 0">Please Select</div>
+                      <template v-for="select in selected">
+                        <div
+                          class="px-2 py-1 text-xs text-white bg-mauve-500 rounded-full"
+                        >
+                          {{
+                            select.name
+                              .split(" ")
+                              .map((s) => s.slice(0, 1).toLocaleUpperCase())
+                              .join("")
+                          }}
+                        </div>
+                      </template>
                     </div>
                   </template>
                   <!-- SELECTED IN MULTI IN UI IN slots -->
 
                   <!-- SELECTION AREA IN MULTI SELECT IN MULTI SLOTS -->
+
                   <template #multiDrop="{ showOptions, multiData }">
                     <div
                       v-if="showOptions"
@@ -325,23 +361,28 @@
 <script setup>
 import {
   ArrowBigRight,
-  ArrowRight,
   Calendar,
   CircleUserRound,
   Clock,
   Plus,
   TagPlus,
-  Tags,
   X,
 } from "@lucide/vue";
+import { format } from "date-fns";
 import { onClickOutside } from "@vueuse/core";
-import { defineAsyncComponent, ref, Teleport, Transition, watch } from "vue";
+import {
+  defineAsyncComponent,
+  ref,
+  Teleport,
+  Transition,
+  watch,
+  onMounted,
+} from "vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import { useTaskStore } from "../../Store/TasksStore.js";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { addTask } from "../../services/AddTaskService.js";
-const TextTaker = defineAsyncComponent(() => import("./textTaker.vue"));
+import { addTask } from "../../services/TaskService.js";
 const Multi = defineAsyncComponent(() => import("./Multi.vue"));
 
 const userFromStore = useUsersStore();
@@ -355,11 +396,10 @@ watch(conversionMarker, (n) => {
 });
 // ---------------------MARKERS
 const taskLocal = ref({
-  id: crypto.randomUUID(),
   title: "",
   description: "",
-  createdBy: userFromStore.loggedInUser,
-  priority: "",
+  createdBy: userFromStore.loggedInUser.id,
+  priority: "Low",
   assignees: [],
   moduleName: "",
   tags: [],
@@ -372,6 +412,8 @@ const taskLocal = ref({
   comments: [],
   history: [],
 });
+
+// console.log(st.value.split(" ").map((s) => s.slice(0, 1).toLocaleUpperCase()));
 
 ///////////////Add Task
 const addTaskFun = () => {
@@ -386,7 +428,24 @@ const addTaskFun = () => {
 const conversionFun = (name) => {
   conversionMarker.value = name;
 };
+const labelModel = ref("");
+const labelPush = () => {
+  taskLocal.value.tags.push(labelModel.value);
+  labelModel.value = "";
+};
 
+///////////////////////////// chooseFilterFun
+
+const chooseFilterForTags = (tag) => {
+  taskLocal.value.tags = taskLocal.value.tags.filter((i) => i !== tag);
+  console.log(taskLocal.value.tags);
+};
+const chooseFilterForAssignees = (s) => {
+  taskLocal.value.assignees = taskLocal.value.assignees.filter((i) => i !== s);
+  console.log(taskLocal.value.assignees);
+};
+
+///////////////////////////// chooseFilterFun
 // ---------------------OUTSIDE CLICK
 const tagsCell = ref(null);
 const assigneesCell = ref(null);
@@ -401,6 +460,8 @@ const closeIfActive = (name) => () => {
 onClickOutside(tagsCell, closeIfActive("tags"));
 onClickOutside(assigneesCell, closeIfActive("multi"));
 onClickOutside(timeCell, closeIfActive("time"));
+
+onMounted(() => {});
 </script>
 <style scoped>
 .conversionTransition-enter-from,

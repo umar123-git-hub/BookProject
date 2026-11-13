@@ -1,25 +1,29 @@
-import axios from "axios";
+import api from "./ax";
+import { useUsersStore } from "../Store/UsersStore";
 
 export const verifyLogIn = async (username, password) => {
   let user = null;
-  await axios
-    .get("https://json-server-v7m9.onrender.com/users")
-    .then((response) => {
-      if (response) {
-        let required = response.data.find(
-          (i) => i.userName === username.trim().toLocaleLowerCase(),
-        );
 
-        if (required) {
-          if (required.password === password) {
-            console.log("required", required);
-            user = required;
-            return;
-          }
+  const usersStore = useUsersStore();
+
+  await api.get("/users").then((response) => {
+    if (response) {
+      let required = response.data.find(
+        (i) => i.username === username.trim().toLocaleLowerCase(),
+      );
+
+      if (required) {
+        if (required.password === password) {
+          usersStore.allUser = response.data;
+          user = required;
+          return;
         }
-        user = null;
       }
       user = null;
-    });
+      usersStore.allUser = [];
+    }
+    user = null;
+    usersStore.allUser = [];
+  });
   return user;
 };

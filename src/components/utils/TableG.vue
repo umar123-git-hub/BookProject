@@ -1,79 +1,100 @@
 <template>
-  <table class="w-full border-separate border-spacing-0 lg:w-full">
-    <slot
-      name="tableColsSlot"
-      v-if="$slots.tableColsSlot"
-      :table-keys="tableKeys"
-    ></slot>
-    <colgroup v-else>
-      <template v-for="tableHeading in tableKeys" :key="tableHeading">
-        <col class="min-w-40" />
+  <table class="w-full table-fixed border-collapse text-center">
+    <!--============ col width ===============-->
+    <colgroup>
+      <template
+        v-for="tHeader in tableDesign"
+        :key="tHeader"
+      >
+        <col :style="{ width: tHeader.wid }" />
       </template>
-    </colgroup>
-    <thead>
       <slot
-        name="tableHeadingSlot"
-        v-if="$slots.tableHeadingSlot"
-        :table-keys="tableKeys"
+        name="extraCol"
+        v-if="$slots.extraCol"
       ></slot>
-      <tr v-else>
-        <template v-for="tableHeading in tableKeys" :key="tableHeading">
-          <th v-if="tableHeading !== 'id'">{{ formatLabel(tableHeading) }}</th>
+    </colgroup>
+    <!--============ col width ===============-->
+    <!--============ thead ===============-->
+    <thead>
+      <tr>
+        <template
+          v-for="tHeader in tableDesign"
+          :key="tHeader"
+        >
+          <slot
+            name="tableHeaderSlot"
+            :t-header="tHeader"
+            v-if="$slots.tableHeaderSlot"
+          ></slot>
+          <th v-else>{{ tHeader.header }}</th>
         </template>
+        <slot
+          name="extraTh"
+          v-if="$slots.extraTh"
+        ></slot>
       </tr>
     </thead>
-    <tbody class="">
-      <template v-for="tableRow in tableArr" :key="tableRow.id">
-        <slot
-          name="tableRowSlot"
-          v-if="$slots.tableRowSlot"
-          :table-row="tableRow"
-          :actions="actions"
-        >
-        </slot>
-        <tr v-else>
-          <template v-for="(TableData, key) in tableRow">
-            <td v-if="key !== 'id'">{{ TableData }}</td>
+    <!--============ thead ===============-->
+    <!--============ tbody ===============-->
+    <tbody>
+      <template
+        v-for="tableRow in tableArr"
+        :key="tableRow.id"
+      >
+        <tr>
+          <template
+            v-for="tData in tableDesign"
+            :key="tData"
+          >
+            <td>
+              <slot
+                name="simple"
+                :simple-data="tableRow[tData.field]"
+                v-if="$slots.simple && tData.simple"
+              ></slot>
+              <slot
+                name="simpleArraySlot"
+                :td-data="tableRow[tData.field]"
+                v-else-if="$slots.simpleArraySlot && tData.simpleArraySlot"
+              ></slot>
+              <slot
+                name="arrayOfObjectSlot"
+                :td-data="tableRow[tData.field]"
+                v-else-if="$slots.arrayOfObjectSlot && tData.arrayOfObjectSlot"
+              ></slot>
+              <slot
+                name="DateSlot"
+                :td-data="tableRow[tData.field]"
+                v-else-if="$slots.DateSlot && tData.DateSlot"
+              ></slot>
+              <slot
+                name="objectSlot"
+                :td-data="tableRow[tData.field]"
+                v-else-if="$slots.objectSlot && tData.objectSlot"
+              ></slot>
+              <div
+                v-else
+                class=""
+              >
+                {{ tableRow[tData.field] }}
+              </div>
+            </td>
           </template>
+          <slot
+            name="extraTd"
+            :table-row="tableRow"
+            v-if="$slots.extraTd"
+          ></slot>
         </tr>
       </template>
     </tbody>
+    <!--============ tbody ===============-->
   </table>
 </template>
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref } from "vue";
 const props = defineProps({
-  tableArr: {
-    Array,
-    default: () => [
-      {
-        head: "data",
-        head1: "data",
-        head2: "data",
-      },
-    ],
-  },
-  actions: Array,
-});
-
-const selectedValueByTable = defineModel({ type: Object });
-
-const formatLabel = (str) => {
-  return str
-    .replace(/([a-z])([A-Z])/g, "$1 $2")
-    .replace(/^\w/, (char) => char.toUpperCase());
-};
-
-const tableKeys = computed(() => {
-  if (props.tableArr.length == 0) {
-    let arr = Object.keys({
-      head: "data",
-      head1: "data",
-      head2: "data",
-    });
-    return arr;
-  } else {
-    return Object.keys(props.tableArr[0]);
-  }
+  tableArr: Array,
+  tableDesign: Array,
 });
 </script>
