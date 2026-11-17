@@ -1,5 +1,5 @@
 <template>
-  <div class="relative bg-yellow-300 w-full grid grid-cols-1 md:grid-cols-12">
+  <div class="relative w-full grid grid-cols-1 md:grid-cols-12">
     <!--=================== LEFT SIDE =================-->
     <div class="p-3 w-full flex flex-col gap-3 md:col-span-8 lg:col-span-9">
       <!-- CARD AND WRITTEN -->
