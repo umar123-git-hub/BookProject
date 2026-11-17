@@ -14,18 +14,12 @@
         <!-- written -->
         <!-- cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-1">
-          <template
-            v-for="card in cardsArr"
-            :key="card"
-          >
+          <template v-for="card in cardsArr" :key="card">
             <div
               :class="card.cardColor"
               class="flex flex-col cursor-pointer gap-1 transition-all duration-150 p-3 border rounded-xl"
             >
-              <component
-                :is="card.iconComp"
-                :class="card.iconColor"
-              />
+              <component :is="card.iconComp" :class="card.iconColor" />
               <div class="flex flex-col">
                 <div class="text-lg font-semibold md:text-xl xl:font-bold">
                   {{ card.uiNum }}
@@ -70,10 +64,7 @@
           <OptionsTabs :tabs-arr="selectionsArr">
             <template #tabsDirectionSlot="{ tabsArr }">
               <div class="flex items-center gap-3 w-max">
-                <template
-                  v-for="tab in tabsArr"
-                  :key="tab"
-                >
+                <template v-for="tab in tabsArr" :key="tab">
                   <div
                     class="px-2 py-0.5 md:py-1 md:px-2.5 lg:px-3 text-gray-100 bg-mauve-500/85 rounded shadow-lg border border-blue-950/0 font-semibold text-xs hover:scale-110 cursor-pointer transition-all duration-75"
                   >
@@ -113,10 +104,7 @@
                 <div
                   class="flex flex-wrap gap-1 items-center py-1 line-clamp-2"
                 >
-                  <template
-                    v-for="t in tdData"
-                    :key="t.id"
-                  >
+                  <template v-for="t in tdData" :key="t.id">
                     <div
                       class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                     >
@@ -127,10 +115,7 @@
               </template>
               <template #arrayOfObjectSlot="{ tdData }">
                 <div class="flex gap-1 justify-center items-center py-1">
-                  <template
-                    v-for="t in tdData"
-                    :key="t.id"
-                  >
+                  <template v-for="t in tdData" :key="t.id">
                     <div
                       class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                     >
@@ -151,10 +136,7 @@
               </template>
               <template #objectSlot="{ tdData }">
                 <div class="flex gap-2">
-                  <template
-                    v-for="(time, tKey) in tdData"
-                    :key="time"
-                  >
+                  <template v-for="(time, tKey) in tdData" :key="time">
                     <div class="flex gap-1">
                       <div class="col-span-1">{{ time }}</div>
                       <div class="col-span-4">
@@ -175,10 +157,7 @@
               <template #extraTd="{ tableRow }">
                 <td class="">
                   <div class="flex items-center justify-center gap-5">
-                    <template
-                      v-for="action in actionsArr"
-                      :key="action"
-                    >
+                    <template v-for="action in actionsArr" :key="action">
                       <component
                         @click="
                           action.name == 'delete' ? deleteFun(tableRow) : ''
@@ -268,47 +247,61 @@ const tableDesign = ref([
   },
 ]);
 
-const cardsArr = ref([
-  {
-    name: "Total Tasks",
-    iconComp: Summary,
-    uiNum: 3,
-    cardColor:
-      "bg-blue-50 text-blue-800 border-blue-100 shadow hover:shadow-lg ",
-    iconColor: "bg-blue-500 text-blue-100 p-1 rounded-full size-7 md:size-8",
-  },
-  {
-    name: "To Do",
-    iconComp: ListTodo,
-    uiNum: 3,
-    cardColor:
-      "bg-red-100 text-red-700 border-red-200/70  shadow hover:shadow-lg ",
-    iconColor: "bg-red-500 text-white p-1 rounded-full size-7 md:size-8",
-  },
-  {
-    name: "In Progress",
-    iconComp: Loader,
-    uiNum: 3,
-    cardColor:
-      "bg-amber-50 text-yellow-700 border-amber-100  shadow hover:shadow-lg ",
-    iconColor: "bg-amber-500 text-white p-1 rounded-full size-7 md:size-8",
-  },
-  {
-    name: "Completed",
-    iconComp: Check,
-    uiNum: 3,
-    cardColor:
-      "bg-green-50 text-green-800 border-green-100 shadow hover:shadow-lg ",
-    iconColor: "bg-green-500 text-green-100 p-1 rounded-full size-7 md:size-8",
-  },
-  // {
-  //   name: "Overdue",
-  //   iconComp: FileWarning,
-  //   uiNum: 3,
-  //   cardColor: "bg-red-100 text-red-800 ",
-  //   iconColor: "bg-red-600 text-red-50 p-1 rounded-full size-6 md:size-7",
-  // },
-]);
+const cardsArr = computed(() => {
+  let Arr = [];
+  Arr = [
+    {
+      name: "Total Tasks",
+      iconComp: Summary,
+      uiNum: tasksArr.value.length,
+      cardColor:
+        "bg-blue-50 text-blue-800 border-blue-100 shadow hover:shadow-lg ",
+      iconColor: "bg-blue-500 text-blue-100 p-1 rounded-full size-7 md:size-8",
+    },
+    {
+      name: "To Do",
+      iconComp: ListTodo,
+      uiNum: tasksArr.value.reduce((acc, i) => {
+        if (i.stage == "To Do") ++acc;
+        return acc;
+      }, 0),
+      cardColor:
+        "bg-red-100 text-red-700 border-red-200/70  shadow hover:shadow-lg ",
+      iconColor: "bg-red-500 text-white p-1 rounded-full size-7 md:size-8",
+    },
+    {
+      name: "In Progress",
+      iconComp: Loader,
+      uiNum: tasksArr.value.reduce((acc, i) => {
+        if (i.stage == "In Progress") ++acc;
+        return acc;
+      }, 0),
+      cardColor:
+        "bg-amber-50 text-yellow-700 border-amber-100  shadow hover:shadow-lg ",
+      iconColor: "bg-amber-500 text-white p-1 rounded-full size-7 md:size-8",
+    },
+    {
+      name: "Completed",
+      iconComp: Check,
+      uiNum: tasksArr.value.reduce((acc, i) => {
+        if (i.stage == "Completed") ++acc;
+        return acc;
+      }, 0),
+      cardColor:
+        "bg-green-50 text-green-800 border-green-100 shadow hover:shadow-lg ",
+      iconColor:
+        "bg-green-500 text-green-100 p-1 rounded-full size-7 md:size-8",
+    },
+    // {
+    //   name: "Overdue",
+    //   iconComp: FileWarning,
+    //   uiNum: 3,
+    //   cardColor: "bg-red-100 text-red-800 ",
+    //   iconColor: "bg-red-600 text-red-50 p-1 rounded-full size-6 md:size-7",
+    // },
+  ];
+  return Arr;
+});
 const selectionsArr = ref([
   { name: "All" },
   { name: "To Do" },
