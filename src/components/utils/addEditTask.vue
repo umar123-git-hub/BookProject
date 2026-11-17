@@ -1,6 +1,9 @@
 <template>
   <Teleport to="#Tel">
-    <div @click="$emit('hide')" class="fixed inset-0 z-20 bg-black/70">
+    <div
+      @click="$emit('hide')"
+      class="fixed inset-0 z-20 bg-black/70"
+    >
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
@@ -12,7 +15,10 @@
           class="flex border-b border-gray-300 px-4 md:px-4 lg:px-5 py-2 md:py-3 justify-between"
         >
           <div class="font-medium text-xl">Add Task</div>
-          <X @click="$emit('hide')" class="text-gray-400"></X>
+          <X
+            @click="closeDia"
+            class="text-gray-400"
+          ></X>
         </div>
         <!------- written or Cancel ------->
         <!------- Task Title ------->
@@ -111,33 +117,6 @@
                 class="flex flex-col gap-1 relative col-span-6 lg:col-span-8 border-l px-2 py-1 border-gray-400"
               >
                 <!-- ref="tagsCell" -->
-                <!-- <Transition name="conversionTransition">
-                  <div
-                    @click="conversionFun('tags')"
-                    v-if="conversionMarker !== 'tags'"
-                  >
-                    <Plus
-                      v-if="taskLocal.tags.length == 0"
-                      class="size-3 md:size-4 cursor-pointer"
-                    ></Plus>
-                    <div
-                      v-else
-                      class="flex gap-2 flex-wrap px-1"
-                    >
-                      <template v-for="val in taskLocal.tags">
-                        <div
-                          class="text-xs px-1 py-0.5 flex justify-between gap-2 items-center bg-blue-500 text-white rounded"
-                        >
-                          <div>{{ val }}</div>
-                        </div>
-                      </template>
-                    </div>
-                  </div>
-                  <div
-                    v-else-if="conversionMarker == 'tags'"
-                    class="w-full"
-                  ></div>
-                </Transition> -->
                 <div
                   v-if="taskLocal.tags.length == 0"
                   class="border border-gray-400 px-2 text-sm text-gray-400 rounded"
@@ -192,7 +171,10 @@
                     class="size-3 md:size-4 cursor-pointer"
                   ></Plus>
                   <div class="flex items-center gap-2 flex-wrap px-1">
-                    <template v-for="s in taskLocal.assignees" :key="s.id">
+                    <template
+                      v-for="s in taskLocal.assignees"
+                      :key="s.id"
+                    >
                       <div
                         v-if="s.pfp"
                         class="flex relative group gap-1 items-center"
@@ -261,7 +243,10 @@
                       v-if="showOptions"
                       class="absolute top-full bg-white w-full"
                     >
-                      <template v-for="val in multiData" :key="val.id">
+                      <template
+                        v-for="val in multiData"
+                        :key="val.id"
+                      >
                         <label class="flex gap-1 px-3 py-1">
                           <input
                             type="checkbox"
@@ -346,7 +331,10 @@
           >
             Add
           </button>
-          <button @click="$emit('hide')" class="px-3 py-1 bg-gray-200 rounded">
+          <button
+            @click="closeDia"
+            class="px-3 py-1 cursor-pointer bg-gray-200 rounded"
+          >
             Cancel
           </button>
         </div>
@@ -382,12 +370,11 @@ import { useUsersStore } from "../../Store/UsersStore";
 import { useTaskStore } from "../../Store/TasksStore.js";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import { addTask } from "../../services/TaskService.js";
+import { addTask, getAllTasks } from "../../services/TaskService.js";
 const Multi = defineAsyncComponent(() => import("./Multi.vue"));
 
+const emit = defineEmits(["hide", "refresh"]);
 const userFromStore = useUsersStore();
-const tasksFromStore = useTaskStore();
-const emit = defineEmits(["hide"]);
 
 // ---------------------MARKERS
 const conversionMarker = ref("");
@@ -420,6 +407,16 @@ const addTaskFun = () => {
   addTask(taskLocal.value).then((res) => {
     console.log(res);
   });
+  // userFromStore.refreshMarker++;
+  getAllTasks().then((res) => {
+    console.log("res in add", res);
+    res.filter((f) =>
+      f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
+    );
+    console.log("tasksArr.value in add", res);
+  });
+  emit("refresh");
+
   // if (taskLocal.value.assignees.length > 0) {
   //   tasksFromStore.allTasks.push(taskLocal.value);
   // }
@@ -433,9 +430,7 @@ const labelPush = () => {
   taskLocal.value.tags.push(labelModel.value);
   labelModel.value = "";
 };
-
 ///////////////////////////// chooseFilterFun
-
 const chooseFilterForTags = (tag) => {
   taskLocal.value.tags = taskLocal.value.tags.filter((i) => i !== tag);
   console.log(taskLocal.value.tags);
@@ -444,8 +439,27 @@ const chooseFilterForAssignees = (s) => {
   taskLocal.value.assignees = taskLocal.value.assignees.filter((i) => i !== s);
   console.log(taskLocal.value.assignees);
 };
-
 ///////////////////////////// chooseFilterFun
+
+const closeDia = () => {
+  taskLocal.value.title = "";
+  taskLocal.value.description = "";
+  taskLocal.value.createdBy = userFromStore.loggedInUser.id;
+  taskLocal.value.priority = "Low";
+  taskLocal.value.assignees = [];
+  taskLocal.value.moduleName = "";
+  taskLocal.value.tags = [];
+  taskLocal.value.estimatedTime = { h: 0, m: 0 };
+  taskLocal.value.loggedTime = [];
+  taskLocal.value.attachments = [];
+  taskLocal.value.startDate = null;
+  taskLocal.value.endDate = null;
+  taskLocal.value.stage = "To Do";
+  taskLocal.value.comments = [];
+  taskLocal.value.history = [];
+  emit("hide");
+};
+
 // ---------------------OUTSIDE CLICK
 const tagsCell = ref(null);
 const assigneesCell = ref(null);
