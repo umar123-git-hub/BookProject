@@ -7,302 +7,313 @@
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
-        class="absolute top-1/2 w-100 sm:w-120 md:w-150 shadow shadow-gray-400 rounded-lg flex flex-col gap-4 left-1/2 -translate-1/2 bg-amber-50"
+        class="absolute flex flex-col gap-1 top-1/2 w-100 sm:w-120 md:w-150 shadow shadow-gray-400 rounded-lg left-1/2 -translate-1/2 bg-amber-50"
       >
-        <!------- Add Task ------->
         <!------- written or Cancel ------->
         <div
           class="flex border-b border-gray-300 px-4 md:px-4 lg:px-5 py-2 md:py-3 justify-between"
         >
-          <div class="font-medium text-xl">Add Task</div>
+          <div class="font-medium text-xl">
+            Add Task
+            <span class="bg-green-400 px-3 py-1">{{
+              Object.keys(editDeleteObj).length
+            }}</span>
+          </div>
           <X
             @click="closeDia"
             class="text-gray-400"
           ></X>
         </div>
         <!------- written or Cancel ------->
-        <!------- Task Title ------->
-        <label class="flex flex-col gap-1 px-4">
-          <div class="text-base font-semibold text-gray-800">Title :</div>
-          <input
-            type="text"
-            class="outline-none px-1 md:px-2 py-1 md:py-1 text-base text-gray-800 border border-gray-400 focus:border-gray-300 rounded"
-            v-model="taskLocal.title"
-          />
-        </label>
-        <!------- Task Title ------->
-        <!------- Task Description ------->
-        <label class="flex flex-col line gap-2 px-4">
-          <div class="text-base font-semibold text-gray-800">Description :</div>
-          <textarea
-            class="w-full resize-y rounded text-base text-gray-800 border border-gray-300 outline-none px-2 py-1"
-            placeholder="Write something..."
-            v-model="taskLocal.description"
-          ></textarea>
-        </label>
-        <!------- Task Description ------->
-        <!--================== FIELDS ====================-->
-        <div class="flex flex-col gap-1 px-4">
-          <div class="text-base font-semibold text-gray-800">Fields :</div>
-          <div
-            class="flex flex-col text-slate-900 bg-stone-200 border border-gray-300 rounded-lg"
-          >
-            <!-- start and due -->
-            <div class="grid grid-cols-12 border-b border-gray-400">
-              <div
-                class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
-              >
-                <Calendar class="size-3 md:size-4"></Calendar>
+        <!-- ADD EDIT CONTENT -->
+        <div
+          class="flex flex-col gap-4"
+          v-if="editDeleteObj == null && diaType !== 'delete'"
+        >
+          <!------- Task Title ------->
+          <label class="flex flex-col gap-1 px-4">
+            <div class="text-base font-semibold text-gray-800">Title :</div>
+            <input
+              type="text"
+              class="outline-none px-1 md:px-2 py-1 md:py-1 text-base text-gray-800 border border-gray-400 focus:border-gray-300 rounded"
+              v-model="taskLocal.title"
+            />
+          </label>
+          <!------- Task Title ------->
+          <!------- Task Description ------->
+          <label class="flex flex-col line gap-2 px-4">
+            <div class="text-base font-semibold text-gray-800">
+              Description :
+            </div>
+            <textarea
+              class="w-full resize-y rounded text-base text-gray-800 border border-gray-300 outline-none px-2 py-1"
+              placeholder="Write something..."
+              v-model="taskLocal.description"
+            ></textarea>
+          </label>
+          <!------- Task Description ------->
+          <!--================== FIELDS ====================-->
+          <div class="flex flex-col gap-1 px-4">
+            <div class="text-base font-semibold text-gray-800">Fields :</div>
+            <div
+              class="flex flex-col text-slate-900 bg-stone-200 border border-gray-300 rounded-lg"
+            >
+              <!-- start and due -->
+              <div class="grid grid-cols-12 border-b border-gray-400">
+                <div
+                  class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
+                >
+                  <Calendar class="size-3 md:size-4"></Calendar>
 
-                <div class="text-xs md:text-sm">Start / End</div>
-              </div>
-              <div
-                class="flex items-center gap-1 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
-              >
-                <div class="flex items-center gap-1">
-                  <VueDatePicker
-                    v-model="taskLocal.startDate"
-                    format="MMM dd"
-                    placeholder="Start"
-                    auto-apply
-                    teleport
-                    :enable-time-picker="false"
-                  >
-                    <template #trigger>
-                      <Calendar class="size-3 md:size-4 cursor-pointer" />
-                    </template>
-                  </VueDatePicker>
-                  <div class="text-xs md:text-sm">
-                    {{
-                      taskLocal.startDate == null
-                        ? "Start"
-                        : format(taskLocal.startDate, "dd MMM yyyy")
-                    }}
-                  </div>
-                </div>
-                <ArrowBigRight class="size-3 md:size-4"></ArrowBigRight>
-                <div class="flex items-center gap-1">
-                  <div class="text-xs md:text-sm">
-                    {{
-                      taskLocal.endDate == null
-                        ? "End"
-                        : format(taskLocal.endDate, "dd MMM yyyy")
-                    }}
-                  </div>
-                  <VueDatePicker
-                    v-model="taskLocal.endDate"
-                    format="MMM dd"
-                    placeholder="Start"
-                    auto-apply
-                    teleport
-                    :enable-time-picker="false"
-                  >
-                    <template #trigger>
-                      <Calendar class="size-3 md:size-4 cursor-pointer" />
-                    </template>
-                  </VueDatePicker>
-                </div>
-              </div>
-            </div>
-            <!-- start and due -->
-            <!-- labels -->
-            <div class="grid grid-cols-12 border-b border-gray-400">
-              <div
-                class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
-              >
-                <TagPlus class="size-3 md:size-4"></TagPlus>
-                <div class="text-xs md:text-sm">Labels</div>
-              </div>
-              <div
-                class="flex flex-col gap-1 relative col-span-6 lg:col-span-8 border-l px-2 py-1 border-gray-400"
-              >
-                <!-- ref="tagsCell" -->
-                <div
-                  v-if="taskLocal.tags.length == 0"
-                  class="border border-gray-400 px-2 text-sm text-gray-400 rounded"
-                >
-                  Please Enter Tags ...
+                  <div class="text-xs md:text-sm">Start / End</div>
                 </div>
                 <div
-                  v-else
-                  class="flex items-center w-full gap-2 px-1 py-1 line-clamp-1 border border-gray-400 text-sm rounded overflow-auto scrollbar-thin"
+                  class="flex items-center gap-1 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
                 >
-                  <template v-for="tag in taskLocal.tags">
-                    <div
-                      class="bg-gray-700 px-2 text-white rounded relative group"
+                  <div class="flex items-center gap-1">
+                    <VueDatePicker
+                      v-model="taskLocal.startDate"
+                      format="MMM dd"
+                      placeholder="Start"
+                      auto-apply
+                      teleport
+                      :enable-time-picker="false"
                     >
-                      {{ tag }}
-                      <X
-                        @click="chooseFilterForTags(tag)"
-                        class="absolute hidden group-hover:block size-3 cursor-pointer -top-1 -right-2 bg-red-300 rounded text-white"
-                      ></X>
+                      <template #trigger>
+                        <Calendar class="size-3 md:size-4 cursor-pointer" />
+                      </template>
+                    </VueDatePicker>
+                    <div class="text-xs md:text-sm">
+                      {{
+                        taskLocal.startDate == null
+                          ? "Start"
+                          : format(taskLocal.startDate, "dd MMM yyyy")
+                      }}
                     </div>
-                  </template>
-                </div>
-                <input
-                  type="text"
-                  v-model="labelModel"
-                  @keydown.enter="labelPush()"
-                  placeholder="Enter here ..."
-                  class="outline-none border border-gray-400 px-2 rounded"
-                />
-              </div>
-            </div>
-            <!-- labels -->
-            <!--=============================== Assignees =====================================-->
-            <div class="grid grid-cols-12 border-b border-gray-400">
-              <div
-                class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
-              >
-                <CircleUserRound class="size-3 md:size-4"></CircleUserRound>
-                <div class="text-xs md:text-sm">Assignees</div>
-              </div>
-              <div
-                ref="assigneesCell"
-                class="flex items-center gap-2 col-span-6 lg:col-span-8 border-l border-gray-400"
-              >
-                <!-- plus and selected show TOGGLE AND CHANGE -->
-                <div
-                  v-if="conversionMarker !== 'multi'"
-                  class="w-full px-2 flex items-center"
-                >
-                  <Plus
-                    @click="conversionFun('multi')"
-                    class="size-3 md:size-4 cursor-pointer"
-                  ></Plus>
-                  <div class="flex items-center gap-2 flex-wrap px-1">
-                    <template
-                      v-for="s in taskLocal.assignees"
-                      :key="s.id"
+                  </div>
+                  <ArrowBigRight class="size-3 md:size-4"></ArrowBigRight>
+                  <div class="flex items-center gap-1">
+                    <div class="text-xs md:text-sm">
+                      {{
+                        taskLocal.endDate == null
+                          ? "End"
+                          : format(taskLocal.endDate, "dd MMM yyyy")
+                      }}
+                    </div>
+                    <VueDatePicker
+                      v-model="taskLocal.endDate"
+                      format="MMM dd"
+                      placeholder="Start"
+                      auto-apply
+                      teleport
+                      :enable-time-picker="false"
                     >
+                      <template #trigger>
+                        <Calendar class="size-3 md:size-4 cursor-pointer" />
+                      </template>
+                    </VueDatePicker>
+                  </div>
+                </div>
+              </div>
+              <!-- start and due -->
+              <!-- labels -->
+              <div class="grid grid-cols-12 border-b border-gray-400">
+                <div
+                  class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
+                >
+                  <TagPlus class="size-3 md:size-4"></TagPlus>
+                  <div class="text-xs md:text-sm">Labels</div>
+                </div>
+                <div
+                  class="flex flex-col gap-1 relative col-span-6 lg:col-span-8 border-l px-2 py-1 border-gray-400"
+                >
+                  <!-- ref="tagsCell" -->
+                  <div
+                    v-if="taskLocal.tags.length == 0"
+                    class="border border-gray-400 px-2 text-sm text-gray-400 rounded"
+                  >
+                    Please Enter Tags ...
+                  </div>
+                  <div
+                    v-else
+                    class="flex items-center w-full gap-2 px-1 py-1 line-clamp-1 border border-gray-400 text-sm rounded overflow-auto scrollbar-thin"
+                  >
+                    <template v-for="tag in taskLocal.tags">
                       <div
-                        v-if="s.pfp"
-                        class="flex relative group gap-1 items-center"
+                        class="bg-gray-700 px-2 text-white rounded relative group"
                       >
-                        <img
-                          :src="s.pfp"
-                          class="size-5 lg:size-6 rounded-full"
-                          alt=""
-                        />
+                        {{ tag }}
                         <X
-                          class="absolute hidden group-hover:block size-3 cursor-pointer -top-2 -right-1 bg-red-300 rounded text-white"
-                        ></X>
-                      </div>
-                      <div
-                        v-else
-                        class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
-                      >
-                        {{
-                          s.name
-                            .split(" ")
-                            .map((s) => s.slice(0, 1).toLocaleUpperCase())
-                            .join("")
-                        }}
-                        <X
-                          @click="chooseFilterForAssignees(s)"
-                          class="absolute hidden group-hover:block size-3 cursor-pointer -top-2 -right-1 bg-red-300 rounded text-white"
+                          @click="chooseFilterForTags(tag)"
+                          class="absolute hidden group-hover:block size-3 cursor-pointer -top-1 -right-2 bg-red-300 rounded text-white"
                         ></X>
                       </div>
                     </template>
                   </div>
+                  <input
+                    type="text"
+                    v-model="labelModel"
+                    @keydown.enter="labelPush()"
+                    placeholder="Enter here ..."
+                    class="outline-none border border-gray-400 px-2 rounded"
+                  />
                 </div>
-                <!-- plus and selected show TOGGLE AND CHANGE -->
-                <Multi
-                  v-else-if="conversionMarker == 'multi'"
-                  v-model="taskLocal.assignees"
-                  :multi-data="userFromStore.allUser"
-                  :field="'name'"
-                  class="w-full"
+              </div>
+              <!-- labels -->
+              <!--=============================== Assignees =====================================-->
+              <div class="grid grid-cols-12 border-b border-gray-400">
+                <div
+                  class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
                 >
-                  <!-- SELECTED IN MULTI IN UI IN slots -->
-                  <template #multiHead="{ showOpsFun, selected }">
-                    <div
-                      class="relative px-2 flex items-center gap-1 bg-white py-2 border border-blue-400 rounded"
-                    >
-                      <div v-if="selected.length == 0">Please Select</div>
-                      <template v-for="select in selected">
+                  <CircleUserRound class="size-3 md:size-4"></CircleUserRound>
+                  <div class="text-xs md:text-sm">Assignees</div>
+                </div>
+                <div
+                  ref="assigneesCell"
+                  class="flex items-center gap-2 col-span-6 lg:col-span-8 border-l border-gray-400"
+                >
+                  <!-- plus and selected show TOGGLE AND CHANGE -->
+                  <div
+                    v-if="conversionMarker !== 'multi'"
+                    class="w-full px-2 flex items-center"
+                  >
+                    <Plus
+                      @click="conversionFun('multi')"
+                      class="size-3 md:size-4 cursor-pointer"
+                    ></Plus>
+                    <div class="flex items-center gap-2 flex-wrap px-1">
+                      <template
+                        v-for="s in taskLocal.assignees"
+                        :key="s.id"
+                      >
                         <div
-                          class="px-2 py-1 text-xs text-white bg-mauve-500 rounded-full"
+                          v-if="s.pfp"
+                          class="flex relative group gap-1 items-center"
+                        >
+                          <img
+                            :src="s.pfp"
+                            class="size-5 lg:size-6 rounded-full"
+                            alt=""
+                          />
+                          <X
+                            class="absolute hidden group-hover:block size-3 cursor-pointer -top-2 -right-1 bg-red-300 rounded text-white"
+                          ></X>
+                        </div>
+                        <div
+                          v-else
+                          class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                         >
                           {{
-                            select.name
+                            s.name
                               .split(" ")
                               .map((s) => s.slice(0, 1).toLocaleUpperCase())
                               .join("")
                           }}
+                          <X
+                            @click="chooseFilterForAssignees(s)"
+                            class="absolute hidden group-hover:block size-3 cursor-pointer -top-2 -right-1 bg-red-300 rounded text-white"
+                          ></X>
                         </div>
                       </template>
                     </div>
-                  </template>
-                  <!-- SELECTED IN MULTI IN UI IN slots -->
-
-                  <!-- SELECTION AREA IN MULTI SELECT IN MULTI SLOTS -->
-
-                  <template #multiDrop="{ showOptions, multiData }">
-                    <div
-                      v-if="showOptions"
-                      class="absolute top-full bg-white w-full"
-                    >
-                      <template
-                        v-for="val in multiData"
-                        :key="val.id"
+                  </div>
+                  <!-- plus and selected show TOGGLE AND CHANGE -->
+                  <Multi
+                    v-else-if="conversionMarker == 'multi'"
+                    v-model="taskLocal.assignees"
+                    :multi-data="userFromStore.allUser"
+                    :field="'name'"
+                    class="w-full"
+                  >
+                    <!-- SELECTED IN MULTI IN UI IN slots -->
+                    <template #multiHead="{ showOpsFun, selected }">
+                      <div
+                        class="relative px-2 flex items-center gap-1 bg-white py-2 border border-blue-400 rounded"
                       >
-                        <label class="flex gap-1 px-3 py-1">
-                          <input
-                            type="checkbox"
-                            :value="val"
-                            v-model="taskLocal.assignees"
-                          />
-                          <div class="flex gap-1">
-                            {{ val.name }}
+                        <div v-if="selected.length == 0">Please Select</div>
+                        <template v-for="select in selected">
+                          <div
+                            class="px-2 py-1 text-xs text-white bg-mauve-500 rounded-full"
+                          >
+                            {{
+                              select.name
+                                .split(" ")
+                                .map((s) => s.slice(0, 1).toLocaleUpperCase())
+                                .join("")
+                            }}
                           </div>
-                        </label>
-                      </template>
-                    </div>
-                  </template>
-                  <!-- SELECTION AREA IN MULTI SELECT IN MULTI SLOTS -->
-                </Multi>
+                        </template>
+                      </div>
+                    </template>
+                    <!-- SELECTED IN MULTI IN UI IN slots -->
+
+                    <!-- SELECTION AREA IN MULTI SELECT IN MULTI SLOTS -->
+
+                    <template #multiDrop="{ showOptions, multiData }">
+                      <div
+                        v-if="showOptions"
+                        class="absolute top-full bg-white w-full"
+                      >
+                        <template
+                          v-for="val in multiData"
+                          :key="val.id"
+                        >
+                          <label class="flex gap-1 px-3 py-1">
+                            <input
+                              type="checkbox"
+                              :value="val"
+                              v-model="taskLocal.assignees"
+                            />
+                            <div class="flex gap-1">
+                              {{ val.name }}
+                            </div>
+                          </label>
+                        </template>
+                      </div>
+                    </template>
+                    <!-- SELECTION AREA IN MULTI SELECT IN MULTI SLOTS -->
+                  </Multi>
+                </div>
               </div>
-            </div>
-            <!--=============================== Assignees =====================================-->
-            <!-- time -->
-            <div class="grid grid-cols-12 border-b border-gray-400">
-              <div
-                class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
-              >
-                <Clock class="size-3 md:size-4"></Clock>
-                <div class="text-xs md:text-sm">Time</div>
-              </div>
-              <div
-                @click="conversionFun('time')"
-                v-if="conversionMarker == ''"
-                class="flex items-center text-sm md:text-base gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
-              >
-                Add estimated time
-              </div>
-              <div
-                ref="timeCell"
-                v-else-if="conversionMarker == 'time'"
-                class="flex items-center text-sm md:text-base gap-2 col-span-6 lg:col-span-8 border-l px-2 py-1 border-gray-400"
-              >
-                <label class="flex flex-col">
-                  <div class="text-sm">hour:</div>
-                  <input
-                    type="number"
-                    class="w-2/3 pl-2 outline-none border border-gray-400 rounded"
-                    v-model="taskLocal.estimatedTime.h"
-                  />
-                </label>
-                <label class="flex flex-col">
-                  <div class="text-sm">min:</div>
-                  <input
-                    type="number"
-                    class="w-2/3 pl-2 outline-none border border-gray-400 rounded"
-                    v-model="taskLocal.estimatedTime.m"
-                  />
-                </label>
-                <!------- Upload or Cancel  ------->
-                <!-- <div class="flex items-center gap-2 px-4">
+              <!--=============================== Assignees =====================================-->
+              <!-- time -->
+              <div class="grid grid-cols-12 border-b border-gray-400">
+                <div
+                  class="flex items-center gap-1 px-2 py-2 col-span-6 lg:col-span-4"
+                >
+                  <Clock class="size-3 md:size-4"></Clock>
+                  <div class="text-xs md:text-sm">Time</div>
+                </div>
+                <div
+                  @click="conversionFun('time')"
+                  v-if="conversionMarker == ''"
+                  class="flex items-center text-sm md:text-base gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+                >
+                  Add estimated time
+                </div>
+                <div
+                  ref="timeCell"
+                  v-else-if="conversionMarker == 'time'"
+                  class="flex items-center text-sm md:text-base gap-2 col-span-6 lg:col-span-8 border-l px-2 py-1 border-gray-400"
+                >
+                  <label class="flex flex-col">
+                    <div class="text-sm">hour:</div>
+                    <input
+                      type="number"
+                      class="w-2/3 pl-2 outline-none border border-gray-400 rounded"
+                      v-model="taskLocal.estimatedTime.h"
+                    />
+                  </label>
+                  <label class="flex flex-col">
+                    <div class="text-sm">min:</div>
+                    <input
+                      type="number"
+                      class="w-2/3 pl-2 outline-none border border-gray-400 rounded"
+                      v-model="taskLocal.estimatedTime.m"
+                    />
+                  </label>
+                  <!------- Upload or Cancel  ------->
+                  <!-- <div class="flex items-center gap-2 px-4">
                   <button
                     @click=""
                     class="px-2 py-1 text-sm bg-blue-400 text-white rounded"
@@ -316,14 +327,25 @@
                     Cancel
                   </button>
                 </div> -->
-                <!------- Upload or Cancel  ------->
+                  <!------- Upload or Cancel  ------->
+                </div>
               </div>
+              <!-- time -->
             </div>
-            <!-- time -->
           </div>
+          <!--================== FIELDS ====================-->
+          
         </div>
-        <!--================== FIELDS ====================-->
-        <!------- Add or Cancel  ------->
+        <!-- ADD EDIT CONTENT -->
+        <!--=============== DELETE ==============-->
+        <div
+          v-else
+          class="flex flex-col gap-3"
+        >
+          <div>Are You Sure ???</div>
+        </div>
+        <!--=============== DELETE ==============-->
+        <!------- BUTTONS  ------->
         <div class="flex items-center gap-2 px-4 pt-2 pb-4">
           <button
             @click="addTaskFun"
@@ -338,7 +360,7 @@
             Cancel
           </button>
         </div>
-        <!------- Add or Cancel  ------->
+        <!------- BUTTONS  ------->
       </div>
       <!------- Add Task ------->
 
@@ -373,14 +395,22 @@ import "@vuepic/vue-datepicker/dist/main.css";
 import { addTask, getAllTasks } from "../../services/TaskService.js";
 const Multi = defineAsyncComponent(() => import("./Multi.vue"));
 
+const props = defineProps({
+  diaType: {
+    type: String,
+    default: () => "",
+  },
+  editDeleteObj: {
+    type: Object,
+    default: () => ({}),
+  },
+});
 const emit = defineEmits(["hide", "refresh"]);
 const userFromStore = useUsersStore();
 
 // ---------------------MARKERS
 const conversionMarker = ref("");
-watch(conversionMarker, (n) => {
-  console.log(n);
-});
+
 // ---------------------MARKERS
 const taskLocal = ref({
   title: "",
@@ -400,8 +430,10 @@ const taskLocal = ref({
   history: [],
 });
 
-// console.log(st.value.split(" ").map((s) => s.slice(0, 1).toLocaleUpperCase()));
-
+if (props.editDeleteObj !== null) {
+  taskLocal.value = props.editDeleteObj;
+  console.log(taskLocal.value);
+}
 ///////////////Add Task
 const addTaskFun = () => {
   addTask(taskLocal.value).then((res) => {
@@ -416,20 +448,21 @@ const addTaskFun = () => {
     console.log("tasksArr.value in add", res);
   });
   emit("refresh");
-
-  // if (taskLocal.value.assignees.length > 0) {
-  //   tasksFromStore.allTasks.push(taskLocal.value);
-  // }
 };
 ///////////////Add Task
+///////////////EDIT Task
+
+///////////////EDIT Task
 const conversionFun = (name) => {
   conversionMarker.value = name;
 };
+// LABEL WORK
 const labelModel = ref("");
 const labelPush = () => {
   taskLocal.value.tags.push(labelModel.value);
   labelModel.value = "";
 };
+// LABEL WORK
 ///////////////////////////// chooseFilterFun
 const chooseFilterForTags = (tag) => {
   taskLocal.value.tags = taskLocal.value.tags.filter((i) => i !== tag);
@@ -474,9 +507,8 @@ const closeIfActive = (name) => () => {
 onClickOutside(tagsCell, closeIfActive("tags"));
 onClickOutside(assigneesCell, closeIfActive("multi"));
 onClickOutside(timeCell, closeIfActive("time"));
-
-onMounted(() => {});
 </script>
+
 <style scoped>
 .conversionTransition-enter-from,
 .conversionTransition-leave-to {
@@ -488,22 +520,3 @@ onMounted(() => {});
   transition: all 0.5s ease;
 }
 </style>
-<!-- const taskLocal = ref({
-    id: crypto.randomUUID(),
-    title: "",
-    description: "",
-    createdBy: null,
-    priority: "",
-    assignees: [],
-    moduleName: "",
-    tags: [],
-    estimatedTime: { h: 0, m: 0 },
-    loggedTime: [],
-    attachments: [],
-    startTime: null,
-    endTime: null,
-    stage: "To Do",
-    comments: [],
-    history: [],    
-  }
-) -->
