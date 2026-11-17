@@ -72,10 +72,7 @@
                 :td-data="tableRow[tData.field]"
                 v-else-if="$slots.objectSlot && tData.objectSlot"
               ></slot>
-              <div
-                v-else
-                class=""
-              >
+              <div v-else class="">
                 {{ tableRow[tData.field] }}
               </div>
             </td>
