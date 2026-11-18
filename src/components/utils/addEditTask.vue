@@ -15,9 +15,6 @@
         >
           <div class="font-medium text-xl">
             Add Task
-            <span class="bg-green-400 px-3 py-1">{{
-              Object.keys(editDeleteObj).length
-            }}</span>
           </div>
           <X
             @click="closeDia"
@@ -28,7 +25,7 @@
         <!-- ADD EDIT CONTENT -->
         <div
           class="flex flex-col gap-4"
-          v-if="editDeleteObj == null && diaType !== 'delete'"
+          v-if="!(editDeleteObj !== null && diaType == 'delete')"
         >
           <!------- Task Title ------->
           <label class="flex flex-col gap-1 px-4">
@@ -351,7 +348,7 @@
             @click="addTaskFun"
             class="px-4 py-1 bg-blue-400 text-white rounded"
           >
-            Add
+            {{ editDeleteObj == null ? "Add" : diaType == 'edit'? 'Edit': 'Delete'}}
           </button>
           <button
             @click="closeDia"
