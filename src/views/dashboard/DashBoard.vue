@@ -14,12 +14,18 @@
         <!-- written -->
         <!-- cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-1">
-          <template v-for="card in cardsArr" :key="card">
+          <template
+            v-for="card in cardsArr"
+            :key="card"
+          >
             <div
               :class="card.cardColor"
               class="flex flex-col cursor-pointer gap-1 transition-all duration-150 p-3 border rounded-xl"
             >
-              <component :is="card.iconComp" :class="card.iconColor" />
+              <component
+                :is="card.iconComp"
+                :class="card.iconColor"
+              />
               <div class="flex flex-col">
                 <div class="text-lg font-semibold md:text-xl xl:font-bold">
                   {{ card.uiNum }}
@@ -64,7 +70,10 @@
           <OptionsTabs :tabs-arr="selectionsArr">
             <template #tabsDirectionSlot="{ tabsArr }">
               <div class="flex items-center gap-3 w-max">
-                <template v-for="tab in tabsArr" :key="tab">
+                <template
+                  v-for="tab in tabsArr"
+                  :key="tab"
+                >
                   <div
                     class="px-2 py-0.5 md:py-1 md:px-2.5 lg:px-3 text-gray-100 bg-mauve-500/85 rounded shadow-lg border border-blue-950/0 font-semibold text-xs cursor-pointer transition-all duration-75"
                   >
@@ -104,7 +113,10 @@
                 <div
                   class="flex flex-wrap gap-1 items-center py-1 line-clamp-2"
                 >
-                  <template v-for="t in tdData" :key="t.id">
+                  <template
+                    v-for="t in tdData"
+                    :key="t.id"
+                  >
                     <div
                       class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                     >
@@ -115,7 +127,10 @@
               </template>
               <template #arrayOfObjectSlot="{ tdData }">
                 <div class="flex gap-1 justify-center items-center py-1">
-                  <template v-for="t in tdData" :key="t.id">
+                  <template
+                    v-for="t in tdData"
+                    :key="t.id"
+                  >
                     <div
                       class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                     >
@@ -136,7 +151,10 @@
               </template>
               <template #objectSlot="{ tdData }">
                 <div class="flex gap-2">
-                  <template v-for="(time, tKey) in tdData" :key="time">
+                  <template
+                    v-for="(time, tKey) in tdData"
+                    :key="time"
+                  >
                     <div class="flex gap-1">
                       <div class="col-span-1">{{ time }}</div>
                       <div class="col-span-4">
@@ -157,10 +175,15 @@
               <template #extraTd="{ tableRow }">
                 <td class="">
                   <div class="flex items-center justify-center gap-5">
-                    <template v-for="action in actionsArr" :key="action">
+                    <template
+                      v-for="action in actionsArr"
+                      :key="action"
+                    >
                       <component
                         @click="
-                          action.name == 'delete' ? deleteFun(tableRow) : ''
+                          action.name == 'delete'
+                            ? deleteFun(tableRow, action.name)
+                            : editOpen(tableRow, action.name)
                         "
                         class="cursor-pointer"
                         :is="action.iconComp"
@@ -188,11 +211,15 @@
       v-if="addEditMarker"
       @refresh="refreshFun()"
       @hide="addEditMarker = false"
+      :edit-delete-obj="editDeleteObj"
+      :dia-type="diaType"
     ></AddEditTask>
     <!-- DIALOGUE -->
   </div>
 </template>
 <script setup>
+//--------------------- imports
+
 import { ref, defineAsyncComponent, onMounted, computed } from "vue";
 import {
   Summary,
@@ -215,9 +242,11 @@ const AddEditTask = defineAsyncComponent(
 const TableG = defineAsyncComponent(
   () => import("../../components/utils/TableG.vue"),
 );
+//--------------------- imports
 const userFromStore = useUsersStore();
 
 const addEditMarker = ref(false);
+const editDeleteObj = ref(null);
 const formatLabel = (str) => {
   return str
     .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -312,10 +341,26 @@ const actionsArr = ref([
   { name: "edit", iconComp: Edit },
   { name: "delete", iconComp: Trash },
 ]);
-const refreshComp = computed(() => userFromStore.refreshMarker);
-const deleteFun = (toBeDelete) => {
-  deleteTask(toBeDelete.id);
+
+const diaType = ref("");
+// DELETE WORK
+const deleteFun = (toBeDelete, type) => {
+  addEditMarker.value = true;
+  editDeleteObj.value = {};
+  editDeleteObj.value = toBeDelete;
+  diaType.value = type;
+  // deleteTask(toBeDelete.id);
 };
+// DELETE WORK
+// EDIT WORK
+const editOpen = (toBeEdit, type) => {
+  addEditMarker.value = true;
+  editDeleteObj.value = {};
+  editDeleteObj.value = toBeEdit;
+  diaType.value = type;
+};
+// EDIT WORK
+
 const refreshFun = () => {
   console.log("userFromStore.loggedInUser.id", userFromStore.loggedInUser.id);
   getAllTasks().then((res) => {
@@ -331,3 +376,22 @@ onMounted(() => {
   refreshFun();
 });
 </script>
+<!-- const taskLocal = ref({
+    id: crypto.randomUUID(),
+    title: "",
+    description: "",
+    createdBy: null,
+    priority: "",
+    assignees: [],
+    moduleName: "",
+    tags: [],
+    estimatedTime: { h: 0, m: 0 },
+    loggedTime: [],
+    attachments: [],
+    startTime: null,
+    endTime: null,
+    stage: "To Do",
+    comments: [],
+    history: [],    
+  }
+) -->
