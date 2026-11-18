@@ -209,8 +209,8 @@
     <!-- DIALOGUE -->
     <AddEditTask
       v-if="addEditMarker"
-      @refresh="refreshFun()"
-      @hide="addEditMarker = false"
+      @refresh="refreshFun"
+      @hide="addEditHideFun"
       :edit-delete-obj="editDeleteObj"
       :dia-type="diaType"
     ></AddEditTask>
@@ -371,6 +371,7 @@ const refreshFun = () => {
     console.log("tasksArr.value", tasksArr.value);
   });
   addEditMarker.value = false;
+  editDeleteObj.value = null;
 };
 onMounted(() => {
   refreshFun();
