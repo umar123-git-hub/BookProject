@@ -15,9 +15,6 @@
         >
           <div class="font-medium text-xl">
             Add Task
-            <span class="bg-green-400 px-3 py-1">{{
-              Object.keys(editDeleteObj).length
-            }}</span>
           </div>
           <X
             @click="closeDia"
