@@ -66,7 +66,7 @@
               <div class="flex items-center gap-3 w-max">
                 <template v-for="tab in tabsArr" :key="tab">
                   <div
-                    class="px-2 py-0.5 md:py-1 md:px-2.5 lg:px-3 text-gray-100 bg-mauve-500/85 rounded shadow-lg border border-blue-950/0 font-semibold text-xs hover:scale-110 cursor-pointer transition-all duration-75"
+                    class="px-2 py-0.5 md:py-1 md:px-2.5 lg:px-3 text-gray-100 bg-mauve-500/85 rounded shadow-lg border border-blue-950/0 font-semibold text-xs cursor-pointer transition-all duration-75"
                   >
                     {{ tab.name }}
                   </div>
