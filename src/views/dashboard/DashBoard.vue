@@ -10,6 +10,7 @@
             Good Afternoon, {{ userFromStore.loggedInUser?.name }} !
           </div>
           <div>Here's what's happening with your tasks today.</div>
+          
         </div>
         <!-- written -->
         <!-- cards -->
@@ -67,20 +68,9 @@
         <!-- SEARCH AND TABLE -->
         <div class="flex flex-col gap-3">
           <!-- SELECTION BTNS -->
-          <OptionsTabs :tabs-arr="selectionsArr">
-            <template #tabsDirectionSlot="{ tabsArr }">
-              <div class="flex items-center gap-3 w-max">
-                <template
-                  v-for="tab in tabsArr"
-                  :key="tab"
-                >
-                  <div
-                    class="px-2 py-0.5 md:py-1 md:px-2.5 lg:px-3 text-gray-100 bg-mauve-500/85 rounded shadow-lg border border-blue-950/0 font-semibold text-xs cursor-pointer transition-all duration-75"
-                  >
-                    {{ tab.name }}
-                  </div>
-                </template>
-              </div>
+          <OptionsTabs :tabs-arr="selectionsArr" v-model="OptionsTabsModel" :tabs-style="' gap-2'">
+            <template #tabsDirectionSlot="{ tabs }">
+              <div @click="OptionsTabsModel = tabs" class="px-2 py-0.5 md:py-1 md:px-2.5 lg:px-3 text-gray-100 bg-mauve-500/85 rounded shadow-lg border border-blue-950/0 font-semibold text-xs cursor-pointer transition-all duration-75 hover:shadow-black/30">{{ tabs }}</div>
             </template>
           </OptionsTabs>
           <!-- SELECTION BTNS -->
@@ -360,6 +350,13 @@ const editOpen = (toBeEdit, type) => {
   diaType.value = type;
 };
 // EDIT WORK
+// addEditHideFun
+const addEditHideFun = () => {
+  addEditMarker.value = false;
+  editDeleteObj.value = null;
+  diaType.value = "";
+};
+// addEditHideFun
 
 const refreshFun = () => {
   console.log("userFromStore.loggedInUser.id", userFromStore.loggedInUser.id);
@@ -372,10 +369,13 @@ const refreshFun = () => {
   });
   addEditMarker.value = false;
   editDeleteObj.value = null;
+  diaType.value = "";
 };
 onMounted(() => {
   refreshFun();
 });
+
+const OptionsTabsModel = ref("hello")
 </script>
 <!-- const taskLocal = ref({
     id: crypto.randomUUID(),
