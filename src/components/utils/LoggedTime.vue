@@ -19,7 +19,7 @@
         <div class="flex gap-2 px-4 py-2">
           <div
             @click="showDatePicker = !showDatePicker"
-            class="relative flex flex-col border"
+            class="relative flex flex-col"
           >
             <div class="text-red-500">Date</div>
             <div
