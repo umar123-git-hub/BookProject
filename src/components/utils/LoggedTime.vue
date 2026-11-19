@@ -75,10 +75,16 @@
       <div>
         <!------- BUTTONS  ------->
         <div class="flex items-center justify-end gap-2 px-4 py-2">
-          <button @click="" class="px-2 bg-blue-400 text-white rounded">
+          <button
+            @click=""
+            class="px-2 bg-blue-400 text-white rounded"
+          >
             Add
           </button>
-          <button @click="" class="px-3 cursor-pointer bg-gray-200 rounded">
+          <button
+            @click=""
+            class="px-3 cursor-pointer bg-gray-200 rounded"
+          >
             Cancel
           </button>
         </div>
