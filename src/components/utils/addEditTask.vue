@@ -454,64 +454,65 @@
           <!-- ADD EDIT CONTENT -->
           <!--=============== DELETE ==============-->
           <div
-            v-else
-            class="flex flex-col gap-3 px-4"
+          v-else
+          class="flex flex-col gap-3 px-4"
           >
-            <div>
-              Are You Sure To Delete
-              <span class="font-bold">{{ editDeleteObj.title }}</span> ???
-            </div>
+          <div>
+            Are You Sure To Delete
+            <span class="font-bold">{{ editDeleteObj.title }}</span> ???
           </div>
-          <!--=============== DELETE ==============-->
-          <!------- BUTTONS  ------->
-          <div class="flex items-center gap-2 px-4 pt-2 pb-4">
-            <button
-              @click="
+        </div>
+        <!--=============== DELETE ==============-->
+        <!------- BUTTONS  ------->
+        <div class="flex items-center gap-2 px-4 pt-2 pb-4">
+          <button
+          @click="
                 editDeleteObj == null
-                  ? addTaskFun()
-                  : editDeleteObj !== null && diaType == 'edit'
-                    ? editTaskFun()
-                    : diaType == 'delete'
-                      ? deleteTaskFun()
-                      : ''
-              "
+                ? addTaskFun()
+                : editDeleteObj !== null && diaType == 'edit'
+                ? editTaskFun()
+                : diaType == 'delete'
+                ? deleteTaskFun()
+                : ''
+                "
               class="px-4 py-1 bg-blue-400 text-white rounded"
-            >
+              >
               {{
                 editDeleteObj == null
-                  ? "Add"
-                  : editDeleteObj !== null && diaType == "edit"
-                    ? "Edit"
-                    : diaType == "delete"
-                      ? "Delete"
-                      : ""
+                ? "Add"
+                : editDeleteObj !== null && diaType == "edit"
+                ? "Edit"
+                : diaType == "delete"
+                ? "Delete"
+                : ""
               }}
             </button>
             <button
-              @click="closeDia"
-              class="px-3 py-1 cursor-pointer bg-gray-200 rounded"
+            @click="closeDia"
+            class="px-3 py-1 cursor-pointer bg-gray-200 rounded"
             >
-              Cancel
-            </button>
-          </div>
-          <!------- BUTTONS  ------->
+            Cancel
+          </button>
         </div>
+        <!------- BUTTONS  ------->
+      </div>
         <!--================== LEFT SIDE ====================-->
         <!--================== RIGHT SIDE ====================-->
         <div
-          v-if="diaType == 'edit'"
-          class="border-l w-1/2 flex-1 border-gray-300"
+        v-if="diaType == 'edit'"
+        class="border-l w-1/2 flex-1 border-gray-300"
         >
-          asas
-        </div>
-        <!--================== RIGHT SIDE ====================-->
+        asas
       </div>
-
-      <!------- Add Task ------->
-
-      <!--=================== ABSOLUTE AREA ========================-->
+      <!--================== RIGHT SIDE ====================-->
     </div>
-  </Teleport>
+    <LoggedTime></LoggedTime>
+    
+    <!------- Add Task ------->
+    
+    <!--=================== ABSOLUTE AREA ========================-->
+  </div>
+</Teleport>
 </template>
 <script setup>
 import {
@@ -538,6 +539,7 @@ import {
   editTask,
   deleteTask,
 } from "../../services/TaskService.js";
+import LoggedTime from "./LoggedTime.vue";
 const Multi = defineAsyncComponent(() => import("./Multi.vue"));
 const DropDown = defineAsyncComponent(() => import("./DropDown.vue"));
 
