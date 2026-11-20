@@ -1,23 +1,24 @@
 <template>
-
   <div
-    class="flex "
-    :class="tabsStyle"
+    class="flex relative w-full items-center"
+    :class="tabsDirection == 'row' ? 'flex-row gap-2' : 'flex-col gap-1'"
   >
     <template
       v-for="tab in tabsArr"
-      :key="tab.name"
+      :key="tab"
     >
-    <slot
-    name="tabsDirectionSlot"
-    :tabs="tab.name"
-    :model="model"
-    v-if="$slots.tabsDirectionSlot"
-  ></slot>
-      <div @click="model=tab.name" v-else
-        class="px-2 py-1 border border-blue-500 font-semibold text-xs md:text-sm bg-blue-200/70 hover:bg-blue-200 cursor-pointer transition-all duration-100 text-blue-700"
+      <div
+        @click="model = tab"
+        :class="tabsDirection == 'row' ? 'w-max' : 'w-full'"
       >
-        {{ tab.name }}
+        <slot
+          name="tabSlot"
+          v-if="$slots.tabSlot"
+          :tab="tab"
+        ></slot>
+        <div v-else>
+          {{ tab }}
+        </div>
       </div>
     </template>
   </div>
@@ -29,10 +30,11 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  tabsStyle:String,
+  tabsDirection: {
+    type: String,
+    default: () => "row",
+  },
 });
 
-const model = defineModel ({
-  type: String,
-})
+const model = defineModel({ type: String });
 </script>

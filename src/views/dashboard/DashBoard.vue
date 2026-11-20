@@ -3,6 +3,7 @@
     <!--=================== LEFT SIDE =================-->
     <div class="p-3 w-full flex flex-col gap-3 md:col-span-8 lg:col-span-9">
       <!-- CARD AND WRITTEN -->
+      {{ addEditMarker }}
       <div class="flex flex-col gap-4">
         <!-- written -->
         <div class="flex flex-col">
@@ -10,7 +11,6 @@
             Good Afternoon, {{ userFromStore.loggedInUser?.name }} !
           </div>
           <div>Here's what's happening with your tasks today.</div>
-          
         </div>
         <!-- written -->
         <!-- cards -->
@@ -20,6 +20,7 @@
             :key="card"
           >
             <div
+              @click="tableSelectModel = card.name"
               :class="card.cardColor"
               class="flex flex-col cursor-pointer gap-1 transition-all duration-150 p-3 border rounded-xl"
             >
@@ -53,7 +54,7 @@
               My Tasks
             </div>
             <button
-              @click="addEditMarker = !addEditMarker"
+              @click="openAdd"
               class="flex items-center text-white gap-0.5 shadow-xl transition-all duration-100 bg-mauve-500 hover:bg-mauve-600 cursor-pointer rounded py-1 px-2"
             >
               <StickyNotePlus
@@ -68,9 +69,16 @@
         <!-- SEARCH AND TABLE -->
         <div class="flex flex-col gap-3">
           <!-- SELECTION BTNS -->
-          <OptionsTabs :tabs-arr="selectionsArr" v-model="OptionsTabsModel" :tabs-style="' gap-2'">
-            <template #tabsDirectionSlot="{ tabs }">
-              <div @click="OptionsTabsModel = tabs" class="px-2 py-0.5 md:py-1 md:px-2.5 lg:px-3 text-gray-100 bg-mauve-500/85 rounded shadow-lg border border-blue-950/0 font-semibold text-xs cursor-pointer transition-all duration-75 hover:shadow-black/30">{{ tabs }}</div>
+          <OptionsTabs
+            :tabs-arr="selectionsArr"
+            v-model="tableSelectModel"
+          >
+            <template #tabSlot="{ tab }">
+              <div
+                class="w-full bg-mauve-500 rounded-sm text-white px-1.5 py-1 cursor-pointer text-xs hover:shadow-xl shadow-black/30 transition-all duration-75"
+              >
+                {{ tab }}
+              </div>
             </template>
           </OptionsTabs>
           <!-- SELECTION BTNS -->
@@ -91,7 +99,7 @@
           <div class="w-full overflow-auto bg-white h-3/4 rounded-xl">
             <TableG
               v-if="tasksArr.length !== 0"
-              :table-arr="tasksArr"
+              :table-arr="tasksComputed"
               :table-design="tableDesign"
             >
               <template #simple="{ simpleData }">
@@ -101,7 +109,7 @@
               </template>
               <template #simpleArraySlot="{ tdData }">
                 <div
-                  class="flex flex-wrap gap-1 items-center py-1 line-clamp-2"
+                  class="flex flex-wrap gap-1 items-center justify-center py-1 line-clamp-2"
                 >
                   <template
                     v-for="t in tdData"
@@ -136,7 +144,7 @@
               </template>
               <template #DateSlot="{ tdData }">
                 <div class="flex justify-center items-center">
-                  {{ format(tdData, "dd MMM yyyy") }}
+                  {{ tdData == null ? "--" : format(tdData, "dd MMM yyyy") }}
                 </div>
               </template>
               <template #objectSlot="{ tdData }">
@@ -145,10 +153,12 @@
                     v-for="(time, tKey) in tdData"
                     :key="time"
                   >
-                    <div class="flex gap-1">
-                      <div class="col-span-1">{{ time }}</div>
-                      <div class="col-span-4">
-                        {{ tKey == "h" ? "Hour" : "Min" }}
+                    <div class="flex items-center gap-1">
+                      <div class="text-sm">
+                        {{ time == 0 ? "--" : time }}
+                      </div>
+                      <div class="text-sm">
+                        {{ tKey == "h" ? " Hour" : "Min" }}
                       </div>
                     </div>
                   </template>
@@ -199,8 +209,8 @@
     <!-- DIALOGUE -->
     <AddEditTask
       v-if="addEditMarker"
-      @refresh="refreshFun"
-      @hide="addEditHideFun"
+      @refresh="refreshFun()"
+      @hide="closeDia"
       :edit-delete-obj="editDeleteObj"
       :dia-type="diaType"
     ></AddEditTask>
@@ -235,8 +245,20 @@ const TableG = defineAsyncComponent(
 //--------------------- imports
 const userFromStore = useUsersStore();
 
+// DIALOGUE OPEN AND CLOSE WORK
 const addEditMarker = ref(false);
 const editDeleteObj = ref(null);
+const diaType = ref("");
+
+const openAdd = () => {
+  addEditMarker.value = !addEditMarker.value;
+};
+const closeDia = () => {
+  addEditMarker.value = false;
+  editDeleteObj.value = null;
+  diaType.value = "";
+};
+// DIALOGUE OPEN AND CLOSE WORK
 const formatLabel = (str) => {
   return str
     .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -244,6 +266,24 @@ const formatLabel = (str) => {
 };
 
 const tasksArr = ref([]);
+const tasksComputed = computed(() => {
+  let arr = [];
+
+  if (
+    tableSelectModel.value == "All" ||
+    tableSelectModel.value == "Total Tasks"
+  ) {
+    return (arr = tasksArr.value);
+  } else if (tableSelectModel.value == "To Do") {
+    arr = tasksArr.value.filter((f) => f.stage == "To Do");
+  } else if (tableSelectModel.value == "In Progress") {
+    arr = tasksArr.value.filter((f) => f.stage == "In Progress");
+  } else if (tableSelectModel.value == "Completed") {
+    arr = tasksArr.value.filter((f) => f.stage == "Completed");
+  }
+
+  return arr;
+});
 
 const tableDesign = ref([
   { header: "Title", field: "title", wid: "300px", simple: true },
@@ -253,9 +293,9 @@ const tableDesign = ref([
     wid: "150px ",
     arrayOfObjectSlot: true,
   },
-  { header: "Stage", field: "stage", wid: "70px" },
-  { header: "Priority", field: "priority", wid: "70px", simple: true },
-  { header: "Tags", field: "tags", wid: "200px", simpleArraySlot: true },
+  { header: "Stage", field: "stage", wid: "100px" },
+  { header: "Priority", field: "priority", wid: "100px", simple: true },
+  { header: "Tags", field: "tags", wid: "150px", simpleArraySlot: true },
   { header: "Start Date", field: "startDate", wid: "200px", DateSlot: true },
   { header: "End Date", field: "endDate", wid: "200px", DateSlot: true },
   {
@@ -274,7 +314,7 @@ const cardsArr = computed(() => {
       iconComp: Summary,
       uiNum: tasksArr.value.length,
       cardColor:
-        "bg-blue-50 text-blue-800 border-blue-100 shadow hover:shadow-lg ",
+        "bg-blue-100 text-blue-800 border-blue-100 shadow hover:shadow-xl ",
       iconColor: "bg-blue-500 text-blue-100 p-1 rounded-full size-7 md:size-8",
     },
     {
@@ -285,7 +325,7 @@ const cardsArr = computed(() => {
         return acc;
       }, 0),
       cardColor:
-        "bg-red-100 text-red-700 border-red-200/70  shadow hover:shadow-lg ",
+        "bg-red-100 text-red-700 border-red-200/70  shadow hover:shadow-xl ",
       iconColor: "bg-red-500 text-white p-1 rounded-full size-7 md:size-8",
     },
     {
@@ -296,7 +336,7 @@ const cardsArr = computed(() => {
         return acc;
       }, 0),
       cardColor:
-        "bg-amber-50 text-yellow-700 border-amber-100  shadow hover:shadow-lg ",
+        "bg-amber-100 text-yellow-700 border-amber-100  shadow hover:shadow-xl ",
       iconColor: "bg-amber-500 text-white p-1 rounded-full size-7 md:size-8",
     },
     {
@@ -307,7 +347,7 @@ const cardsArr = computed(() => {
         return acc;
       }, 0),
       cardColor:
-        "bg-green-50 text-green-800 border-green-100 shadow hover:shadow-lg ",
+        "bg-green-100 text-green-800 border-green-100 shadow hover:shadow-xl ",
       iconColor:
         "bg-green-500 text-green-100 p-1 rounded-full size-7 md:size-8",
     },
@@ -321,18 +361,13 @@ const cardsArr = computed(() => {
   ];
   return Arr;
 });
-const selectionsArr = ref([
-  { name: "All" },
-  { name: "To Do" },
-  { name: "In Progress" },
-  { name: "Completed" },
-]);
 const actionsArr = ref([
   { name: "edit", iconComp: Edit },
   { name: "delete", iconComp: Trash },
 ]);
 
-const diaType = ref("");
+const selectionsArr = ref(["All", "To Do", "In Progress", "Completed"]);
+const tableSelectModel = ref("All");
 // DELETE WORK
 const deleteFun = (toBeDelete, type) => {
   addEditMarker.value = true;
@@ -350,16 +385,8 @@ const editOpen = (toBeEdit, type) => {
   diaType.value = type;
 };
 // EDIT WORK
-// addEditHideFun
-const addEditHideFun = () => {
-  addEditMarker.value = false;
-  editDeleteObj.value = null;
-  diaType.value = "";
-};
-// addEditHideFun
 
 const refreshFun = () => {
-  console.log("userFromStore.loggedInUser.id", userFromStore.loggedInUser.id);
   getAllTasks().then((res) => {
     console.log("res", res);
     tasksArr.value = res.filter((f) =>
@@ -368,14 +395,10 @@ const refreshFun = () => {
     console.log("tasksArr.value", tasksArr.value);
   });
   addEditMarker.value = false;
-  editDeleteObj.value = null;
-  diaType.value = "";
 };
 onMounted(() => {
   refreshFun();
 });
-
-const OptionsTabsModel = ref("hello")
 </script>
 <!-- const taskLocal = ref({
     id: crypto.randomUUID(),
