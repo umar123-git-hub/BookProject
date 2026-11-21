@@ -720,13 +720,15 @@ const showLoggedTime = ref(false)
 
 const loggedTimeModel = ref({
   dateModel:null,
-  hourModel:null,
-  MinutesModel:null,
+  hourModel:0,
+  MinutesModel:0,
   descriptionModel:'',
 })
 
 const addLoggedTimeFun = ()=>{
-  loggedTimeModel.value
+  taskLocal.value.loggedTime.push(loggedTimeModel.value)
+  showLoggedTime.value = false
+  console.log(taskLocal.value.loggedTime)
 }
 // loggedTime work
 </script>

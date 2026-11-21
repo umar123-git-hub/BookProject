@@ -48,6 +48,8 @@
             <div class="text-red-500">Hour</div>
             <input
               type="number"
+              min="0"
+              max="12"
               v-model="model.hourModel"
               class="pl-2 py-0.5 text-sm outline-none border border-gray-300 w-20 rounded focus:border-black"
             />
@@ -56,6 +58,8 @@
             <div class="text-red-500">Minutes</div>
             <input
               type="number"
+              min="0"
+              max="60"
               v-model="model.MinutesModel"
               class="pl-2 py-0.5 text-sm outline-none border border-gray-300 w-20 rounded focus:border-black"
             />
@@ -82,7 +86,7 @@
         <!------- BUTTONS  ------->
         <div class="flex items-center justify-end gap-2 px-4 py-2">
           <button
-            @click="$emit('add')"
+            @click="addFun"
             class="px-2 bg-blue-400 text-white rounded"
           >
             Add
@@ -112,10 +116,14 @@ const emit = defineEmits(["hide","add"])
 
 const showDatePicker = ref(false);
 
-// const dateModel = ref(null);
-// const hourModel = ref(null);
-// const MinutesModel = ref(null);
-// const descriptionModel = ref("");
+const addFun = ()=>{
+  if(model.value.dateModel!==null&&model.value.hourModel!==0&&model.value.MinutesModel!==0){
+    emit('add')
+  }
+  else{
+    alert('Data not added please add data first')
+  }
+}
 
 const model = defineModel({type:Object})
 </script>
