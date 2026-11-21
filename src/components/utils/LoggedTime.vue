@@ -22,17 +22,23 @@
             class="relative flex flex-col"
           >
             <div class="text-red-500">Date</div>
-            <div
+            <div v-if="model.dateModel==null"
               class="flex items-center text-xs gap-1.5 border border-gray-300 w-max px-1 cursor-pointer"
             >
               <div class="text-gray-400">select a date</div>
               <Calendar class="size-3.5"></Calendar>
             </div>
+            <div v-else
+            class="flex items-center text-xs gap-1.5 border border-gray-300 w-max px-1 cursor-pointer"
+            >
+              <div class="text-gray-400">{{ format(model.dateModel, "dd MMM yyyy") }}</div>
+              <X @click.stop=" model.dateModel = null" class=" size-3.5"></X>
+            </div>
             <VueDatePicker
               @date-click="showDatePicker = !showDatePicker"
               v-show="showDatePicker"
               class="absolute top-full"
-              v-model="dateModel"
+              v-model="model.dateModel"
               inline
               auto-apply
               format="HH:mm"
@@ -42,7 +48,7 @@
             <div class="text-red-500">Hour</div>
             <input
               type="number"
-              v-model="hourModel"
+              v-model="model.hourModel"
               class="pl-2 py-0.5 text-sm outline-none border border-gray-300 w-20 rounded focus:border-black"
             />
           </label>
@@ -50,7 +56,7 @@
             <div class="text-red-500">Minutes</div>
             <input
               type="number"
-              v-model="MinutesModel"
+              v-model="model.MinutesModel"
               class="pl-2 py-0.5 text-sm outline-none border border-gray-300 w-20 rounded focus:border-black"
             />
           </label>
@@ -60,7 +66,7 @@
         <label class="flex flex-col px-2 pb-2">
           <div class="text-sm text-gray-700">Description</div>
           <textarea
-            v-model="descriptionModel"
+            v-model="model.descriptionModel"
             class="w-full outline-none border border-gray-300 pl-2 py-1 text-sm focus:border-black rounded"
           ></textarea>
         </label>
@@ -76,13 +82,13 @@
         <!------- BUTTONS  ------->
         <div class="flex items-center justify-end gap-2 px-4 py-2">
           <button
-            @click=""
+            @click="$emit('add')"
             class="px-2 bg-blue-400 text-white rounded"
           >
             Add
           </button>
           <button
-            @click=""
+            @click="$emit('hide')"
             class="px-3 cursor-pointer bg-gray-200 rounded"
           >
             Cancel
@@ -100,9 +106,16 @@
 import { Calendar, X } from "@lucide/vue";
 import { VueDatePicker } from "@vuepic/vue-datepicker";
 import { ref } from "vue";
+import { format } from "date-fns";
+
+const emit = defineEmits(["hide","add"])
+
 const showDatePicker = ref(false);
-const dateModel = ref(null);
-const hourModel = ref(null);
-const MinutesModel = ref(null);
-const descriptionModel = ref("");
+
+// const dateModel = ref(null);
+// const hourModel = ref(null);
+// const MinutesModel = ref(null);
+// const descriptionModel = ref("");
+
+const model = defineModel({type:Object})
 </script>

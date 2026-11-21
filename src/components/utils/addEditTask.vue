@@ -442,6 +442,7 @@
                   <div class="text-xs">Logged Time</div>
                 </div>
                 <div
+                @click="showLoggedTime = !showLoggedTime"
                   class="flex items-center cursor-pointer text-xs gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
                 >
                   Logged Time
@@ -506,7 +507,7 @@
       </div>
       <!--================== RIGHT SIDE ====================-->
     </div>
-    <LoggedTime></LoggedTime>
+    <LoggedTime v-if="showLoggedTime" v-model="loggedTimeModel" @hide="showLoggedTime = false" @add="addLoggedTimeFun" ></LoggedTime>
     
     <!------- Add Task ------->
     
@@ -714,6 +715,20 @@ const any = { a: 1, b: 2, m: { t: 1 } };
 const any2 = { ...any };
 any2.m.t = 4;
 console.log(any);
+// loggedTime work
+const showLoggedTime = ref(false)
+
+const loggedTimeModel = ref({
+  dateModel:null,
+  hourModel:null,
+  MinutesModel:null,
+  descriptionModel:'',
+})
+
+const addLoggedTimeFun = ()=>{
+  loggedTimeModel.value
+}
+// loggedTime work
 </script>
 
 <style scoped>
