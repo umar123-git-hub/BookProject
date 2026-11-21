@@ -3,7 +3,6 @@
     <!--=================== LEFT SIDE =================-->
     <div class="p-3 w-full flex flex-col gap-3 md:col-span-8 lg:col-span-9">
       <!-- CARD AND WRITTEN -->
-      {{ addEditMarker }}
       <div class="flex flex-col gap-4">
         <!-- written -->
         <div class="flex flex-col">
