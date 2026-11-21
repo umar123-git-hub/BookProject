@@ -2,7 +2,8 @@
   <Teleport to="#Tel">
     <div
       @click="closeDia"
-      class="fixed inset-0 z-20 bg-black/70"
+      class="fixed inset-0 w-full h-full z-20 bg-black/70"
+      :class="logTimeDiaMarker ? 'hidden' : ''"
     >
       <!--=================== ABSOLUTE AREA ========================-->
       <div
@@ -344,7 +345,7 @@
               <!--================== FIELDS ====================-->
             </div>
             <!-- ADD CONTENT -->
-            <!-- EDIT CONTENT -->
+            <!--=============================== EDIT CONTENT ===========================-->
             <div
               v-if="diaType == 'edit'"
               class="px-4"
@@ -442,78 +443,104 @@
                   <div class="text-xs">Logged Time</div>
                 </div>
                 <div
-                @click="showLoggedTime = !showLoggedTime"
-                  class="flex items-center cursor-pointer text-xs gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
+                  ref="logTimeOptionsCell"
+                  @click="logTimeOptionsMarker = !logTimeOptionsMarker"
+                  class="relative flex items-center cursor-pointer text-xs gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
                 >
                   Logged Time
+                  <!-- Log time options  -->
+                  <div
+                    @click.stop
+                    v-if="logTimeOptionsMarker"
+                    class="absolute bottom-full left-1/12 flex flex-col min-w-1/2 px-1 py-1 bg-gray-100 rounded border border-gray-400 shadow shadow-black/80"
+                  >
+                    <template
+                      v-for="logT in logTimeSelectArr"
+                      :key="logT"
+                    >
+                      <div
+                        class="flex items-center px-2 py-1 gap-1 hover:bg-blue-700 hover:text-white transition-all duration-150 rounded"
+                        @click="LogTimeDiaSelectFun(logT.name)"
+                      >
+                        <component
+                          class="size-3 stroke-2"
+                          :is="logT.iconComp"
+                        />
+                        <div class="text-xs">{{ logT.name }}</div>
+                      </div>
+                    </template>
+                  </div>
+                  <!-- Log time options  -->
                 </div>
               </div>
               <!--============= LOGGED TIME ===========-->
             </div>
-            <!-- EDIT CONTENT -->
+            <!--=============================== EDIT CONTENT ===========================-->
           </div>
           <!-- ADD EDIT CONTENT -->
           <!--=============== DELETE ==============-->
           <div
-          v-else
-          class="flex flex-col gap-3 px-4"
+            v-else
+            class="flex flex-col gap-3 px-4"
           >
-          <div>
-            Are You Sure To Delete
-            <span class="font-bold">{{ editDeleteObj.title }}</span> ???
+            <div>
+              Are You Sure To Delete
+              <span class="font-bold">{{ editDeleteObj.title }}</span> ???
+            </div>
           </div>
-        </div>
-        <!--=============== DELETE ==============-->
-        <!------- BUTTONS  ------->
-        <div class="flex items-center gap-2 px-4 pt-2 pb-4">
-          <button
-          @click="
+          <!--=============== DELETE ==============-->
+          <!------- BUTTONS  ------->
+          <div class="flex items-center gap-2 px-4 pt-2 pb-4">
+            <button
+              @click="
                 editDeleteObj == null
-                ? addTaskFun()
-                : editDeleteObj !== null && diaType == 'edit'
-                ? editTaskFun()
-                : diaType == 'delete'
-                ? deleteTaskFun()
-                : ''
-                "
-              class="px-4 py-1 bg-blue-400 text-white rounded"
-              >
+                  ? addTaskFun()
+                  : editDeleteObj !== null && diaType == 'edit'
+                    ? editTaskFun()
+                    : diaType == 'delete'
+                      ? deleteTaskFun()
+                      : ''
+              "
+              class="px-4 py-1 bg-blue-600 text-white rounded"
+            >
               {{
                 editDeleteObj == null
-                ? "Add"
-                : editDeleteObj !== null && diaType == "edit"
-                ? "Edit"
-                : diaType == "delete"
-                ? "Delete"
-                : ""
+                  ? "Add"
+                  : editDeleteObj !== null && diaType == "edit"
+                    ? "Edit"
+                    : diaType == "delete"
+                      ? "Delete"
+                      : ""
               }}
             </button>
             <button
-            @click="closeDia"
-            class="px-3 py-1 cursor-pointer bg-gray-200 rounded"
+              @click="closeDia"
+              class="px-3 py-1 cursor-pointer bg-gray-200 rounded"
             >
-            Cancel
-          </button>
+              Cancel
+            </button>
+          </div>
+          <!------- BUTTONS  ------->
         </div>
-        <!------- BUTTONS  ------->
-      </div>
         <!--================== LEFT SIDE ====================-->
         <!--================== RIGHT SIDE ====================-->
         <div
-        v-if="diaType == 'edit'"
-        class="border-l w-1/2 flex-1 border-gray-300"
+          v-if="diaType == 'edit'"
+          class="border-l w-1/2 flex-1 border-gray-300"
         >
-        asas
+          asas
+        </div>
+        <!--================== RIGHT SIDE ====================-->
       </div>
-      <!--================== RIGHT SIDE ====================-->
+      <!--=================== ABSOLUTE AREA ========================-->
+      <LoggedTimeDia
+        v-if="logTimeDiaMarker"
+        @closeLogTimeDia="closeLogTimeDia"
+        v-model="taskLocal.loggedTime"
+        :dia-type="logTimeDiaType"
+      ></LoggedTimeDia>
     </div>
-    <LoggedTime v-if="showLoggedTime" v-model="loggedTimeModel" @hide="showLoggedTime = false" @add="addLoggedTimeFun" ></LoggedTime>
-    
-    <!------- Add Task ------->
-    
-    <!--=================== ABSOLUTE AREA ========================-->
-  </div>
-</Teleport>
+  </Teleport>
 </template>
 <script setup>
 import {
@@ -527,6 +554,8 @@ import {
   TagPlus,
   X,
   Podium,
+  TrainTrack,
+  ArrowBigDown,
 } from "@lucide/vue";
 import { format } from "date-fns";
 import { onClickOutside } from "@vueuse/core";
@@ -540,9 +569,10 @@ import {
   editTask,
   deleteTask,
 } from "../../services/TaskService.js";
-import LoggedTime from "./LoggedTime.vue";
 const Multi = defineAsyncComponent(() => import("./Multi.vue"));
 const DropDown = defineAsyncComponent(() => import("./DropDown.vue"));
+const LoggedTimeDia = defineAsyncComponent(() => import("./LoggedTimeDia.vue"));
+// import  from ;
 
 // PROPS AND EMITS
 
@@ -562,6 +592,8 @@ const userFromStore = useUsersStore();
 
 // ---------------------MARKERS
 const conversionMarker = ref("");
+const logTimeOptionsMarker = ref(false);
+const logTimeDiaMarker = ref(false);
 // ---------------------MARKERS
 const taskLocal = ref({
   title: "",
@@ -599,13 +631,6 @@ const addTaskFun = () => {
 };
 ///////////////Add Task
 ///////////////EDIT Task
-// const localEdit = ref({});
-// if (props.editDeleteObj !== null) {
-//   // taskLocal.value = structuredClone(toRaw(props.editDeleteObj));
-//   taskLocal.value = props.editDeleteObj;
-//   // props.editDeleteObj.stage = "change";
-//   console.log(taskLocal.value);
-// }
 const editTaskFun = () => {
   editTask(taskLocal.value).then((res) => {
     console.log(res);
@@ -646,6 +671,10 @@ const conversionFun = (name) => {
 //=========================== PROP ARRAYS
 const priorityArr = ref(["Low", "Medium", "High", "P1", "P2", "P3"]);
 const stageArr = ref(["To Do", "In Progress", "Completed"]);
+const logTimeSelectArr = ref([
+  { name: "Track Manually", iconComp: TrainTrack },
+  { name: "Logged Time Details", iconComp: ArrowBigDown },
+]);
 //=========================== PROP ARRAYS
 
 // LABEL WORK
@@ -688,11 +717,23 @@ const closeDia = () => {
   emit("hide");
 };
 
+// LOG TIME DIA HANDLING
+const logTimeDiaType = ref("");
+const LogTimeDiaSelectFun = (diaName) => {
+  logTimeDiaMarker.value = !logTimeDiaMarker.value;
+  logTimeDiaType.value = diaName;
+};
+const closeLogTimeDia = () => {
+  logTimeDiaMarker.value = false;
+  logTimeDiaType.value = "";
+};
+// LOG TIME DIA HANDLING
+
 // ---------------------OUTSIDE CLICK
 const tagsCell = ref(null);
 const assigneesCell = ref(null);
 const timeCell = ref(null);
-
+const logTimeOptionsCell = ref(null);
 // Only close if this cell's field is the one currently open.
 // Otherwise clicking another "+" would be overwritten by this handler.
 const closeIfActive = (name) => () => {
@@ -702,35 +743,13 @@ const closeIfActive = (name) => () => {
 onClickOutside(tagsCell, closeIfActive("tags"));
 onClickOutside(assigneesCell, closeIfActive("multi"));
 onClickOutside(timeCell, closeIfActive("time"));
+onClickOutside(logTimeOptionsCell, () => (logTimeOptionsMarker.value = false));
 onMounted(() => {
   if (props.editDeleteObj !== null) {
-    // taskLocal.value = structuredClone(toRaw(props.editDeleteObj));
-    // taskLocal.value = JSON.parse(JSON.stringify(props.editDeleteObj));
-    taskLocal.value = { ...props.editDeleteObj };
-    // props.editDeleteObj.stage = "change";
+    taskLocal.value = structuredClone(toRaw(props.editDeleteObj));
     console.log(taskLocal.value);
   }
 });
-const any = { a: 1, b: 2, m: { t: 1 } };
-const any2 = { ...any };
-any2.m.t = 4;
-console.log(any);
-// loggedTime work
-const showLoggedTime = ref(false)
-
-const loggedTimeModel = ref({
-  dateModel:null,
-  hourModel:0,
-  MinutesModel:0,
-  descriptionModel:'',
-})
-
-const addLoggedTimeFun = ()=>{
-  taskLocal.value.loggedTime.push(loggedTimeModel.value)
-  showLoggedTime.value = false
-  console.log(taskLocal.value.loggedTime)
-}
-// loggedTime work
 </script>
 
 <style scoped>
