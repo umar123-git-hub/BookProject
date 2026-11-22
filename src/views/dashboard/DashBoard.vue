@@ -232,7 +232,11 @@ import {
 } from "@lucide/vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import { useTaskStore } from "../../Store/TasksStore.js";
-import { getAllTasks, deleteTask } from "../../services/TaskService.js";
+import {
+  getAllTasks,
+  deleteTask,
+  searchTasks,
+} from "../../services/TaskService.js";
 import { format } from "date-fns";
 import OptionsTabs from "../../components/utils/OptionsTabs/OptionsTabs.vue";
 const AddEditTask = defineAsyncComponent(
@@ -386,14 +390,41 @@ const editOpen = (toBeEdit, type) => {
 // EDIT WORK
 
 const refreshFun = () => {
-  getAllTasks().then((res) => {
+  searchTasks("To Do").then((res) => {
     console.log("res", res);
     tasksArr.value = res.filter((f) =>
       f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
     );
     console.log("tasksArr.value", tasksArr.value);
   });
+  // getAllTasks({
+  //   startDate: new Date("25 Nov 2026"),
+  //   // priority: "Low",
+  //   // stage: "Completed",
+  //   // moduleName: "Dashboard",
+  //   // tags: JSON.stringify(["comp"]),
+  //   // assignees: JSON.stringify([
+  //   //   {
+  //   //     id: "20197c2b-f20a-45ec-98ef-f652ea8a71d5",
+  //   //   },
+  //   // ]),
+  // }).then((res) => {
+  //   console.log("res", res);
+  //   tasksArr.value = res.filter((f) =>
+  //     f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
+  //   );
+  //   console.log("tasksArr.value", tasksArr.value);
+  // });
   addEditMarker.value = false;
+
+  // getAllTasks().then((res) => {
+  //   console.log("res", res);
+  //   tasksArr.value = res.filter((f) =>
+  //     f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
+  //   );
+  //   console.log("tasksArr.value", tasksArr.value);
+  // });
+  // addEditMarker.value = false;
 };
 onMounted(() => {
   refreshFun();
