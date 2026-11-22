@@ -750,25 +750,23 @@ onMounted(() => {
     console.log(taskLocal.value);
   }
 });
-<<<<<<< Updated upstream
-=======
+
 // loggedTime work
-const showLoggedTime = ref(false)
+const showLoggedTime = ref(false);
 
 const loggedTimeModel = ref({
-  dateModel:null,
-  hourModel:0,
-  MinutesModel:0,
-  descriptionModel:'',
-})
+  dateModel: null,
+  hourModel: 0,
+  MinutesModel: 0,
+  descriptionModel: "",
+});
 
-const addLoggedTimeFun = ()=>{
-  taskLocal.value.loggedTime.push(loggedTimeModel.value)
-  showLoggedTime.value = false
-  console.log(taskLocal.value.loggedTime)
-}
+const addLoggedTimeFun = () => {
+  taskLocal.value.loggedTime.push(loggedTimeModel.value);
+  showLoggedTime.value = false;
+  console.log(taskLocal.value.loggedTime);
+};
 // loggedTime work
->>>>>>> Stashed changes
 </script>
 
 <style scoped>
