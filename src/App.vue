@@ -2,7 +2,7 @@
   <div class="h-full w-full relative bg-white flex">
     <AppNav></AppNav>
     <Loader v-if="st.loadMarker"></Loader>
-    <div class="w-full">
+    <div class="w-full pl-20 ">
       <RouterView></RouterView>
     </div>
   </div>
@@ -16,10 +16,5 @@ import { watch } from "vue";
 
 const st = useUsersStore();
 
-watch(
-  () => st.loadMarker,
-  (n) => {
-    console.log("n", n);
-  },
-);
+
 </script>
