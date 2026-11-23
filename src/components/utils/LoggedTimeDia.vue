@@ -77,7 +77,7 @@
               <div class="flex flex-col gap-1">
                 <div
                   :class="
-                    totalMins == 0
+                    logTimeObj.logHour * 60 + logTimeObj.logMin == 0
                       ? 'text-red-500 text-sm'
                       : 'text-black text-sm'
                   "
@@ -96,7 +96,7 @@
               <div class="flex flex-col gap-1">
                 <div
                   :class="
-                    totalMins == 0
+                    logTimeObj.logHour * 60 + logTimeObj.logMin == 0
                       ? 'text-red-500 text-sm'
                       : 'text-black text-sm'
                   "
@@ -272,7 +272,10 @@ const resetLog = () => {
   logTimeObj.value.LogDescription = "";
 };
 const addLogTime = () => {
-  if (logTimeObj.value.logDate == null || totalMins.value == 0) {
+  if (
+    logTimeObj.value.logDate == null ||
+    logTimeObj.value.logHour * 60 + logTimeObj.value.logMin == 0
+  ) {
     errMsg.value = "Please Fill Required Fields";
     setTimeout(() => {
       errMsg.value = "";
