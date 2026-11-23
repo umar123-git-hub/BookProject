@@ -1,19 +1,35 @@
 <template>
-  <div class="relative w-full grid grid-cols-1 md:grid-cols-12">
+  <div class="relative w-full flex">
     <!--=================== LEFT SIDE =================-->
-    <div class="p-3 w-full flex flex-col gap-3 md:col-span-8 lg:col-span-9">
+    <div class="py-3 px-1 w-full flex flex-col gap-3">
       <!-- CARD AND WRITTEN -->
       <div class="flex flex-col gap-4">
-        <!-- written -->
-        <div class="flex flex-col">
-          <div class="font-semibold xl:font-bold text-xl xl:text-2xl">
-            Good Afternoon, {{ userFromStore.loggedInUser?.name }} !
+        <div class=" flex items-center justify-between px-3">
+
+          <!-- written -->
+          <div class="flex flex-col ">
+            <div class="font-semibold xl:font-bold text-xl xl:text-2xl">
+              Good Afternoon, {{ userFromStore.loggedInUser?.name }} !
+            </div>
+            <div>Here's what's happening with your tasks today.</div>
           </div>
-          <div>Here's what's happening with your tasks today.</div>
+          <!-- written -->
+           <!-- ADD BTN AND WRITTEN -->
+            <button
+              @click="openAdd"
+              class="flex text-white gap-0.5 shadow-xl h-max transition-all duration-100 bg-mauve-500 hover:bg-mauve-600 cursor-pointer rounded py-1 px-2"
+            >
+              <StickyNotePlus
+                class="size-4 md:size-5 xl:size7"
+              ></StickyNotePlus>
+              <div class="text-xs md:text-sm font-semibold">Add Task</div>
+            </button>
+          <!-- ADD BTN AND WRITTEN -->
         </div>
-        <!-- written -->
+        <!--================  CARDS AND CHARTS ========================-->
+        
         <!-- cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-1">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-x-2 gap-y-1">
           <template
             v-for="card in cardsArr"
             :key="card"
@@ -39,36 +55,20 @@
           </template>
         </div>
         <!-- cards -->
+        <!--================  CARDS AND CHARTS ========================--> 
       </div>
       <!--CARD AND WRITTEN -->
       <!-- ADD, SELECTION AND TABLE  -->
       <div class="flex flex-col gap-1 bg-blue-500/10 rounded-xl px-3">
         <!--================ ADD BTN AND WRITTEN AND SELECTION BTNS  ========================-->
         <div class="flex flex-col py-3 gap-1">
-          <!-- ADD BTN AND WRITTEN -->
-          <div class="flex items-center justify-between">
-            <div
-              class="px-1 py-0.5 font-semibold lg:font- text-base md:text-lg xl:text-xl"
-            >
-              My Tasks
-            </div>
-            <button
-              @click="openAdd"
-              class="flex items-center text-white gap-0.5 shadow-xl transition-all duration-100 bg-mauve-500 hover:bg-mauve-600 cursor-pointer rounded py-1 px-2"
-            >
-              <StickyNotePlus
-                class="size-4 md:size-5 xl:size7"
-              ></StickyNotePlus>
-              <div class="text-xs md:text-sm font-semibold">Add Task</div>
-            </button>
-          </div>
-          <!-- ADD BTN AND WRITTEN -->
+          
         </div>
         <!--================ ADD BTN AND WRITTEN AND SELECTION BTNS  ========================-->
         <!-- SEARCH AND TABLE -->
         <div class="flex flex-col gap-3">
           <!-- SELECTION BTNS -->
-          <OptionsTabs
+          <!-- <OptionsTabs
             :tabs-arr="selectionsArr"
             v-model="tableSelectModel"
           >
@@ -79,11 +79,11 @@
                 {{ tab }}
               </div>
             </template>
-          </OptionsTabs>
+          </OptionsTabs> -->
           <!-- SELECTION BTNS -->
 
           <!-- search -->
-          <div
+          <!-- <div
             class="flex items-center backdrop-blur-2xl bg-white shadow-xl rounded-xl gap-2 px-3 py-2 border border-white w-full"
           >
             <Search class="size-5 stroke-3 text-gray-600"></Search>
@@ -92,7 +92,7 @@
               class="w-full bg-transparent py-0.5 outline-none"
               placeholder="Search Tasks"
             />
-          </div>
+          </div> -->
           <!-- search -->
           <!-- TABLE -->
           <div class="w-full overflow-auto bg-white h-3/4 rounded-xl">
@@ -155,7 +155,7 @@
                     <div class="flex items-center gap-1">
                       <div class="text-sm">
                         {{ time == 0 ? "--" : time }}
-                      </div>
+                      </div>  
                       <div class="text-sm">
                         {{ tKey == "h" ? " Hour" : "Min" }}
                       </div>
@@ -202,9 +202,6 @@
       <!-- ADD, SELECTION AND TABLE  -->
     </div>
     <!--=================== LEFT SIDE =================-->
-    <!--=================== RIGHT SIDE =================-->
-    <div class="p-3 w-full bg-blue-200 md:col-span-4 lg:col-span-3">right</div>
-    <!--=================== RIGHT SIDE =================-->
     <!-- DIALOGUE -->
     <AddEditTask
       v-if="addEditMarker"
@@ -232,11 +229,7 @@ import {
 } from "@lucide/vue";
 import { useUsersStore } from "../../Store/UsersStore";
 import { useTaskStore } from "../../Store/TasksStore.js";
-import {
-  getAllTasks,
-  deleteTask,
-  searchTasks,
-} from "../../services/TaskService.js";
+import { getAllTasks, deleteTask } from "../../services/TaskService.js";
 import { format } from "date-fns";
 import OptionsTabs from "../../components/utils/OptionsTabs/OptionsTabs.vue";
 const AddEditTask = defineAsyncComponent(
@@ -390,41 +383,14 @@ const editOpen = (toBeEdit, type) => {
 // EDIT WORK
 
 const refreshFun = () => {
-  searchTasks("To Do").then((res) => {
+  getAllTasks().then((res) => {
     console.log("res", res);
     tasksArr.value = res.filter((f) =>
       f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
     );
     console.log("tasksArr.value", tasksArr.value);
   });
-  // getAllTasks({
-  //   startDate: new Date("25 Nov 2026"),
-  //   // priority: "Low",
-  //   // stage: "Completed",
-  //   // moduleName: "Dashboard",
-  //   // tags: JSON.stringify(["comp"]),
-  //   // assignees: JSON.stringify([
-  //   //   {
-  //   //     id: "20197c2b-f20a-45ec-98ef-f652ea8a71d5",
-  //   //   },
-  //   // ]),
-  // }).then((res) => {
-  //   console.log("res", res);
-  //   tasksArr.value = res.filter((f) =>
-  //     f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
-  //   );
-  //   console.log("tasksArr.value", tasksArr.value);
-  // });
   addEditMarker.value = false;
-
-  // getAllTasks().then((res) => {
-  //   console.log("res", res);
-  //   tasksArr.value = res.filter((f) =>
-  //     f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
-  //   );
-  //   console.log("tasksArr.value", tasksArr.value);
-  // });
-  // addEditMarker.value = false;
 };
 onMounted(() => {
   refreshFun();
