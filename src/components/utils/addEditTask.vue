@@ -3,7 +3,7 @@
     <div
       @click="closeDia"
       class="fixed inset-0 w-full h-full z-20 bg-black/70"
-      :class="logTimeDiaMarker ? 'hidden' : 'bg-red-400'"
+      :class="logTimeDiaMarker ? 'hidden' : ''"
     >
       <!--=================== ABSOLUTE AREA ========================-->
       <div
