@@ -1,75 +1,81 @@
 <template>
-  <div class="relative w-full grid grid-cols-1 md:grid-cols-12">
+  <div class="relative w-full flex bg-gray-200">
     <!--=================== LEFT SIDE =================-->
-    <div class="p-3 w-full flex flex-col gap-3 md:col-span-8 lg:col-span-9">
+    <div class="py-3 px-1 w-full flex flex-col gap-3">
       <!-- CARD AND WRITTEN -->
-      {{ addEditMarker }}
       <div class="flex flex-col gap-4">
-        <!-- written -->
-        <div class="flex flex-col">
-          <div class="font-semibold xl:font-bold text-xl xl:text-2xl">
-            Good Afternoon, {{ userFromStore.loggedInUser?.name }} !
+        <div class="flex items-center justify-between px-3">
+          <!-- written -->
+          <div class="flex flex-col">
+            <div class="font-semibold xl:font-bold text-xl xl:text-2xl">
+              Good Afternoon, {{ userFromStore.loggedInUser?.name }} !
+            </div>
+            <div>Here's what's happening with your tasks today.</div>
           </div>
-          <div>Here's what's happening with your tasks today.</div>
-        </div>
-        <!-- written -->
-        <!-- cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-1">
-          <template
-            v-for="card in cardsArr"
-            :key="card"
+          <!-- written -->
+          <!-- ADD BTN AND WRITTEN -->
+          <button
+            @click="openAdd"
+            class="flex text-white gap-0.5 shadow-xl h-max transition-all duration-100 bg-mauve-500 hover:bg-mauve-600 cursor-pointer rounded py-1 px-2"
           >
-            <div
-              @click="tableSelectModel = card.name"
-              :class="card.cardColor"
-              class="flex flex-col cursor-pointer gap-1 transition-all duration-150 p-3 border rounded-xl"
+            <StickyNotePlus class="size-4 md:size-5 xl:size7"></StickyNotePlus>
+            <div class="text-xs md:text-sm font-semibold">Add Task</div>
+          </button>
+          <!-- ADD BTN AND WRITTEN -->
+        </div>
+        <!--================  CARDS AND CHARTS ========================-->
+        <div
+          class="flex flex-col gap-3 lg:flex-row bg-white px-2 py-1 rounded shadow shadow-gray-400"
+        >
+          <!-- cards -->
+          <div
+            class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-x-2 gap-y-1 w-full lg:w-[60%]"
+          >
+            <template
+              v-for="card in cardsArr"
+              :key="card"
             >
-              <component
-                :is="card.iconComp"
-                :class="card.iconColor"
-              />
-              <div class="flex flex-col">
-                <div class="text-lg font-semibold md:text-xl xl:font-bold">
-                  {{ card.uiNum }}
-                </div>
-                <div class="text-xs lg:text-lg">
-                  {{ card.name }}
+              <div
+                @click="tableSelectModel = card.name"
+                :class="card.cardColor"
+                class="flex flex-col cursor-pointer gap-1 transition-all duration-150 p-3 border rounded-xl"
+              >
+                <component
+                  :is="card.iconComp"
+                  :class="card.iconColor"
+                />
+                <div class="flex flex-col">
+                  <div class="text-lg font-semibold md:text-xl xl:font-bold">
+                    {{ card.uiNum }}
+                  </div>
+                  <div class="text-xs lg:text-lg">
+                    {{ card.name }}
+                  </div>
                 </div>
               </div>
-            </div>
-          </template>
+            </template>
+          </div>
+          <!-- cards -->
+          <!-- Chart -->
+          <div
+            class="w-full lg:w-[40%] h-60 shadow shadow-gray-800 border border-gray-400 rounded"
+          >
+            <PieChart :dataset="chartDataset"></PieChart>
+          </div>
+          <!-- Chart -->
         </div>
-        <!-- cards -->
+        <!--================  CARDS AND CHARTS ========================-->
       </div>
       <!--CARD AND WRITTEN -->
       <!-- ADD, SELECTION AND TABLE  -->
       <div class="flex flex-col gap-1 bg-blue-500/10 rounded-xl px-3">
         <!--================ ADD BTN AND WRITTEN AND SELECTION BTNS  ========================-->
-        <div class="flex flex-col py-3 gap-1">
-          <!-- ADD BTN AND WRITTEN -->
-          <div class="flex items-center justify-between">
-            <div
-              class="px-1 py-0.5 font-semibold lg:font- text-base md:text-lg xl:text-xl"
-            >
-              My Tasks
-            </div>
-            <button
-              @click="openAdd"
-              class="flex items-center text-white gap-0.5 shadow-xl transition-all duration-100 bg-mauve-500 hover:bg-mauve-600 cursor-pointer rounded py-1 px-2"
-            >
-              <StickyNotePlus
-                class="size-4 md:size-5 xl:size7"
-              ></StickyNotePlus>
-              <div class="text-xs md:text-sm font-semibold">Add Task</div>
-            </button>
-          </div>
-          <!-- ADD BTN AND WRITTEN -->
-        </div>
+        <div class="flex flex-col py-3 gap-1"></div>
         <!--================ ADD BTN AND WRITTEN AND SELECTION BTNS  ========================-->
         <!-- SEARCH AND TABLE -->
         <div class="flex flex-col gap-3">
           <!-- SELECTION BTNS -->
-          <OptionsTabs
+          <!-- <OptionsTabs
             :tabs-arr="selectionsArr"
             v-model="tableSelectModel"
           >
@@ -80,11 +86,11 @@
                 {{ tab }}
               </div>
             </template>
-          </OptionsTabs>
+          </OptionsTabs> -->
           <!-- SELECTION BTNS -->
 
           <!-- search -->
-          <div
+          <!-- <div
             class="flex items-center backdrop-blur-2xl bg-white shadow-xl rounded-xl gap-2 px-3 py-2 border border-white w-full"
           >
             <Search class="size-5 stroke-3 text-gray-600"></Search>
@@ -93,10 +99,10 @@
               class="w-full bg-transparent py-0.5 outline-none"
               placeholder="Search Tasks"
             />
-          </div>
+          </div> -->
           <!-- search -->
           <!-- TABLE -->
-          <div class="w-full overflow-auto bg-white h-3/4 rounded-xl">
+          <div class="w-full overflow-auto bg-white h-full rounded-xl">
             <TableG
               v-if="tasksArr.length !== 0"
               :table-arr="tasksComputed"
@@ -203,9 +209,6 @@
       <!-- ADD, SELECTION AND TABLE  -->
     </div>
     <!--=================== LEFT SIDE =================-->
-    <!--=================== RIGHT SIDE =================-->
-    <div class="p-3 w-full bg-blue-200 md:col-span-4 lg:col-span-3">right</div>
-    <!--=================== RIGHT SIDE =================-->
     <!-- DIALOGUE -->
     <AddEditTask
       v-if="addEditMarker"
@@ -236,8 +239,9 @@ import { useTaskStore } from "../../Store/TasksStore.js";
 import { getAllTasks, deleteTask } from "../../services/TaskService.js";
 import { format } from "date-fns";
 import OptionsTabs from "../../components/utils/OptionsTabs/OptionsTabs.vue";
+import PieChart from "../../components/utils/PieChart/PieChart.vue";
 const AddEditTask = defineAsyncComponent(
-  () => import("../../components/utils/addEditTask.vue"),
+  () => import("../../components/utils/AddEdit/addEditTask.vue"),
 );
 const TableG = defineAsyncComponent(
   () => import("../../components/utils/TableG.vue"),
@@ -365,6 +369,51 @@ const actionsArr = ref([
   { name: "edit", iconComp: Edit },
   { name: "delete", iconComp: Trash },
 ]);
+
+// chart data
+const chartDataset = computed(() => {
+  if (tasksArr.value.length == 0) {
+    return {
+      labels: ["To do", "In Progress", "Completed"],
+      datasets: [
+        {
+          data: [0, 0, 0],
+          backgroundColor: ["#3B82F6", "#F59E0B", "#10B981"],
+        },
+      ],
+    };
+  } else {
+    return {
+      labels: ["To do", "In Progress", "Completed"],
+      datasets: [
+        {
+          data: [
+            (tasksArr.value.reduce((acc, i) => {
+              if (i.stage == "To Do") ++acc;
+              return acc;
+            }, 0) /
+              tasksArr.value.length) *
+              100,
+            (tasksArr.value.reduce((acc, i) => {
+              if (i.stage == "In Progress") ++acc;
+              return acc;
+            }, 0) /
+              tasksArr.value.length) *
+              100,
+            (tasksArr.value.reduce((acc, i) => {
+              if (i.stage == "Completed") ++acc;
+              return acc;
+            }, 0) /
+              tasksArr.value.length) *
+              100,
+          ],
+          backgroundColor: ["#3B82F6", "#10B981", "#F59E0B"],
+        },
+      ],
+    };
+  }
+});
+// chart data
 
 const selectionsArr = ref(["All", "To Do", "In Progress", "Completed"]);
 const tableSelectModel = ref("All");

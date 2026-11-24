@@ -1,5 +1,5 @@
 <template>
-  <table class="w-full table-fixed border-collapse text-center">
+  <table class="w-full relative table-fixed border-collapse text-center">
     <!--============ col width ===============-->
     <colgroup>
       <template
@@ -16,7 +16,7 @@
     <!--============ col width ===============-->
     <!--============ thead ===============-->
     <thead>
-      <tr>
+      <tr class="sticky top-0">
         <template
           v-for="tHeader in tableDesign"
           :key="tHeader"
@@ -72,7 +72,10 @@
                 :td-data="tableRow[tData.field]"
                 v-else-if="$slots.objectSlot && tData.objectSlot"
               ></slot>
-              <div v-else class="">
+              <div
+                v-else
+                class=""
+              >
                 {{ tableRow[tData.field] }}
               </div>
             </td>

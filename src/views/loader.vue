@@ -15,13 +15,10 @@ import { ref } from "vue";
 </script>
 <style scoped>
 .rotateClass {
-  animation: anim 3s linear infinite;
+  animation: anim 1s linear infinite;
 }
 @keyframes anim {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
+  to {
     transform: rotate(360deg);
   }
 }
