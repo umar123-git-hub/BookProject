@@ -6,11 +6,12 @@
       <div class="flex items-center justify-between gap-2">
         <div class="relative w-full py-1 z-50">
           <Funnel
-            @click="showFiltersMaker = !showFiltersMaker"
+            @click="showFiltersMarker = !showFiltersMarker"
             class="cursor-pointer"
           ></Funnel>
           <div
-            v-if="showFiltersMaker"
+            ref="filterCell"
+            v-if="showFiltersMarker"
             class="absolute bottom-full bg-gray-100 border rounded-lg border-gray-300 shadow shadow-gray-800 px-3 py-1 flex flex-col"
           >
             <input
@@ -21,18 +22,24 @@
         </div>
         <div class="relative w-full py-1 z-50">
           <Search
-            @click="showSearchMaker = !showSearchMaker"
+            @click="showSearchMarker = !showSearchMarker"
             class="cursor-pointer"
           ></Search>
           <div
-            v-if="showSearchMaker"
+            ref="searchCell"
+            v-if="showSearchMarker"
             class="absolute top-1/2 right-full bg-gray-100 border rounded-lg border-gray-300 shadow shadow-gray-800 px-3 py-1 flex flex-col gap-3"
           >
             <input
               type="text"
+              placeholder="Search"
+              v-model="globalSearchModel"
               class="outline-none ring ring-gray-400 focus:ring-gray-500 rounded px-1 py-1"
             />
-            <button class="bg-red-500 text-white px-2 py-1 rounded">
+            <button
+              @click="globalSearchFun(globalSearchModel)"
+              class="bg-red-500 text-white px-2 py-1 rounded"
+            >
               Search
             </button>
           </div>
@@ -140,10 +147,29 @@
 <script setup>
 import { Funnel, Search, TableIcon } from "@lucide/vue";
 import { ref } from "vue";
+import { onClickOutside } from "@vueuse/core";
 const props = defineProps({
   tableArr: Array,
   tableDesign: Array,
 });
-const showSearchMaker = ref(false);
-const showFiltersMaker = ref(false);
+const emit = defineEmits(["searchRefresh"]);
+const showSearchMarker = ref(false);
+const showFiltersMarker = ref(false);
+
+const globalSearchModel = ref("");
+
+const globalSearchFun = () => {
+  console.log(globalSearchModel.value);
+  emit("searchRefresh", globalSearchModel.value);
+};
+
+const searchCell = ref(null);
+const filterCell = ref(null);
+
+onClickOutside(searchCell, () => {
+  showSearchMarker.value = false;
+});
+onClickOutside(filterCell, () => {
+  showFiltersMarker.value = false;
+});
 </script>
