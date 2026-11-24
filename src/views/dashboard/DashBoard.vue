@@ -31,19 +31,13 @@
           <div
             class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-x-2 gap-y-1 w-full lg:w-[60%]"
           >
-            <template
-              v-for="card in cardsArr"
-              :key="card"
-            >
+            <template v-for="card in cardsArr" :key="card">
               <div
                 @click="tableSelectModel = card.name"
                 :class="card.cardColor"
                 class="flex flex-col cursor-pointer gap-1 transition-all duration-150 p-3 border rounded-xl"
               >
-                <component
-                  :is="card.iconComp"
-                  :class="card.iconColor"
-                />
+                <component :is="card.iconComp" :class="card.iconColor" />
                 <div class="flex flex-col">
                   <div class="text-lg font-semibold md:text-xl xl:font-bold">
                     {{ card.uiNum }}
@@ -117,10 +111,7 @@
                 <div
                   class="flex flex-wrap gap-1 items-center justify-center py-1 line-clamp-2"
                 >
-                  <template
-                    v-for="t in tdData"
-                    :key="t.id"
-                  >
+                  <template v-for="t in tdData" :key="t.id">
                     <div
                       class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                     >
@@ -131,10 +122,7 @@
               </template>
               <template #arrayOfObjectSlot="{ tdData }">
                 <div class="flex gap-1 justify-center items-center py-1">
-                  <template
-                    v-for="t in tdData"
-                    :key="t.id"
-                  >
+                  <template v-for="t in tdData" :key="t.id">
                     <div
                       class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                     >
@@ -155,10 +143,7 @@
               </template>
               <template #objectSlot="{ tdData }">
                 <div class="flex gap-2">
-                  <template
-                    v-for="(time, tKey) in tdData"
-                    :key="time"
-                  >
+                  <template v-for="(time, tKey) in tdData" :key="time">
                     <div class="flex items-center gap-1">
                       <div class="text-sm">
                         {{ time == 0 ? "--" : time }}
@@ -181,10 +166,7 @@
               <template #extraTd="{ tableRow }">
                 <td class="">
                   <div class="flex items-center justify-center gap-5">
-                    <template
-                      v-for="action in actionsArr"
-                      :key="action"
-                    >
+                    <template v-for="action in actionsArr" :key="action">
                       <component
                         @click="
                           action.name == 'delete'
@@ -378,7 +360,7 @@ const chartDataset = computed(() => {
       datasets: [
         {
           data: [0, 0, 0],
-          backgroundColor: ["#3B82F6", "#10B981  ", "#F59E0B"],
+          backgroundColor: ["#3B82F6", " #F59E0B  ", "#10B981"],
         },
       ],
     };
@@ -407,7 +389,7 @@ const chartDataset = computed(() => {
               tasksArr.value.length) *
               100,
           ],
-          backgroundColor: ["#3B82F6", "#10B981", "#F59E0B"],
+          backgroundColor: ["#3B82F6", " #F59E0B  ", "#10B981"],
         },
       ],
     };
