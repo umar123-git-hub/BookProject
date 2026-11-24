@@ -80,6 +80,7 @@
               v-if="tasksArr.length !== 0"
               :table-arr="tasksComputed"
               :table-design="tableDesign"
+              @search-refresh="searchRefresh"
             >
               <template #simple="{ simpleData }">
                 <div class="px-2 flex justify-center items-center">
@@ -207,12 +208,12 @@ import {
   Trash,
   Edit,
 } from "@lucide/vue";
-import { useUsersStore } from "../../Store/UsersStore";
-import { useTaskStore } from "../../Store/TasksStore.js";
-import { getAllTasks, deleteTask } from "../../services/TaskService.js";
+import { useUsersStore } from "@/Store/UsersStore";
+import { getAllTasks, deleteTask } from "@/services/TaskService.js";
 import { format } from "date-fns";
-import OptionsTabs from "../../components/utils/OptionsTabs/OptionsTabs.vue";
-import PieChart from "../../components/utils/PieChart/PieChart.vue";
+import PieChart from "@/components/utils/PieChart/PieChart.vue";
+import { searchTasks } from "@/services/TaskService";
+
 const AddEditTask = defineAsyncComponent(
   () => import("../../components/utils/AddEdit/addEditTask.vue"),
 );
@@ -245,19 +246,20 @@ const formatLabel = (str) => {
 const tasksArr = ref([]);
 const tasksComputed = computed(() => {
   let arr = [];
+  arr = tasksArr.value;
+  // if (
+  //   tableSelectModel.value == "All" ||
+  //   tableSelectModel.value == "Total Tasks"
+  // ) {
 
-  if (
-    tableSelectModel.value == "All" ||
-    tableSelectModel.value == "Total Tasks"
-  ) {
-    return (arr = tasksArr.value);
-  } else if (tableSelectModel.value == "To Do") {
-    arr = tasksArr.value.filter((f) => f.stage == "To Do");
-  } else if (tableSelectModel.value == "In Progress") {
-    arr = tasksArr.value.filter((f) => f.stage == "In Progress");
-  } else if (tableSelectModel.value == "Completed") {
-    arr = tasksArr.value.filter((f) => f.stage == "Completed");
-  }
+  //   return (arr = tasksArr.value);
+  // } else if (tableSelectModel.value == "To Do") {
+  //   arr = tasksArr.value.filter((f) => f.stage == "To Do");
+  // } else if (tableSelectModel.value == "In Progress") {
+  //   arr = tasksArr.value.filter((f) => f.stage == "In Progress");
+  // } else if (tableSelectModel.value == "Completed") {
+  //   arr = tasksArr.value.filter((f) => f.stage == "Completed");
+  // }
 
   return arr;
 });
@@ -407,14 +409,20 @@ const editOpen = (toBeEdit, type) => {
   diaType.value = type;
 };
 // EDIT WORK
+// GLOBAL SEARCH
+const searchRefresh = (gS) => {
+  console.log(gS);
+  searchTasks(gS).then((res) => {
+    tasksArr.value = res;
+  });
+};
+// GLOBAL SEARCH
 
 const refreshFun = () => {
   getAllTasks().then((res) => {
-    console.log("res", res);
     tasksArr.value = res.filter((f) =>
       f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
     );
-    console.log("tasksArr.value", tasksArr.value);
   });
   addEditMarker.value = false;
 };
