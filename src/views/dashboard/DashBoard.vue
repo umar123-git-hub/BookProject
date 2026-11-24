@@ -378,7 +378,7 @@ const chartDataset = computed(() => {
       datasets: [
         {
           data: [0, 0, 0],
-          backgroundColor: ["#3B82F6", "#F59E0B", "#10B981"],
+          backgroundColor: ["#3B82F6", "#10B981  ", "#F59E0B"],
         },
       ],
     };
