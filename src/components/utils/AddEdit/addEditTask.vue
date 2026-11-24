@@ -571,6 +571,7 @@
         @closeLogTimeDia="closeLogTimeDia"
         v-model="taskLocal.loggedTime"
         :dia-type="logTimeDiaType"
+        :log-by="userFromStore.loggedInUser"
       ></LoggedTimeDia>
     </div>
   </Teleport>
@@ -656,49 +657,23 @@ const taskLocal = ref({
 ///////////////Add Task
 const addTaskFun = () => {
   addTask(taskLocal.value).then((res) => {
-    console.log(res);
+    emit("refresh");
   });
   // userFromStore.refreshMarker++;
-  getAllTasks().then((res) => {
-    console.log("res in add", res);
-    res.filter((f) =>
-      f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
-    );
-    console.log("tasksArr.value in add", res);
-  });
-  emit("refresh");
 };
 ///////////////Add Task
 ///////////////EDIT Task
 const editTaskFun = () => {
   editTask(taskLocal.value).then((res) => {
-    console.log(res);
+    emit("refresh");
   });
-  // userFromStore.refreshMarker++;
-  getAllTasks().then((res) => {
-    console.log("res in add", res);
-    res.filter((f) =>
-      f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
-    );
-    console.log("tasksArr.value in add", res);
-  });
-  emit("refresh");
 };
 ///////////////EDIT Task
 ///////////////DELETE Task
 const deleteTaskFun = () => {
   deleteTask(taskLocal.value.id).then((res) => {
-    console.log(res);
+    emit("refresh");
   });
-  // userFromStore.refreshMarker++;
-  getAllTasks().then((res) => {
-    console.log("res in add", res);
-    res.filter((f) =>
-      f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
-    );
-    console.log("tasksArr.value in add", res);
-  });
-  emit("refresh");
 };
 ///////////////DELETE Task
 //============================================ ADD, EDIT, AND DELETE FUNCTIONS
