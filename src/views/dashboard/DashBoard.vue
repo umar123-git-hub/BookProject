@@ -241,7 +241,7 @@ import { format } from "date-fns";
 import OptionsTabs from "../../components/utils/OptionsTabs/OptionsTabs.vue";
 import PieChart from "../../components/utils/PieChart/PieChart.vue";
 const AddEditTask = defineAsyncComponent(
-  () => import("../../components/utils/addEditTask.vue"),
+  () => import("../../components/utils/AddEdit/addEditTask.vue"),
 );
 const TableG = defineAsyncComponent(
   () => import("../../components/utils/TableG.vue"),
@@ -378,7 +378,7 @@ const chartDataset = computed(() => {
       datasets: [
         {
           data: [0, 0, 0],
-          backgroundColor: ["#3B82F6", "#10B981", "#F59E0B"],
+          backgroundColor: ["#3B82F6", "#F59E0B", "#10B981"],
         },
       ],
     };
