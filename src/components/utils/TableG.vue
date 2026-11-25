@@ -39,7 +39,7 @@
                       type="text"
                       class="outline-none ring ring-gray-400 focus:ring-gray-500 rounded px-1"
                     />
-                    <X class="text-red-600 size-4 stroke-4 cursor-pointer"></X>
+                    <X @click="delObj(Inps)" class="text-red-600 size-4 stroke-4 cursor-pointer"></X>
                   </div>
                 </div>
               </template>
@@ -239,6 +239,14 @@ const applyFilter = () => {
   });
   console.log(filtersToSend);
 };
+const delObj = (o)=>{
+  if(filtersArr.value.length==1){
+    return
+  }
+  else{
+    filtersArr.value=filtersArr.value.filter((i)=>!(i.k==o.k||i.v==o.v))
+  }
+}
 onClickOutside(searchCell, () => {
   showSearchMarker.value = false;
 });
