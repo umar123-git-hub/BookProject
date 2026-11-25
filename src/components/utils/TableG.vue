@@ -12,7 +12,7 @@
           <div
             ref="filterCell"
             v-if="showFiltersMarker"
-            class="absolute bottom-full bg-gray-100 border rounded-lg border-gray-300 shadow shadow-gray-800 px-3 py-1 flex flex-col"
+            class="absolute right-full bottom-full bg-gray-100 border rounded-lg border-gray-300 shadow shadow-gray-800 px-3 py-1 flex flex-col"
           >
             <input
               type="text"
