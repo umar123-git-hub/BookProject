@@ -31,13 +31,19 @@
           <div
             class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-2 gap-x-2 gap-y-1 w-full lg:w-[60%]"
           >
-            <template v-for="card in cardsArr" :key="card">
+            <template
+              v-for="card in cardsArr"
+              :key="card"
+            >
               <div
                 @click="tableSelectModel = card.name"
                 :class="card.cardColor"
                 class="flex flex-col cursor-pointer gap-1 transition-all duration-150 p-3 border rounded-xl"
               >
-                <component :is="card.iconComp" :class="card.iconColor" />
+                <component
+                  :is="card.iconComp"
+                  :class="card.iconColor"
+                />
                 <div class="flex flex-col">
                   <div class="text-lg font-semibold md:text-xl xl:font-bold">
                     {{ card.uiNum }}
@@ -68,39 +74,13 @@
         <!--================ ADD BTN AND WRITTEN AND SELECTION BTNS  ========================-->
         <!-- SEARCH AND TABLE -->
         <div class="flex flex-col gap-3">
-          <!-- SELECTION BTNS -->
-          <!-- <OptionsTabs
-            :tabs-arr="selectionsArr"
-            v-model="tableSelectModel"
-          >
-            <template #tabSlot="{ tab }">
-              <div
-                class="w-full bg-mauve-500 rounded-sm text-white px-1.5 py-1 cursor-pointer text-xs hover:shadow-xl shadow-black/30 transition-all duration-75"
-              >
-                {{ tab }}
-              </div>
-            </template>
-          </OptionsTabs> -->
-          <!-- SELECTION BTNS -->
-
-          <!-- search -->
-          <!-- <div
-            class="flex items-center backdrop-blur-2xl bg-white shadow-xl rounded-xl gap-2 px-3 py-2 border border-white w-full"
-          >
-            <Search class="size-5 stroke-3 text-gray-600"></Search>
-            <input
-              type="text"
-              class="w-full bg-transparent py-0.5 outline-none"
-              placeholder="Search Tasks"
-            />
-          </div> -->
-          <!-- search -->
           <!-- TABLE -->
-          <div class="w-full overflow-auto bg-white h-full rounded-xl">
+          <div class="w-full bg-white h-full rounded-xl">
             <TableG
               v-if="tasksArr.length !== 0"
               :table-arr="tasksComputed"
               :table-design="tableDesign"
+              @search-refresh="searchRefresh"
             >
               <template #simple="{ simpleData }">
                 <div class="px-2 flex justify-center items-center">
@@ -111,7 +91,10 @@
                 <div
                   class="flex flex-wrap gap-1 items-center justify-center py-1 line-clamp-2"
                 >
-                  <template v-for="t in tdData" :key="t.id">
+                  <template
+                    v-for="t in tdData"
+                    :key="t.id"
+                  >
                     <div
                       class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                     >
@@ -122,7 +105,10 @@
               </template>
               <template #arrayOfObjectSlot="{ tdData }">
                 <div class="flex gap-1 justify-center items-center py-1">
-                  <template v-for="t in tdData" :key="t.id">
+                  <template
+                    v-for="t in tdData"
+                    :key="t.id"
+                  >
                     <div
                       class="px-2 py-1 relative group text-xs text-white bg-mauve-500 rounded-full"
                     >
@@ -143,7 +129,10 @@
               </template>
               <template #objectSlot="{ tdData }">
                 <div class="flex gap-2">
-                  <template v-for="(time, tKey) in tdData" :key="time">
+                  <template
+                    v-for="(time, tKey) in tdData"
+                    :key="time"
+                  >
                     <div class="flex items-center gap-1">
                       <div class="text-sm">
                         {{ time == 0 ? "--" : time }}
@@ -166,7 +155,10 @@
               <template #extraTd="{ tableRow }">
                 <td class="">
                   <div class="flex items-center justify-center gap-5">
-                    <template v-for="action in actionsArr" :key="action">
+                    <template
+                      v-for="action in actionsArr"
+                      :key="action"
+                    >
                       <component
                         @click="
                           action.name == 'delete'
@@ -216,12 +208,12 @@ import {
   Trash,
   Edit,
 } from "@lucide/vue";
-import { useUsersStore } from "../../Store/UsersStore";
-import { useTaskStore } from "../../Store/TasksStore.js";
-import { getAllTasks, deleteTask } from "../../services/TaskService.js";
+import { useUsersStore } from "@/Store/UsersStore";
+import { getAllTasks, deleteTask } from "@/services/TaskService.js";
 import { format } from "date-fns";
-import OptionsTabs from "../../components/utils/OptionsTabs/OptionsTabs.vue";
-import PieChart from "../../components/utils/PieChart/PieChart.vue";
+import PieChart from "@/components/utils/PieChart/PieChart.vue";
+import { searchTasks } from "@/services/TaskService";
+
 const AddEditTask = defineAsyncComponent(
   () => import("../../components/utils/AddEdit/addEditTask.vue"),
 );
@@ -254,19 +246,20 @@ const formatLabel = (str) => {
 const tasksArr = ref([]);
 const tasksComputed = computed(() => {
   let arr = [];
+  arr = tasksArr.value;
+  // if (
+  //   tableSelectModel.value == "All" ||
+  //   tableSelectModel.value == "Total Tasks"
+  // ) {
 
-  if (
-    tableSelectModel.value == "All" ||
-    tableSelectModel.value == "Total Tasks"
-  ) {
-    return (arr = tasksArr.value);
-  } else if (tableSelectModel.value == "To Do") {
-    arr = tasksArr.value.filter((f) => f.stage == "To Do");
-  } else if (tableSelectModel.value == "In Progress") {
-    arr = tasksArr.value.filter((f) => f.stage == "In Progress");
-  } else if (tableSelectModel.value == "Completed") {
-    arr = tasksArr.value.filter((f) => f.stage == "Completed");
-  }
+  //   return (arr = tasksArr.value);
+  // } else if (tableSelectModel.value == "To Do") {
+  //   arr = tasksArr.value.filter((f) => f.stage == "To Do");
+  // } else if (tableSelectModel.value == "In Progress") {
+  //   arr = tasksArr.value.filter((f) => f.stage == "In Progress");
+  // } else if (tableSelectModel.value == "Completed") {
+  //   arr = tasksArr.value.filter((f) => f.stage == "Completed");
+  // }
 
   return arr;
 });
@@ -389,7 +382,7 @@ const chartDataset = computed(() => {
               tasksArr.value.length) *
               100,
           ],
-          backgroundColor: ["#3B82F6", " #F59E0B  ", "#10B981"],
+          backgroundColor: ["#FF0000", " #F59E0B  ", "#10B981"],
         },
       ],
     };
@@ -416,14 +409,20 @@ const editOpen = (toBeEdit, type) => {
   diaType.value = type;
 };
 // EDIT WORK
+// GLOBAL SEARCH
+const searchRefresh = (gS) => {
+  console.log(gS);
+  searchTasks(gS).then((res) => {
+    tasksArr.value = res;
+  });
+};
+// GLOBAL SEARCH
 
 const refreshFun = () => {
   getAllTasks().then((res) => {
-    console.log("res", res);
     tasksArr.value = res.filter((f) =>
       f.assignees.some((s) => s.id == userFromStore.loggedInUser.id),
     );
-    console.log("tasksArr.value", tasksArr.value);
   });
   addEditMarker.value = false;
 };

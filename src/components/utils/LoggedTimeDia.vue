@@ -177,7 +177,9 @@
                         >
                           <Plus class="size-4"></Plus>
                         </div>
-                        <div>Log By</div>
+                        <div>
+                          {{ logTd.loggedBy }}
+                        </div>
                       </div>
                     </td>
                     <td>{{ format(logTd.logDate, "dd MMM yyyy") }}</td>
@@ -227,6 +229,7 @@ const props = defineProps({
     type: String,
     default: () => "",
   },
+  logBy: Object,
 });
 const emit = defineEmits(["closeLogTimeDia"]);
 const logModel = defineModel({ type: Array, default: () => [] });
@@ -288,6 +291,7 @@ const addLogTime = () => {
     logMin: logTimeObj.value.logMin,
     logDescription: logTimeObj.value.LogDescription,
     logMarker: false,
+    loggedBy: props.logBy.name,
   };
   logModel.value.push(obj);
   resetLog();
