@@ -218,7 +218,7 @@ const globalSearchFun = () => {
 const searchCell = ref(null);
 const filterCell = ref(null);
 
-const filtersArr = ref([{ k: "", v: "" }]);
+const filtersArr = ref([{ id:crypto.randomUUID(), k: "", v: "" }]);
 const addFilter = () => {
   if (
     filtersArr.value.at(filtersArr.value.length - 1).k == "" ||
@@ -226,11 +226,11 @@ const addFilter = () => {
   ) {
     return console.log("erroe");
   }
-  filtersArr.value.push({ k: "", v: "" });
+  filtersArr.value.push({ id:crypto.randomUUID(), k: "", v: "" });
 };
 const clearFilters = () => {
   filtersArr.value = [];
-  filtersArr.value.push({ k: "", v: "" });
+  filtersArr.value.push({ id:crypto.randomUUID(),k: "", v: "" });
 };
 const applyFilter = () => {
   let filtersToSend = {};
@@ -244,7 +244,7 @@ const delObj = (o)=>{
     return
   }
   else{
-    filtersArr.value=filtersArr.value.filter((i)=>!(i.k==o.k||i.v==o.v))
+    filtersArr.value=filtersArr.value.filter((i)=> i.id!==o.id)
   }
 }
 onClickOutside(searchCell, () => {
