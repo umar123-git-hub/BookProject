@@ -2,7 +2,7 @@
   <Teleport to="#Tel">
     <div
       @click="closeDia"
-      class="fixed inset-0 w-full h-full z-20 bg-black/70"
+      class="fixed inset-0 w-full h-full z-50 bg-black/70"
       :class="logTimeDiaMarker ? 'hidden' : ''"
     >
       <!--=================== ABSOLUTE AREA ========================-->
@@ -32,17 +32,11 @@
               Object.keys(editDeleteObj).length
             }}</span> -->
             </div>
-            <X
-              @click="closeDia"
-              class="text-gray-400"
-            ></X>
+            <X @click="closeDia" class="text-gray-400"></X>
           </div>
           <!------- written or Cancel ------->
           <!-- ADD EDIT CONTENT -->
-          <div
-            v-if="diaType !== 'delete'"
-            class="flex flex-col"
-          >
+          <div v-if="diaType !== 'delete'" class="flex flex-col">
             <!-- Main CONTENT -->
             <div class="flex flex-col gap-4">
               <!------- Task Title ------->
@@ -159,9 +153,12 @@
                           placeholder="Type here ..."
                           class="outline-none ring ring-gray-400 focus:ring-gray-500 bg-white py-1 text-black placeholder:text-black text-xs px-2 rounded"
                         />
-
+                        <div class="w-full" v-if="taskLocal.tags.length == 0">
+                          Please Enter
+                        </div>
                         <div
-                          class="flex items-center w-full gap-2 line-clamp-1 border border-gray-400 text-xs rounded overflow-auto scrollbar-thin"
+                          v-else
+                          class="flex items-center w-full gap-2 line-clamp-1 border border-gray-400 text-xs rounded overflow-x-auto scrollCustom"
                         >
                           <template v-for="tag in taskLocal.tags">
                             <div
@@ -371,10 +368,7 @@
                 <!--=============================== Add CONTENT ===========================-->
 
                 <!--=============================== EDIT CONTENT ===========================-->
-                <div
-                  v-if="diaType == 'edit'"
-                  class="px-4 flex flex-col"
-                >
+                <div v-if="diaType == 'edit'" class="px-4 flex flex-col">
                   <!--============= PRIORITY ===========-->
                   <div class="grid grid-cols-12 border-b border-gray-400">
                     <div
@@ -431,10 +425,7 @@
                       class="flex items-center gap-2 col-span-6 lg:col-span-8 border-l border-gray-400"
                     >
                       <!-- ref="PriorityCell" -->
-                      <DropDown
-                        :drop-arr="stageArr"
-                        v-model="taskLocal.stage"
-                      >
+                      <DropDown :drop-arr="stageArr" v-model="taskLocal.stage">
                         <template
                           #dropSelectShow="{ selectedDrop, dropsPanelShow }"
                         >
@@ -483,10 +474,7 @@
                         v-if="logTimeOptionsMarker"
                         class="absolute bottom-full left-1/12 flex flex-col min-w-1/2 px-1 py-1 bg-gray-100 rounded border border-gray-400 shadow shadow-black/80"
                       >
-                        <template
-                          v-for="logT in logTimeSelectArr"
-                          :key="logT"
-                        >
+                        <template v-for="logT in logTimeSelectArr" :key="logT">
                           <div
                             class="flex items-center px-2 py-1 gap-1 hover:bg-blue-700 hover:text-white transition-all duration-150 rounded"
                             @click="LogTimeDiaSelectFun(logT.name)"
@@ -512,10 +500,7 @@
           </div>
           <!-- ADD EDIT CONTENT -->
           <!--=============== DELETE ==============-->
-          <div
-            v-else
-            class="flex flex-col gap-3 px-4"
-          >
+          <div v-else class="flex flex-col gap-3 px-4">
             <div>
               Are You Sure To Delete
               <span class="font-bold">{{ editDeleteObj.title }}</span> ???
@@ -694,6 +679,9 @@ const logTimeSelectArr = ref([
 // LABEL WORK
 const labelModel = ref("");
 const labelPush = () => {
+  if (labelModel.value == "") {
+    return;
+  }
   taskLocal.value.tags.push(labelModel.value);
   labelModel.value = "";
 };
@@ -775,5 +763,15 @@ onMounted(() => {
 .conversionTransition-enter-active,
 .conversionTransition-leave-active {
   transition: all 0.5s ease;
+}
+.scrollCustom::-webkit-scrollbar {
+  width: 10px; /* Vertical scrollbar width */
+  height: 8px; /* Horizontal scrollbar height */
+  background: #000000;
+}
+.scrollCustom::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 9999px;
+  border: 1px solid #f3f4f6; /* Creates padding around the thumb */
 }
 </style>

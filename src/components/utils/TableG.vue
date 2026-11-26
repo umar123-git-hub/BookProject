@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col gap-1 px-2 py-2">
+    {{ filtersArr }}
     <!-- filter -->
     <div class="flex justify-between items-center px-2 bg-gray-300 rounded">
       <TableIcon class=""></TableIcon>
@@ -21,14 +22,17 @@
             </div>
             <!-- inputs -->
             <div class="flex flex-col items-center gap-2">
-              <template v-for="Inps in filtersArr" :key="Inps">
-                <div class="flex items-center gap-2">
-                  <div class="">
-                    <input
+              <template v-for="Inps in filtersArr" :key="Inps.id">
+                <div class="flex items-center gap-2 w-full">
+                  <div class="w-full bg-amber-600">
+                    <DropDown
+                      :drop-arr="tableDesign.map((m) => m.field)"
                       v-model="Inps.k"
-                      type="text"
-                      class="outline-none ring ring-gray-400 focus:ring-gray-500 rounded px-1"
-                    />
+                    >
+                      <template #singleDropPanel="{ drop }">
+                        <div class="w-full">{{ drop }}</div>
+                      </template>
+                    </DropDown>
                   </div>
                   <div class="flex gap-1 items-center">
                     <input
@@ -179,6 +183,7 @@
 import { Funnel, Search, TableIcon, X } from "@lucide/vue";
 import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
+import DropDown from "./DropDown.vue";
 const props = defineProps({
   tableArr: Array,
   tableDesign: Array,
@@ -214,13 +219,29 @@ const clearFilters = () => {
 const applyFilter = () => {
   let filtersToSend = {};
   filtersArr.value.forEach((f) => {
-    filtersToSend[f.k] = f.v;
+    if (
+      f.k == "createdBy" ||
+      f.k == "assignees" ||
+      f.k == "tags" ||
+      f.k == "estimatedTime" ||
+      f.k == "loggedTime" ||
+      f.k == "attachments" ||
+      f.k == "startTime" ||
+      f.k == "endTime"
+    ) {
+      filtersToSend[f.k] = JSON.stringify(f.v);
+      return;
+    } else {
+      filtersToSend[f.k] = f.v;
+    }
   });
+  emit("searchRefresh", filtersToSend);
   console.log(filtersToSend);
 };
 const delObj = (o) => {
   if (filtersArr.value.length == 1) {
-    return;
+    o.k = "";
+    o.v = "";
   } else {
     filtersArr.value = filtersArr.value.filter((i) => i.id !== o.id);
   }
@@ -233,3 +254,13 @@ onClickOutside(filterCell, () => {
   showFiltersMarker.value = false;
 });
 </script>
+<!-- 
+    createdBy: null,
+    assignees: [],
+    tags: [],
+    estimatedTime:,
+    loggedTime: [],
+    attachments: [],
+    startTime: null,
+    endTime: null,
+     -->
