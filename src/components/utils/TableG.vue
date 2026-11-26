@@ -21,10 +21,7 @@
             </div>
             <!-- inputs -->
             <div class="flex flex-col items-center gap-2">
-              <template
-                v-for="Inps in filtersArr"
-                :key="Inps"
-              >
+              <template v-for="Inps in filtersArr" :key="Inps">
                 <div class="flex items-center gap-2">
                   <div class="">
                     <input
@@ -39,7 +36,10 @@
                       type="text"
                       class="outline-none ring ring-gray-400 focus:ring-gray-500 rounded px-1"
                     />
-                    <X @click="delObj(Inps)" class="text-red-600 size-4 stroke-4 cursor-pointer"></X>
+                    <X
+                      @click="delObj(Inps)"
+                      class="text-red-600 size-4 stroke-4 cursor-pointer"
+                    ></X>
                   </div>
                 </div>
               </template>
@@ -49,19 +49,19 @@
             <div class="grid grid-cols-3 items-center gap-2">
               <button
                 @click="clearFilters"
-                class="bg-gray-300 text-black px-2 py-1 rounded text-sm font-semibold col-span-1"
+                class="bg-gray-300 text-black px-2 py-1 rounded text-sm font-semibold col-span-1 cursor-pointer"
               >
                 Clear Filter
               </button>
               <button
                 @click="addFilter"
-                class="bg-gray-500 text-white px-2 py-1 rounded text-sm font-semibold col-span-1"
+                class="bg-gray-500 text-white px-2 py-1 rounded text-sm font-semibold col-span-1 cursor-pointer"
               >
                 + Add Filter
               </button>
               <button
                 @click="applyFilter"
-                class="bg-red-700 text-white px-2 py-1 rounded text-sm font-semibold col-span-1"
+                class="bg-red-700 text-white px-2 py-1 rounded text-sm font-semibold col-span-1 cursor-pointer"
               >
                 Apply
               </button>
@@ -89,7 +89,7 @@
             />
             <button
               @click="globalSearchFun(globalSearchModel)"
-              class="bg-red-500 text-white px-2 py-1 rounded"
+              class="bg-red-500 text-white px-2 py-1 rounded cursor-pointer"
             >
               Search
             </button>
@@ -103,25 +103,16 @@
       <table class="w-full relative table-fixed border-collapse text-center">
         <!--============ col width ===============-->
         <colgroup>
-          <template
-            v-for="tHeader in tableDesign"
-            :key="tHeader"
-          >
+          <template v-for="tHeader in tableDesign" :key="tHeader">
             <col :style="{ width: tHeader.wid }" />
           </template>
-          <slot
-            name="extraCol"
-            v-if="$slots.extraCol"
-          ></slot>
+          <slot name="extraCol" v-if="$slots.extraCol"></slot>
         </colgroup>
         <!--============ col width ===============-->
         <!--============ thead ===============-->
         <thead>
           <tr class="sticky top-0">
-            <template
-              v-for="tHeader in tableDesign"
-              :key="tHeader"
-            >
+            <template v-for="tHeader in tableDesign" :key="tHeader">
               <slot
                 name="tableHeaderSlot"
                 :t-header="tHeader"
@@ -129,24 +120,15 @@
               ></slot>
               <th v-else>{{ tHeader.header }}</th>
             </template>
-            <slot
-              name="extraTh"
-              v-if="$slots.extraTh"
-            ></slot>
+            <slot name="extraTh" v-if="$slots.extraTh"></slot>
           </tr>
         </thead>
         <!--============ thead ===============-->
         <!--============ tbody ===============-->
         <tbody>
-          <template
-            v-for="tableRow in tableArr"
-            :key="tableRow.id"
-          >
+          <template v-for="tableRow in tableArr" :key="tableRow.id">
             <tr>
-              <template
-                v-for="tData in tableDesign"
-                :key="tData"
-              >
+              <template v-for="tData in tableDesign" :key="tData">
                 <td>
                   <slot
                     name="simple"
@@ -175,10 +157,7 @@
                     :td-data="tableRow[tData.field]"
                     v-else-if="$slots.objectSlot && tData.objectSlot"
                   ></slot>
-                  <div
-                    v-else
-                    class=""
-                  >
+                  <div v-else class="">
                     {{ tableRow[tData.field] }}
                   </div>
                 </td>
@@ -218,19 +197,19 @@ const globalSearchFun = () => {
 const searchCell = ref(null);
 const filterCell = ref(null);
 
-const filtersArr = ref([{ id:crypto.randomUUID(), k: "", v: "" }]);
+const filtersArr = ref([{ id: crypto.randomUUID(), k: "", v: "" }]);
 const addFilter = () => {
   if (
     filtersArr.value.at(filtersArr.value.length - 1).k == "" ||
     filtersArr.value.at(filtersArr.value.length - 1).v == ""
   ) {
-    return console.log("erroe");
+    return;
   }
-  filtersArr.value.push({ id:crypto.randomUUID(), k: "", v: "" });
+  filtersArr.value.push({ id: crypto.randomUUID(), k: "", v: "" });
 };
 const clearFilters = () => {
   filtersArr.value = [];
-  filtersArr.value.push({ id:crypto.randomUUID(),k: "", v: "" });
+  filtersArr.value.push({ id: crypto.randomUUID(), k: "", v: "" });
 };
 const applyFilter = () => {
   let filtersToSend = {};
@@ -239,14 +218,13 @@ const applyFilter = () => {
   });
   console.log(filtersToSend);
 };
-const delObj = (o)=>{
-  if(filtersArr.value.length==1){
-    return
+const delObj = (o) => {
+  if (filtersArr.value.length == 1) {
+    return;
+  } else {
+    filtersArr.value = filtersArr.value.filter((i) => i.id !== o.id);
   }
-  else{
-    filtersArr.value=filtersArr.value.filter((i)=> i.id!==o.id)
-  }
-}
+};
 onClickOutside(searchCell, () => {
   showSearchMarker.value = false;
 });
