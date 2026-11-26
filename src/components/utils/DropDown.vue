@@ -1,24 +1,15 @@
 <template>
-  <div
-    ref="dropdownRef"
-    class="relative w-full h-max"
-  >
+  <div ref="dropdownRef" class="relative w-full h-max">
     <!-- SELECTED AREA -->
 
-    <div
-      @click="toggleDropdown"
-      class="flex justify-between items-center"
-    >
+    <div @click="toggleDropdown" class="flex justify-between items-center">
       <slot
         v-if="$slots.dropSelectShow"
         name="dropSelectShow"
         :selected-drop="selectedDrop"
         :drops-panel-show="dropsPanelShow"
       ></slot>
-      <div
-        v-else
-        class="flex justify-between items-center"
-      >
+      <div v-else class="flex justify-between w-full items-center">
         <div>
           {{ selectedDrop || "Please Select" }}
         </div>
@@ -36,17 +27,11 @@
         v-if="dropsPanelShow"
         class="absolute top-[110%] z-60 max-h-30 overflow-auto origin-top-right bg-gray-100 w-full py-1 flex flex-col gap-1"
       >
-        <template
-          v-for="drop in dropArr"
-          :key="drop"
-        >
-          <div
-            @click="selectDrop(drop)"
-            class="cursor-pointer"
-          >
+        <template v-for="drop in dropArr" :key="drop">
+          <div @click="selectDrop(drop)" class="cursor-pointer w-full">
             <slot
               v-if="$slots.dropsPanel"
-              name="dropsPanel"
+              name="singleDropPanel"
               :drop="drop"
             ></slot>
             <div v-else>
