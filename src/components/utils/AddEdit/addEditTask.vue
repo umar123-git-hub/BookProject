@@ -8,8 +8,8 @@
       <!--=================== ABSOLUTE AREA ========================-->
       <div
         @click.stop
-        class="absolute flex top-1/2 shadow shadow-gray-400 rounded-lg left-1/2 -translate-1/2 bg-amber-50"
-        :class="diaType == 'edit' ? 'min-w-[70%]' : ''"
+        class="absolute flex top-1/2 shadow shadow-gray-400 rounded-lg min-w-[40%] max-w-[40%] left-1/2 -translate-1/2 bg-amber-50"
+        :class="diaType == 'edit' ? 'min-w-[70%] max-w-[70%]' : ''"
       >
         <!--================== LEFT SIDE ====================-->
         <div class="flex flex-2 flex-col gap-1">
@@ -337,7 +337,7 @@
                       </div>
                       <div
                         @click="conversionFun('time')"
-                        v-if="conversionMarker == ''"
+                        v-if="conversionMarker !== 'time'"
                         class="flex items-center text-xs gap-2 col-span-6 lg:col-span-8 border-l px-2 border-gray-400"
                       >
                         Add estimated time

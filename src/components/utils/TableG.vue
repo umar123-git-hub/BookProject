@@ -4,6 +4,7 @@
     <div class="flex justify-between items-center px-2 bg-gray-300 rounded">
       <TableIcon class=""></TableIcon>
       <div class="flex items-center justify-between gap-2">
+        <!-- FILTERS -->
         <div class="relative w-full py-1 z-50">
           <Funnel
             @click="showFiltersMarker = !showFiltersMarker"
@@ -12,14 +13,64 @@
           <div
             ref="filterCell"
             v-if="showFiltersMarker"
-            class="absolute bottom-full bg-gray-100 border rounded-lg border-gray-300 shadow shadow-gray-800 px-3 py-1 flex flex-col"
+            class="absolute right-full bottom-full gap-2 bg-gray-100 border rounded-lg border-gray-300 shadow shadow-gray-800 px-4 py-2 flex flex-col"
           >
-            <input
-              type="text"
-              class="outline-none ring ring-gray-400 focus:ring-gray-500 rounded px-1 py-1"
-            />
+            <div class="grid grid-cols-2 items-center gap-20 w-100">
+              <div class="text-sm font-semibold">Columns</div>
+              <div class="">Value</div>
+            </div>
+            <!-- inputs -->
+            <div class="flex flex-col items-center gap-2">
+              <template
+                v-for="Inps in filtersArr"
+                :key="Inps"
+              >
+                <div class="flex items-center gap-2">
+                  <div class="">
+                    <input
+                      v-model="Inps.k"
+                      type="text"
+                      class="outline-none ring ring-gray-400 focus:ring-gray-500 rounded px-1"
+                    />
+                  </div>
+                  <div class="flex gap-1 items-center">
+                    <input
+                      v-model="Inps.v"
+                      type="text"
+                      class="outline-none ring ring-gray-400 focus:ring-gray-500 rounded px-1"
+                    />
+                    <X @click="delObj(Inps)" class="text-red-600 size-4 stroke-4 cursor-pointer"></X>
+                  </div>
+                </div>
+              </template>
+            </div>
+            <!-- inputs -->
+            <!-- buttons -->
+            <div class="grid grid-cols-3 items-center gap-2">
+              <button
+                @click="clearFilters"
+                class="bg-gray-300 text-black px-2 py-1 rounded text-sm font-semibold col-span-1"
+              >
+                Clear Filter
+              </button>
+              <button
+                @click="addFilter"
+                class="bg-gray-500 text-white px-2 py-1 rounded text-sm font-semibold col-span-1"
+              >
+                + Add Filter
+              </button>
+              <button
+                @click="applyFilter"
+                class="bg-red-700 text-white px-2 py-1 rounded text-sm font-semibold col-span-1"
+              >
+                Apply
+              </button>
+            </div>
+            <!-- buttons-->
           </div>
         </div>
+        <!-- FILTERS -->
+        <!-- SEARCH -->
         <div class="relative w-full py-1 z-50">
           <Search
             @click="showSearchMarker = !showSearchMarker"
@@ -44,6 +95,7 @@
             </button>
           </div>
         </div>
+        <!-- SEARCH -->
       </div>
     </div>
     <!-- filter -->
@@ -145,7 +197,7 @@
   </div>
 </template>
 <script setup>
-import { Funnel, Search, TableIcon } from "@lucide/vue";
+import { Funnel, Search, TableIcon, X } from "@lucide/vue";
 import { ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
 const props = defineProps({
@@ -166,10 +218,40 @@ const globalSearchFun = () => {
 const searchCell = ref(null);
 const filterCell = ref(null);
 
+const filtersArr = ref([{ id:crypto.randomUUID(), k: "", v: "" }]);
+const addFilter = () => {
+  if (
+    filtersArr.value.at(filtersArr.value.length - 1).k == "" ||
+    filtersArr.value.at(filtersArr.value.length - 1).v == ""
+  ) {
+    return console.log("erroe");
+  }
+  filtersArr.value.push({ id:crypto.randomUUID(), k: "", v: "" });
+};
+const clearFilters = () => {
+  filtersArr.value = [];
+  filtersArr.value.push({ id:crypto.randomUUID(),k: "", v: "" });
+};
+const applyFilter = () => {
+  let filtersToSend = {};
+  filtersArr.value.forEach((f) => {
+    filtersToSend[f.k] = f.v;
+  });
+  console.log(filtersToSend);
+};
+const delObj = (o)=>{
+  if(filtersArr.value.length==1){
+    return
+  }
+  else{
+    filtersArr.value=filtersArr.value.filter((i)=> i.id!==o.id)
+  }
+}
 onClickOutside(searchCell, () => {
   showSearchMarker.value = false;
 });
 onClickOutside(filterCell, () => {
+  clearFilters();
   showFiltersMarker.value = false;
 });
 </script>

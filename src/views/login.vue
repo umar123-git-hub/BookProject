@@ -93,7 +93,7 @@
   <!-- Main Overlay black -->
 </template>
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useUsersStore } from "../Store/UsersStore";
 import { useRouter } from "vue-router";
 import { verifyLogIn } from "../services/LoginService.js";
@@ -116,4 +116,12 @@ const loginFun = () => {
     router.push({ name: "DashBoard" });
   });
 };
+
+onMounted(() => {
+  console.log("in login", usersFromStore.loadMarker);
+  if (usersFromStore.loggedInUser) {
+    router.push({ name: "DashBoard" });
+  }
+});
+
 </script>
